@@ -1,6 +1,6 @@
 ﻿namespace GadevangTennisklub2025.Models
 {
-    public class UserClass
+    public class Member
     {
     }
 }
