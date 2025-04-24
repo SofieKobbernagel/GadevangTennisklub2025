@@ -64,6 +64,10 @@ namespace GadevangTennisklub2025.Models
 
         public int BookingsLeft { get; set; }
 
+        [Display(Name = "brugernavn")]
+        [Required(ErrorMessage = "Du skal angive et brugernavn")]
+        public string Username { get; set; }
+
         [Display(Name = "Kodeord")]
         [Required(ErrorMessage = "Du skal angive et kodeord")]
         private string _password;
@@ -78,6 +82,8 @@ namespace GadevangTennisklub2025.Models
         [Display(Name = "Is Admin")]
         public bool IsAdmin { get; set; }
 
+        public bool NewsSubscriber { get; set; }
+
        
       
         public string? ProfileImagePath { get; set; }
@@ -85,7 +91,7 @@ namespace GadevangTennisklub2025.Models
 
 
 
-        public Member(string name, DateOnly birthday, string membertype, string city, string phone, string postalcode, string gender, string address, string email, string password)
+        public Member(string username, string name, DateOnly birthday, string membertype, string city, string phone, string postalcode, string gender, string address, string email, string password)
         {
             Member_Id = _count++;
             IsAdmin = false;
@@ -99,6 +105,7 @@ namespace GadevangTennisklub2025.Models
             Address = address;
             Email = email;
             Password = password;
+            Username = username;
         }
        
         

@@ -27,20 +27,23 @@ namespace GadevangTennisklub2025.Services
                     SqlDataReader reader = await command.ExecuteReaderAsync();
                     while (await reader.ReadAsync())
                     {
-                        string name = reader.GetString("Navn");
-                        DateOnly birthday = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Fødselsdag")));
-                        string membertype = reader.GetString("Medlemstype");
-                        string city = reader.GetString("By");
-                        string phone = reader.GetString("Tlf");
-                        string postalcode = reader.GetString("Postnummer");
-                        string gender = reader.GetString("Køn");
-                        string address = reader.GetString("address");
-                        int id = reader.GetInt32("Medlems id");
+                        string name = reader.GetString("Name");
+                        DateOnly birthday = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Birthday")));
+                        string membertype = reader.GetString("MembershipType");
+                        string city = reader.GetString("City");
+                        string phone = reader.GetString("TLF");
+                        string postalcode = reader.GetString("PostalCode");
+                        string gender = reader.GetString("Gender");
+                        string address = reader.GetString("Address");
+                        int id = reader.GetInt32("Member_id");
                         string email = reader.GetString("Email");
                         string password = reader.GetString("Password");
+                        string username = reader.GetString("Username");
                         bool isAdmin = reader.GetBoolean("IsAdmin");
-                        Member m = new Member(name, birthday, membertype, city, phone, postalcode, gender, address, email, password);
+                        bool newsSubscriber = reader.GetBoolean("NewsSubscriber");
+                        Member m = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password);
                         m.IsAdmin = isAdmin;
+                        m.NewsSubscriber = newsSubscriber;
 
                         members.Add(m);
                        
@@ -63,7 +66,7 @@ namespace GadevangTennisklub2025.Services
         {
             foreach (var member in GetAllMembersAsync().Result)
             {
-                if (username.Equals(member.Email) && password.Equals(member.Password))
+                if (username.Equals(member.Username) && password.Equals(member.Password))
                 {
                     return member;
                 }
