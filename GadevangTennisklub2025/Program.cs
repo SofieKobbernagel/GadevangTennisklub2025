@@ -1,11 +1,19 @@
+using GadevangTennisklub2025.Interfaces;
+using GadevangTennisklub2025.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddTransient<IMemberService, MemberService>();
+builder.Services.AddSession();    //Nyt
+builder.Services.AddHttpContextAccessor();//Nyt
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
+/// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -17,6 +25,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthorization();
 
