@@ -14,9 +14,9 @@ namespace GadevangTennisklub2025.Services
     {
         private string connectionString = Secret.ConnectionString;
         private string selectAllMembersSql = "select * From Members";
-        private string insertSql = "Insert INTO Members (Member_Id, Name, Address, Gender, Email, PostalCode, TLF, City, " +
+        private string insertSql = "Insert INTO Members (Name, Address, Gender, Email, PostalCode, TLF, City, " +
             "MembershipType, Birthday, OtherTLF, NewsSubscriber, Username, Password, IsAdmin, Municipality, PictureConsent)" +
-            "VALUES (@Member_Id, @Name, @Address, @Gender, @Email, @Postalcode, @TLF, @City, @MembershipType, " +
+            "VALUES (@Name, @Address, @Gender, @Email, @Postalcode, @TLF, @City, @MembershipType, " +
             "@Birthday, @OtherTLF, @NewsSubscriber, @Username, @Password, @IsAdmin, @Municipality, @PictureConsent)";
 
         public async Task<bool> CreateMemberAsync(Member member)
@@ -86,7 +86,10 @@ namespace GadevangTennisklub2025.Services
                         string membertype = reader.GetString("MembershipType");
                         string city = reader.GetString("City");
                         string phone = reader.GetString("TLF");
+                      
                         string otherphone = reader.GetString("OtherTLF");
+                      
+
                         string postalcode = reader.GetString("PostalCode");
                         string gender = reader.GetString("Gender");
                         string address = reader.GetString("Address");
@@ -101,7 +104,9 @@ namespace GadevangTennisklub2025.Services
                         Member m = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password, municipality, consent);
                         m.IsAdmin = isAdmin;
                         m.NewsSubscriber = newsSubscriber;
-                        m.OtherPhone = otherphone;
+                     
+                        
+                      
 
                         members.Add(m);
                        

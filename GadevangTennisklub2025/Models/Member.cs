@@ -4,7 +4,6 @@ namespace GadevangTennisklub2025.Models
 {
     public class Member
     {
-        private int _count = 0;
 
         [Display(Name = "Fødselsdag")]
         [Required(ErrorMessage = "Du skal angive din fødselsdag")]
@@ -99,7 +98,6 @@ namespace GadevangTennisklub2025.Models
 
         public Member(string username, string name, DateOnly birthday, string membertype, string city, string phone, string postalcode, string gender, string address, string email, string password, string municipality, string consent)
         {
-            Member_Id = _count++;
             IsAdmin = false;
             Name = name;
             Birthday = birthday;
