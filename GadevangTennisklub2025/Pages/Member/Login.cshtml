@@ -1,0 +1,33 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.Member.LoginModel
+@{
+}
+
+<h3>Login</h3>
+<p style="color:red">@Model.Message</p>
+
+<form method="post">
+    <table>
+        <tr>
+            <td>Brugernavn</td>
+            <td><input asp-for="LoginMember.Username" /></td>
+        </tr>
+        <tr>
+            <td>Kodeord</td>
+            <td><input type="password" asp-for="LoginMember.Password" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Login" /></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <a asp-page="/Member/CreateMember">Opret ny bruger</a>
+            </td>
+        </tr>
+    </table>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

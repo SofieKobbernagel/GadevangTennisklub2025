@@ -29,6 +29,17 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Events/ShowEvents">Events</a>
                         </li>
                     </ul>
+                    <div class="d-flex">
+                        @if (Context.Session.GetString("Member_Id") != null)
+                        {
+                            <a asp-page="/Member/MyProfile" class="btn btn-outline-secondary btn-sm">Min Profil</a>
+                            <a asp-page="/Member/Login" asp-page-handler="Logout" class="btn btn-outline-danger btn-sm">Logud</a>
+                        }
+                        else
+                        {
+                            <a asp-page="/Member/Login" class="btn btn-outline-primary btn-sm">Login</a>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
