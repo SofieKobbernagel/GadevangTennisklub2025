@@ -1,7 +1,11 @@
+using GadevangTennisklub2025.Interfaces;
+using GadevangTennisklub2025.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddTransient<IEventServiceAsync, EventServicesAsync>();
 
 var app = builder.Build();
 
