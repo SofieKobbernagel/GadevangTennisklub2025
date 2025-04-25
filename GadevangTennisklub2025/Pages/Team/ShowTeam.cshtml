@@ -1,0 +1,51 @@
+﻿@page
+@using Models;
+@model GadevangTennisklub2025.Pages.Team.ShowTeamModel
+@{
+    ViewData["Title"] = "Klubbens Hold";
+}
+
+<h3>Klubbens Hold</h3>
+
+<btn>
+    <a class="nav-link text-dark bg-primary" asp-page="AddTeam">Opret nyt Hold</a>
+</btn>
+
+
+<form style="display: inline;" asp-page-handler="SignIn">
+    <input type="submit" value="SignIn" />
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>pladser tilbage</th>
+            <th>Kort Beskrivelse</th>
+            <th>hold lavet af</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (Team item in Model.ListOfTeams)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@(item.AttendeeRange[1] - item.Attendees.Count)</td>
+                <td>@item.Summary</td>
+                <td>@item.Master.Name</td>
+
+                <td>
+
+                    <form style="display: inline;" asp-page-handler="Edit" asp-route-id="@item.Id">
+                        <input type="image" src="~/Images/pencil-square.svg" />
+                    </form>
+
+
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
