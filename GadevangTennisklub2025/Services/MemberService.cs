@@ -86,10 +86,7 @@ namespace GadevangTennisklub2025.Services
                         string membertype = reader.GetString("MembershipType");
                         string city = reader.GetString("City");
                         string phone = reader.GetString("TLF");
-                      
-                        string otherphone = reader.GetString("OtherTLF");
-                      
-
+                        string otherphone = reader.IsDBNull(reader.GetOrdinal("OtherTLF")) ? null : reader.GetString(reader.GetOrdinal("OtherTLF"));
                         string postalcode = reader.GetString("PostalCode");
                         string gender = reader.GetString("Gender");
                         string address = reader.GetString("Address");
@@ -104,9 +101,11 @@ namespace GadevangTennisklub2025.Services
                         Member m = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password, municipality, consent);
                         m.IsAdmin = isAdmin;
                         m.NewsSubscriber = newsSubscriber;
-                     
-                        
-                      
+                        m.OtherPhone = otherphone;
+
+
+
+
 
                         members.Add(m);
                        
