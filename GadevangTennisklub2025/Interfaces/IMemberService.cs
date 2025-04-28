@@ -6,6 +6,8 @@ namespace GadevangTennisklub2025.Interfaces
     {
         public Task<List<Member>> GetAllMembersAsync();
 
+        public Task<bool> CreateMemberAsync(Member member);
+
         public Member VerifyMember(string username, string password);
     }
 }

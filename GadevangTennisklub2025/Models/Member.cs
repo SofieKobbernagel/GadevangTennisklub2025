@@ -4,7 +4,6 @@ namespace GadevangTennisklub2025.Models
 {
     public class Member
     {
-        private int _count = 0;
 
         [Display(Name = "Fødselsdag")]
         [Required(ErrorMessage = "Du skal angive din fødselsdag")]
@@ -54,6 +53,10 @@ namespace GadevangTennisklub2025.Models
         [Required(ErrorMessage = "Du skal angive din adresse")]
         public string Address { get; set; }
 
+        [Display(Name = "Hjemmekommune")]
+        [Required(ErrorMessage = "Du skal angive din kommune")]
+        public string Municipality { get; set; }
+
         [Display(Name = "Navn")]
         [Required(ErrorMessage = "Du skal angive dit fulde navn")]
         public string Name { get; set; }
@@ -68,32 +71,33 @@ namespace GadevangTennisklub2025.Models
         [Required(ErrorMessage = "Du skal angive et brugernavn")]
         public string Username { get; set; }
 
+        [Display(Name = "Samtykke til offentliggørelse af billeder")]
+        [Required(ErrorMessage = "Vælg venligst en mulighed for billedtilladelse")]
+        public string PictureConsent { get; set; }
+
         [Display(Name = "Kodeord")]
         [Required(ErrorMessage = "Du skal angive et kodeord")]
-        private string _password;
+        public string Password { get; set; }
 
-        public string Password
-        {
-            get { return _password; }
-            private set { _password = value; }
-        }
 
 
         [Display(Name = "Is Admin")]
         public bool IsAdmin { get; set; }
 
-        public bool NewsSubscriber { get; set; }
+        public bool NewsSubscriber { get; set; } = false;
 
-       
+        public string? OtherPhone {  get; set; } 
       
         public string? ProfileImagePath { get; set; }
 
 
-
-
-        public Member(string username, string name, DateOnly birthday, string membertype, string city, string phone, string postalcode, string gender, string address, string email, string password)
+        public Member()
         {
-            Member_Id = _count++;
+            
+        }
+
+        public Member(string username, string name, DateOnly birthday, string membertype, string city, string phone, string postalcode, string gender, string address, string email, string password, string municipality, string consent)
+        {
             IsAdmin = false;
             Name = name;
             Birthday = birthday;
@@ -106,6 +110,8 @@ namespace GadevangTennisklub2025.Models
             Email = email;
             Password = password;
             Username = username;
+            Municipality = municipality;
+            PictureConsent = consent;
         }
        
         
