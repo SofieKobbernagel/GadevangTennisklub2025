@@ -2,7 +2,7 @@
 @model GadevangTennisklub2025.Pages.Member.CreateMemberModel
 @{
 }
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 
     <div class="form-group">
         <label asp-for="@Model.RegisterModel.Member.Name" class="control-label"></label>
@@ -85,6 +85,10 @@
         <label asp-for="@Model.RegisterModel.Member.Password" class="control-label"></label>
         <input asp-for="@Model.RegisterModel.Member.Password" class="form-control" autocomplete="off" />
         <span asp-validation-for="RegisterModel.Member.Password" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="ProfileImage">Upload profilbillede (Valgfrit)</label>
+        <input type="file" class="form-control" name="ProfileImage" id="ProfileImage" />
     </div>
     <h4>Vælg medlemskabstype</h4>
     <table class="table table-bordered">
