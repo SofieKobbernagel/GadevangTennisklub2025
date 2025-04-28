@@ -4,10 +4,14 @@ namespace GadevangTennisklub2025.Interfaces
 {
     public interface IMemberService
     {
-        public Task<List<Member>> GetAllMembersAsync();
+       Task<List<Member>> GetAllMembersAsync();
 
-        public Task<bool> CreateMemberAsync(Member member);
+       Task<bool> CreateMemberAsync(Member member);
 
-        public Member VerifyMember(string username, string password);
+       Member VerifyMember(string username, string password);
+       
+       Task<Member> GetMemberById(int id);
+
+       Task<bool> UpdateMemberAsync(Member member, int member_Id);
     }
 }

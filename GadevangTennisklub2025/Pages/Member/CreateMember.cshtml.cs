@@ -12,6 +12,9 @@ namespace GadevangTennisklub2025.Pages.Member
         [BindProperty]
         public RegisterMemberViewModel RegisterModel { get; set; }
 
+        [BindProperty]
+        public IFormFile? ProfileImage { get; set; }
+
         public CreateMemberModel(IMemberService memberService)
         {
             _memberService = memberService;
@@ -19,13 +22,31 @@ namespace GadevangTennisklub2025.Pages.Member
 
 
      
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
                     return Page();
+                }
+
+                if (ProfileImage != null && ProfileImage.Length > 0)
+                {
+                    // Generate a unique filename (so people don't overwrite each other’s pictures)
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfileImage.FileName);
+
+                    // Build the path to /images/ProfilePictures/
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/ProfilePictures", fileName);
+
+                    // Save the file to the server
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ProfileImage.CopyToAsync(stream);
+                    }
+
+                    // Save the relative path to the database
+                    RegisterModel.Member.ProfileImagePath = "/images/ProfilePictures/" + fileName;
                 }
 
                 bool success = await _memberService.CreateMemberAsync(RegisterModel.Member);
