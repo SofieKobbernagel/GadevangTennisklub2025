@@ -2,3 +2,81 @@
 @model GadevangTennisklub2025.Pages.Member.MyProfileModel
 @{
 }
+<h2>Min Profil</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Profil billede</label><br />
+        @if (!string.IsNullOrEmpty(Model.Member.ProfileImagePath))
+        {
+            <img src="@Model.Member.ProfileImagePath" width="150" height="150" />
+        }
+        else
+        {
+            <p>Intet profilbillede.</p>
+        }
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.Member.Username"></label>
+        <input asp-for="@Model.Member.Username" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Member.Name"></label>
+        <input asp-for="@Model.Member.Name" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Member.Address"></label>
+        <input asp-for="@Model.Member.Address" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Member.PostalCode"></label>
+        <input asp-for="@Model.Member.PostalCode" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Member.City"></label>
+        <input asp-for="@Model.Member.City" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Member.Municipality"></label>
+        <input asp-for="@Model.Member.Municipality" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Member.Phone"></label>
+        <input asp-for="@Model.Member.Phone" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Member.OtherPhone"></label>
+        <input asp-for="@Model.Member.OtherPhone" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Member.Birthday"></label>
+        <input asp-for="@Model.Member.Birthday" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Member.Gender"></label>
+        <input asp-for="@Model.Member.Gender" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Member.Email"></label>
+        <input asp-for="@Model.Member.Email" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label>Tilmeldt Nyhedsbrev</label>
+        <input class="form-control" readonly
+               value="@(Model.Member.NewsSubscriber ? "Ja" : "Nej")" />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Member.MemberType"></label>
+        <input asp-for="@Model.Member.MemberType" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Member.PictureConsent"></label>
+        <input asp-for="@Model.Member.PictureConsent" class="form-control" readonly />
+    </div>
+  
+    <a class="btn btn-primary btn-sm" title="Edit"
+       asp-page="EditMember" asp-route-userId="@Model.Member.Member_Id">Rediger Profil</a>
+
+</form>
+

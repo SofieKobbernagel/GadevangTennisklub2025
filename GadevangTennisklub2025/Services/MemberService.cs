@@ -8,16 +8,17 @@ using System.Reflection;
 
 namespace GadevangTennisklub2025.Services
 {
- 
+
 
     public class MemberService : IMemberService
     {
         private string connectionString = Secret.ConnectionString;
         private string selectAllMembersSql = "select * From Members";
         private string insertSql = "Insert INTO Members (Name, Address, Gender, Email, PostalCode, TLF, City, " +
-            "MembershipType, Birthday, OtherTLF, NewsSubscriber, Username, Password, IsAdmin, Municipality, PictureConsent)" +
+            "MembershipType, Birthday, OtherTLF, NewsSubscriber, Username, Password, IsAdmin, Municipality, PictureConsent, ProfileImagePath)" +
             "VALUES (@Name, @Address, @Gender, @Email, @Postalcode, @TLF, @City, @MembershipType, " +
-            "@Birthday, @OtherTLF, @NewsSubscriber, @Username, @Password, @IsAdmin, @Municipality, @PictureConsent)";
+            "@Birthday, @OtherTLF, @NewsSubscriber, @Username, @Password, @IsAdmin, @Municipality, @PictureConsent, @ProfileImagePath)";
+        private string getByIdSql = @"SELECT * FROM Members WHERE Member_Id = @Member_Id";
 
         public async Task<bool> CreateMemberAsync(Member member)
         {
@@ -45,7 +46,8 @@ namespace GadevangTennisklub2025.Services
                     command.Parameters.AddWithValue("@IsAdmin", member.IsAdmin);
                     command.Parameters.AddWithValue("@Municipality", member.Municipality);
                     command.Parameters.AddWithValue("@PictureConsent", member.PictureConsent);
-                    
+                    command.Parameters.AddWithValue("@ProfileImagePath", member.ProfileImagePath);
+
                     await connection.OpenAsync();
                     int rowsAffected = await command.ExecuteNonQueryAsync();
                     if (rowsAffected > 0)
@@ -66,8 +68,8 @@ namespace GadevangTennisklub2025.Services
             }
             return isCreated;
         }
-        
-        
+
+
 
         public async Task<List<Member>> GetAllMembersAsync()
         {
@@ -90,7 +92,7 @@ namespace GadevangTennisklub2025.Services
                         string postalcode = reader.GetString("PostalCode");
                         string gender = reader.GetString("Gender");
                         string address = reader.GetString("Address");
-                        int id = reader.GetInt32("Member_id");
+                        int id = reader.GetInt32("Member_Id");
                         string email = reader.GetString("Email");
                         string password = reader.GetString("Password");
                         string username = reader.GetString("Username");
@@ -98,32 +100,38 @@ namespace GadevangTennisklub2025.Services
                         bool newsSubscriber = reader.GetBoolean("NewsSubscriber");
                         string municipality = reader.GetString("Municipality");
                         string consent = reader.GetString("PictureConsent");
-                        Member m = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password, municipality, consent);
+                        string filepath = reader.IsDBNull(reader.GetOrdinal("ProfileImagePath")) ? null : reader.GetString(reader.GetOrdinal("ProfileImagePath"));
+
+                        Member m = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password, municipality, consent,id);
                         m.IsAdmin = isAdmin;
                         m.NewsSubscriber = newsSubscriber;
                         m.OtherPhone = otherphone;
-
-
-
-
+                        m.ProfileImagePath = filepath;
 
                         members.Add(m);
-                       
+
                     }
                     reader.Close();
                 }
                 catch (SqlException sqlExp)
                 {
                     Console.WriteLine("SQL ERROR: " + sqlExp.Message);
-                    Console.WriteLine("Stack Trace: " + sqlExp.StackTrace);                
+                    Console.WriteLine("Stack Trace: " + sqlExp.StackTrace);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("GENERAL ERROR: " + ex.Message);
-                    Console.WriteLine("Stack Trace: " + ex.StackTrace);          
+                    Console.WriteLine("Stack Trace: " + ex.StackTrace);
                 }
             }
             return members;
+        }
+
+
+
+        public Task<bool> UpdateMemberAsync(Member member, int member_Id)
+        {
+            throw new NotImplementedException();
         }
 
         public Member VerifyMember(string username, string password)
@@ -136,6 +144,68 @@ namespace GadevangTennisklub2025.Services
                 }
             }
             return null;
+        }
+
+        public async Task<Member> GetMemberById(int member_id)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                Member? foundMember = null;
+                try
+                {
+
+                    SqlCommand command = new SqlCommand(getByIdSql, connection);
+                    command.Parameters.AddWithValue("@Member_Id", member_id);
+
+                    await connection.OpenAsync();
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                    if (await reader.ReadAsync())
+                    {
+                        string name = reader.GetString("Name");
+                        DateOnly birthday = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Birthday")));
+                        string membertype = reader.GetString("MembershipType");
+                        string city = reader.GetString("City");
+                        string phone = reader.GetString("TLF");
+                        string otherphone = reader.IsDBNull(reader.GetOrdinal("OtherTLF")) ? null : reader.GetString(reader.GetOrdinal("OtherTLF"));
+                        string postalcode = reader.GetString("PostalCode");
+                        string gender = reader.GetString("Gender");
+                        string address = reader.GetString("Address");
+                        int id = reader.GetInt32("Member_id");
+                        string email = reader.GetString("Email");
+                        string password = reader.GetString("Password");
+                        string username = reader.GetString("Username");
+                        bool isAdmin = reader.GetBoolean("IsAdmin");
+                        bool newsSubscriber = reader.GetBoolean("NewsSubscriber");
+                        string municipality = reader.GetString("Municipality");
+                        string consent = reader.GetString("PictureConsent");
+                        string filepath = reader.IsDBNull(reader.GetOrdinal("ProfileImagePath")) ? null : reader.GetString(reader.GetOrdinal("ProfileImagePath"));
+
+                        foundMember = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password, municipality, consent, member_id);
+                        foundMember.IsAdmin = isAdmin;
+                        foundMember.NewsSubscriber = newsSubscriber;
+                        foundMember.OtherPhone = otherphone;
+                        foundMember.ProfileImagePath = filepath;
+                     
+
+
+                    }
+                    reader.Close();
+
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error" + sqlExp.Message);
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Generel fejl: " + ex.Message);
+                    return null;
+                }
+       
+                return foundMember;
+            }
         }
     }
 }
