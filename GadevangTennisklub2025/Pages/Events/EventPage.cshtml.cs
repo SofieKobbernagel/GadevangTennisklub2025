@@ -8,11 +8,13 @@ namespace GadevangTennisklub2025.Pages.Events
     public class EventPageModel : PageModel
     {
         IEventServiceAsync eventServicesAsync { get; set; }
+        IRelationshipsServicesAsync relationshipsServicesAsync { get; set; }
         [BindProperty]
         public Event e { get; set; }
-        public EventPageModel(IEventServiceAsync IESA)
+        public EventPageModel(IEventServiceAsync IESA, IRelationshipsServicesAsync IRSA)
         {
             eventServicesAsync = IESA;
+            relationshipsServicesAsync = IRSA;
            
         }
         public async Task OnGetAsync(int EventId)
@@ -23,7 +25,17 @@ namespace GadevangTennisklub2025.Pages.Events
 
         public IActionResult OnPost()
         {
-            return Redirect("GetAllHotels");
+            try 
+            {
+                int t = Convert.ToInt32(HttpContext.Session.GetString("Member_Id"));
+                relationshipsServicesAsync.EventMemberRelation(e.Id, int.Parse(HttpContext.Session.GetString("Member_Id")));
+                return Redirect("ShowEvents");
+            }
+            catch (Exception ex) 
+            {
+                return null;
+            }
+           
         }
 
         public IActionResult OnPostSignUp()

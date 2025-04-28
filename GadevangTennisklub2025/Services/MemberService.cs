@@ -91,7 +91,7 @@ namespace GadevangTennisklub2025.Services
                         string postalcode = reader.GetString("PostalCode");
                         string gender = reader.GetString("Gender");
                         string address = reader.GetString("Address");
-                        int id = reader.GetInt32("Member_id");
+                        int id = reader.GetInt32("Member_Id");
                         string email = reader.GetString("Email");
                         string password = reader.GetString("Password");
                         string username = reader.GetString("Username");
