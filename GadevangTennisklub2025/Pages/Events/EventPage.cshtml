@@ -24,7 +24,13 @@
         <input asp-for="@Model.e.Description" class="form-control" readonly="true" />
     </div> *@
     @Model.e.Description
-    @if (Context.Session.GetString("Member_Id")!=null)
+    <br>
+
+    
+        
+
+    
+    @if (HttpContext.Session.GetString("Member_Id") != null)
     {
         <div class="formgroup">
             <input type="submit" value="make event" class="btn btn-primary" />

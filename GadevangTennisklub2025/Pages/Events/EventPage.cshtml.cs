@@ -25,5 +25,11 @@ namespace GadevangTennisklub2025.Pages.Events
         {
             return Redirect("GetAllHotels");
         }
+
+        public IActionResult OnPostSignUp()
+        {
+
+            return RedirectToPage("/Index");
+        }
     }
 }
