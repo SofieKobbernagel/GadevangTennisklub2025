@@ -45,6 +45,7 @@ namespace GadevangTennisklub2025.Services
                     command.Parameters.AddWithValue("@IsAdmin", member.IsAdmin);
                     command.Parameters.AddWithValue("@Municipality", member.Municipality);
                     command.Parameters.AddWithValue("@PictureConsent", member.PictureConsent);
+                    command.Parameters.AddWithValue("@ProfileImagePath", member.ProfileImagePath);
                     
                     await connection.OpenAsync();
                     int rowsAffected = await command.ExecuteNonQueryAsync();
@@ -98,14 +99,13 @@ namespace GadevangTennisklub2025.Services
                         bool newsSubscriber = reader.GetBoolean("NewsSubscriber");
                         string municipality = reader.GetString("Municipality");
                         string consent = reader.GetString("PictureConsent");
+                        string filepath = reader.IsDBNull(reader.GetOrdinal("ProfileImagePath")) ? null : reader.GetString(reader.GetOrdinal("ProfileImagePath"));
+
                         Member m = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password, municipality, consent);
                         m.IsAdmin = isAdmin;
                         m.NewsSubscriber = newsSubscriber;
                         m.OtherPhone = otherphone;
-
-
-
-
+                        m.ProfileImagePath = filepath;
 
                         members.Add(m);
                        
