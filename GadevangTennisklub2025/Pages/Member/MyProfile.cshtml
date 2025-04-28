@@ -76,7 +76,9 @@
     </div>
   
     <a class="btn btn-primary btn-sm" title="Edit"
-       asp-page="EditMember" asp-route-userId="@Model.Member.Member_Id">Rediger Profil</a>
+       asp-page="EditMember" asp-route-member_Id="@Model.Member.Member_Id">Rediger Profil</a>
+    <a class="btn btn-danger btn-sm " type="button" title="Delete"
+       asp-page="DeleteMember" asp-route-member_Id="@Model.Member.Member_Id">Slet profil</a>
 
 </form>
 

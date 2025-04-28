@@ -13,5 +13,7 @@ namespace GadevangTennisklub2025.Interfaces
        Task<Member> GetMemberById(int id);
 
        Task<bool> UpdateMemberAsync(Member member, int member_Id);
+
+       Task<Member> DeleteMemberAsync(int member_Id);
     }
 }

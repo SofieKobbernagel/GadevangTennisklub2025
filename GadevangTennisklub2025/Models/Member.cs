@@ -87,6 +87,7 @@ namespace GadevangTennisklub2025.Models
         [Display(Name = "Tilmeldt nyhedsbrev")]
         public bool NewsSubscriber { get; set; } = false;
 
+        [Display(Name = "Evt. Anden TLF (valgfri)")]
         public string? OtherPhone {  get; set; }
 
         [Display(Name = "Profilbillede")]
