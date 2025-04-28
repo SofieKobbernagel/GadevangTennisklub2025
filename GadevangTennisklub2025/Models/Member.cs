@@ -81,13 +81,15 @@ namespace GadevangTennisklub2025.Models
 
 
 
-        [Display(Name = "Is Admin")]
+        [Display(Name = "Er Admin")]
         public bool IsAdmin { get; set; }
 
+        [Display(Name = "Tilmeldt nyhedsbrev")]
         public bool NewsSubscriber { get; set; } = false;
 
-        public string? OtherPhone {  get; set; } 
-      
+        public string? OtherPhone {  get; set; }
+
+        [Display(Name = "Profilbillede")]
         public string? ProfileImagePath { get; set; }
 
 

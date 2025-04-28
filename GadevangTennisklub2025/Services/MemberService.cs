@@ -181,7 +181,7 @@ namespace GadevangTennisklub2025.Services
                         string consent = reader.GetString("PictureConsent");
                         string filepath = reader.IsDBNull(reader.GetOrdinal("ProfileImagePath")) ? null : reader.GetString(reader.GetOrdinal("ProfileImagePath"));
 
-                        foundMember = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password, municipality, consent);
+                        foundMember = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password, municipality, consent, member_id);
                         foundMember.IsAdmin = isAdmin;
                         foundMember.NewsSubscriber = newsSubscriber;
                         foundMember.OtherPhone = otherphone;
