@@ -19,6 +19,7 @@ namespace GadevangTennisklub2025.Services
             "VALUES (@Name, @Address, @Gender, @Email, @Postalcode, @TLF, @City, @MembershipType, " +
             "@Birthday, @OtherTLF, @NewsSubscriber, @Username, @Password, @IsAdmin, @Municipality, @PictureConsent, @ProfileImagePath)";
         private string getByIdSql = @"SELECT * FROM Members WHERE Member_Id = @Member_Id";
+        private string deleteSql = "DELETE FROM Members WHERE Member_Id = @Member_Id;";
 
         public async Task<bool> CreateMemberAsync(Member member)
         {
@@ -46,7 +47,7 @@ namespace GadevangTennisklub2025.Services
                     command.Parameters.AddWithValue("@IsAdmin", member.IsAdmin);
                     command.Parameters.AddWithValue("@Municipality", member.Municipality);
                     command.Parameters.AddWithValue("@PictureConsent", member.PictureConsent);
-                    command.Parameters.AddWithValue("@ProfileImagePath", member.ProfileImagePath);
+                    command.Parameters.AddWithValue("@ProfileImagePath", string.IsNullOrEmpty(member.ProfileImagePath) ? DBNull.Value : member.ProfileImagePath);
 
                     await connection.OpenAsync();
                     int rowsAffected = await command.ExecuteNonQueryAsync();
@@ -68,8 +69,6 @@ namespace GadevangTennisklub2025.Services
             }
             return isCreated;
         }
-
-
 
         public async Task<List<Member>> GetAllMembersAsync()
         {
@@ -127,9 +126,7 @@ namespace GadevangTennisklub2025.Services
             return members;
         }
 
-
-
-        public Task<bool> UpdateMemberAsync(Member member, int member_Id)
+        public async Task<bool> UpdateMemberAsync(Member member, int member_Id)
         {
             throw new NotImplementedException();
         }
@@ -181,7 +178,7 @@ namespace GadevangTennisklub2025.Services
                         string consent = reader.GetString("PictureConsent");
                         string filepath = reader.IsDBNull(reader.GetOrdinal("ProfileImagePath")) ? null : reader.GetString(reader.GetOrdinal("ProfileImagePath"));
 
-                        foundMember = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password, municipality, consent,id);
+                        foundMember = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password, municipality, consent, member_id);
                         foundMember.IsAdmin = isAdmin;
                         foundMember.NewsSubscriber = newsSubscriber;
                         foundMember.OtherPhone = otherphone;
@@ -205,6 +202,42 @@ namespace GadevangTennisklub2025.Services
                 }
        
                 return foundMember;
+            }
+        }
+
+        public async Task<Member> DeleteMemberAsync(int member_Id)
+        {
+            Member? deletedMember = await GetMemberById(member_Id);
+            if (deletedMember == null)
+            {
+                return null;
+            }
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(deleteSql, connection);
+                    command.Parameters.AddWithValue("@Member_Id", member_Id);
+                    await connection.OpenAsync();
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                    if (rowsAffected == 0)
+                        deletedMember = null;
+                }
+
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error: " + sqlExp.Message);
+                    deletedMember = null;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("General error: " + ex.Message);
+                    deletedMember = null;
+                }
+                return deletedMember;
             }
         }
     }

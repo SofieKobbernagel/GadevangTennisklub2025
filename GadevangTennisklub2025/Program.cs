@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddTransient<IMemberService, MemberService>();
+builder.Services.AddTransient<ICourtService, CourtService>();
 builder.Services.AddTransient<IEventServiceAsync, EventServicesAsync>();
 builder.Services.AddTransient<IRelationshipsServicesAsync, RelationshipsServicesAsync>();
 builder.Services.AddSession();    //Nyt
