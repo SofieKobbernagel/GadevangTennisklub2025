@@ -13,7 +13,7 @@ namespace GadevangTennisklub2025.Services
             {
                 try
                 {
-                    SqlCommand cmd = new SqlCommand("INSERT INTO Event VALUES (@ID,@Title, @Date,@DESCRIPTION);", con);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO Event VALUES (@Title, @Date,@DESCRIPTION);", con);
                     con.Open();
                     cmd.Parameters.AddWithValue("@ID", ev.Id);
                     cmd.Parameters.AddWithValue("@Title", ev.Title);
@@ -121,7 +121,7 @@ namespace GadevangTennisklub2025.Services
 
                 try
                 {
-                    SqlCommand com = new SqlCommand("UPDATE Event  Event_Id= @ID, Title= @Title,Date=@Date,DESCRIPTION=@Desc WHERE EVENT_Id=@ID;", con);
+                    SqlCommand com = new SqlCommand("UPDATE Event set Title= @Title,Date=@Date,DESCRIPTION=@Desc WHERE EVENT_Id=@ID;", con);
                     await com.Connection.OpenAsync();
                     com.Parameters.AddWithValue("@ID", ev.Id);
                     com.Parameters.AddWithValue("@Title",ev.Title);
