@@ -1,5 +1,6 @@
 ﻿using GadevangTennisklub2025.Interfaces;
 using GadevangTennisklub2025.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Net;
@@ -20,6 +21,7 @@ namespace GadevangTennisklub2025.Services
             "@Birthday, @OtherTLF, @NewsSubscriber, @Username, @Password, @IsAdmin, @Municipality, @PictureConsent, @ProfileImagePath)";
         private string getByIdSql = @"SELECT * FROM Members WHERE Member_Id = @Member_Id";
         private string deleteSql = "DELETE FROM Members WHERE Member_Id = @Member_Id;";
+        private string updateSql = @"Update Members Set Name = @Name,Address = @Address, Gender = @Gender, Email = @Email, PostalCode = @Postalcode, TLF= @TLF, City = @City, MembershipType = @MembershipType, Birthday = @Birthday, OtherTLF = @OtherTLF, NewsSubscriber = @NewsSubscriber, Username = @Username,Password = @Password, IsAdmin = @IsAdmin,Municipality =  @Municipality, PictureConsent = @PictureConsent, ProfileImagePath = @ProfileImagePath WHERE Member_Id = @Member_Id";
 
         public async Task<bool> CreateMemberAsync(Member member)
         {
@@ -128,7 +130,51 @@ namespace GadevangTennisklub2025.Services
 
         public async Task<bool> UpdateMemberAsync(Member member, int member_Id)
         {
-            throw new NotImplementedException();
+            bool isUpdated = false;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(updateSql, connection);
+                    command.Parameters.AddWithValue("@Member_Id", member.Member_Id);
+                    command.Parameters.AddWithValue("@Name", member.Name);
+                    command.Parameters.AddWithValue("@Address", member.Address);
+                    command.Parameters.AddWithValue("@Gender", member.Gender);
+                    command.Parameters.AddWithValue("@Email", member.Email);
+                    command.Parameters.AddWithValue("@PostalCode", member.PostalCode);
+                    command.Parameters.AddWithValue("@TLF", member.Phone);
+                    command.Parameters.AddWithValue("@City", member.City);
+                    command.Parameters.AddWithValue("@MembershipType", member.MemberType);
+                    command.Parameters.AddWithValue("@Birthday", member.Birthday);
+                    command.Parameters.AddWithValue("@OtherTLF", string.IsNullOrEmpty(member.OtherPhone) ? DBNull.Value : member.OtherPhone);
+                    command.Parameters.AddWithValue("@NewsSubscriber", member.NewsSubscriber);
+                    command.Parameters.AddWithValue("@Username", member.Username);
+                    command.Parameters.AddWithValue("@Password", member.Password);
+                    command.Parameters.AddWithValue("@IsAdmin", member.IsAdmin);
+                    command.Parameters.AddWithValue("@Municipality", member.Municipality);
+                    command.Parameters.AddWithValue("@PictureConsent", member.PictureConsent);
+                    command.Parameters.AddWithValue("@ProfileImagePath", string.IsNullOrEmpty(member.ProfileImagePath) ? DBNull.Value : member.ProfileImagePath);
+
+                    await connection.OpenAsync();
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    if (rowsAffected > 0)
+                    {
+                        isUpdated = true;
+                    }
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error: " + sqlExp.Message);
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("General error: " + ex.Message);
+                    return false;
+                }
+            }
+            return isUpdated;
         }
 
         public Member VerifyMember(string username, string password)
