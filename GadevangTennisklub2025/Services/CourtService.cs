@@ -185,5 +185,10 @@ namespace GadevangTennisklub2025.Services
             }
             return temp;
         }
+
+        public Task<bool> UpdateHotelAsync(TennisField tennisField)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

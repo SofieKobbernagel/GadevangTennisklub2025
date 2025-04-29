@@ -13,15 +13,14 @@
         <label asp-for="@Model.bo.Court_Id" class="control-label"></label>
         <input asp-for="@Model.bo.Court_Id" class="form-control" required="true" />
     </div>
-    <select asp-for="@Model.me.Member" name="number">
-        @foreach (var i in await Model.memberService.GetAllMembersAsync())
-        {
-            <option value="@i">@i.Name</option>
-        
-        }
-       
-       
-    </select>
+    <div class="form-group">
+        <label asp-for="@Model.me" class="control-label"></label>
+        <select asp-for="@Model.me" class="form-control"
+                asp-items="@Model.ints">
+        </select>
+        <span asp-validation-for="@Model.me" class="text-danger"></span>
+    </div>
+
    
     @if (bool.Parse(HttpContext.Session.GetString("IsAdmin")))
     {

@@ -4,6 +4,7 @@ using GadevangTennisklub2025.Models;
 using GadevangTennisklub2025.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GadevangTennisklub2025.Pages.Bookingpages
 {
@@ -15,22 +16,34 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
         [BindProperty]
         public Booking bo { get; set; }
 
-        public List<int> i=new List<int>();
+        public List<SelectListItem> ints { get; set; }
 
         [BindProperty]
-        public MemberPlaceHolder me { get; set; }
+        public string me { get; set; }
 
         public MakeBookingModel(IBookingServiceAsync IBSA, IMemberService IMS) 
         {
             bookingService = IBSA;
             memberService = IMS;
+            ints= new List<SelectListItem>();
         }
-        public void OnGet()
+        public async Task OnGet()
         {
+
+            foreach (var item in await memberService.GetAllMembersAsync()) 
+            {
+                ints.Add(new SelectListItem(item.Name, Convert.ToString(item.Member_Id)) );
+            }
+            ints.Add(new SelectListItem("boldMaskine", "0"));
         }
 
         public async Task<IActionResult> OnPost() 
         {
+            if (!me.Equals("0"))
+            {
+                await memberService.GetMemberById(int.Parse(me));
+            }
+            Console.WriteLine(bool.Parse(HttpContext.Session.GetString("IsAdmin")));
             if (!bool.Parse(HttpContext.Session.GetString("IsAdmin")))
             {
                 bo.End = bo.Start;

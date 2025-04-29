@@ -376,5 +376,10 @@ namespace GadevangTennisklub2025.Services
             }
             return isuniqe;
         }
+
+        public async Task SubtrackHour(int id) 
+        {
+            throw new NotImplementedException();
+        }
     }
 }
