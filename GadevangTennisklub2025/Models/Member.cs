@@ -88,7 +88,7 @@ namespace GadevangTennisklub2025.Models
         public bool NewsSubscriber { get; set; } = false;
 
         [Display(Name = "Evt. Anden TLF (valgfri)")]
-        public string? OtherPhone {  get; set; }
+        public string? OtherPhone { get; set; }
 
         [Display(Name = "Profilbillede")]
         public string? ProfileImagePath { get; set; }
@@ -96,7 +96,7 @@ namespace GadevangTennisklub2025.Models
 
         public Member()
         {
-            
+
         }
 
         public Member(string username, string name, DateOnly birthday, string membertype, string city, string phone, string postalcode, string gender, string address, string email, string password, string municipality, string consent, int memberId)
@@ -117,7 +117,7 @@ namespace GadevangTennisklub2025.Models
             PictureConsent = consent;
             Member_Id = memberId;
         }
+
        
-        
     }
 }

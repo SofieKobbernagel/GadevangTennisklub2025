@@ -1,5 +1,6 @@
 ﻿using GadevangTennisklub2025.Interfaces;
 using GadevangTennisklub2025.Models;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -285,6 +286,95 @@ namespace GadevangTennisklub2025.Services
                 }
                 return deletedMember;
             }
+        }
+
+        public async Task<(bool isValid, string? message)> ValidateMemberAsync(Member member)
+        {
+            if (!member.Email.Contains("@"))
+            {
+                
+                return (false, "Email skal indeholde @");
+            }
+            if (!(member.Email.EndsWith(".com") || member.Email.EndsWith(".dk")))
+            {
+
+                return (false, "Email skal slutte på .com or .dk.");
+            }
+
+            if (member.Name.Length > 50)
+            {
+                
+                return (false,"Dit davn må max fylde 50 karakterer.");
+            }
+
+            if (member.Birthday > DateOnly.FromDateTime(DateTime.Today) ||
+            member.Birthday < DateOnly.FromDateTime(DateTime.Today.AddYears(-120)))
+            {
+                return (false,"Fødselsdag skal være i dag eller højst 120 år tilbage.");
+            }
+            if (!member.Phone.All(char.IsDigit))
+            {
+                return (false, "Telefonnummer må kun indeholde tal.");
+            }
+
+            if (member.Phone.Length != 8)
+            {              
+                return (false,"Telefonnummer skal være 8 cifre langt.");
+            }
+            if (!member.PostalCode.All(char.IsDigit))
+            {           
+                return (false,"Postnummer må kun indeholde tal.");
+            }
+
+            if (member.PostalCode.Length != 4)
+            {         
+                return (false, "Postnummer skal være præcis 4 cifre.");
+            }
+            if (member.City.Length > 50)
+            {              
+                return (false,"Navnet på din by må ikke være længere end 50 karakterer.");
+            }
+
+            if (!member.City.All(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
+            {       
+                return (false, "Navnet på din by må kun indeholde bogstaver og mellemrum.");
+            }
+            if (member.Address.Length > 100)
+            {
+                return (false,"Adresse må ikke være længere end 100 karakterer.");
+            }
+
+            if (!member.Address.All(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c) || c == '.' || c == ',' || c == '-'))
+            {          
+                return (false,"Adresse må kun indeholde bogstaver, tal, mellemrum og tegnene '.', ',' eller '-'.");
+            }
+            if (member.Username.Length < 3 || member.Username.Length > 20)
+            {     
+                return (false, "Brugernavn skal være mellem 3 og 20 karakterer.");
+            }
+
+            if (!member.Username.All(c => char.IsLetterOrDigit(c) || c == '_' || c == '-'))
+            {
+               
+                return (false, "Brugernavn må kun indeholde bogstaver, tal, bindestreg (-) eller underscore (_).");
+            }
+            if (!await IsUsernameUnique(member.Username))
+            {           
+                return (false,"Brugernavnet er allerede taget.");
+            }
+            return (true,null);
+        }
+
+        public async Task<bool> IsUsernameUnique(string username)
+        {
+            bool isuniqe = true;
+            List<Member> members = await GetAllMembersAsync();
+            foreach (Member m in members)
+            {
+                if (m.Username == username)
+                    isuniqe= false;
+            }
+            return isuniqe;
         }
     }
 }

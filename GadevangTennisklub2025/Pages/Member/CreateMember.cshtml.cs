@@ -31,6 +31,12 @@ namespace GadevangTennisklub2025.Pages.Member
                     return Page();
                 }
 
+                if (!RegisterModel.Member.IsValid(out string validationMessage))
+                {
+                    ModelState.AddModelError(string.Empty, validationMessage);
+                    return Page();
+                }
+
                 if (ProfileImage != null && ProfileImage.Length > 0)
                 {
                     // Generate a unique filename (so people don't overwrite each other’s pictures)
