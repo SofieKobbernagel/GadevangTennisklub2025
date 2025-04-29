@@ -151,7 +151,7 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        public async Task<bool> UpdateHotelAsync(TennisField tennisField)
+        public async Task<bool> UpdateCourtAsync(TennisField tennisField)
         {
             bool temp = false;
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -161,7 +161,8 @@ namespace GadevangTennisklub2025.Services
                     SqlCommand command = new SqlCommand(updateSql, connection);
                     command.Parameters.AddWithValue("@ID", tennisField.CourtId);
                     command.Parameters.AddWithValue("@Type", tennisField.Type);
-                    command.Connection.Open();
+                    
+                    await command.Connection.OpenAsync();
                     SqlDataReader reader = await command.ExecuteReaderAsync();
                     await reader.ReadAsync();
                     reader.Close();
