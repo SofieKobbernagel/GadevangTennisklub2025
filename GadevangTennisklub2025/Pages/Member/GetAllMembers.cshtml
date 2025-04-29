@@ -7,7 +7,7 @@
 <table class="table table-bordered table-hover table-striped">
     <thead>
         <tr>
-            <th>Billede</th>
+            <th>Profilbillede</th>
             <th>Navn</th>
             <th>Alder</th>
             <th>Email</th>
@@ -21,13 +21,21 @@
             foreach (var m in Model.Members)
             {
                 <tr>
-                    <td>
-                        <a class="" type="button" title="Picture"
-                           asp-page="GetMember" asp-route-userId="@m.Member_Id">@m.ProfileImagePath</a>
+                    <td class="form-group">
+                    
+                        @if (!string.IsNullOrEmpty(m.ProfileImagePath))
+                        {
+                            <img src="@m.ProfileImagePath" width="150" height="150" />
+                        }
+                        else
+                        {
+                            <p>Intet profilbillede.</p>
+                        }
+
                     </td>
                     <td>
                         <a class="" type="button" title="More"
-                           asp-page="GetMember" asp-route-userId="@m.Member_Id">@m.Name</a>
+                           asp-page="GetMember" asp-route-member_Id="@m.Member_Id">@m.Name</a>
                     </td>
                     <td>
                         @m.Age
