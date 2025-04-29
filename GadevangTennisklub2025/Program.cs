@@ -9,6 +9,7 @@ builder.Services.AddTransient<IMemberService, MemberService>();
 builder.Services.AddTransient<ICourtService, CourtService>();
 builder.Services.AddTransient<IEventServiceAsync, EventServicesAsync>();
 builder.Services.AddTransient<IRelationshipsServicesAsync, RelationshipsServicesAsync>();
+builder.Services.AddTransient<IBookingServiceAsync, BookingServiceAsync>();
 builder.Services.AddSession();    //Nyt
 builder.Services.AddHttpContextAccessor();//Nyt
 
