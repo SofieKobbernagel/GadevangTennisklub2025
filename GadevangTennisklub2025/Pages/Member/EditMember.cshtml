@@ -2,3 +2,172 @@
 @model GadevangTennisklub2025.Pages.Member.EditMemberModel
 @{
 }
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="MemberObject.Member_Id" />
+
+
+    <div class="form-group">
+        <label asp-for="@Model.MemberObject.Name" class="control-label"></label>
+        <input asp-for="@Model.MemberObject.Name" class="form-control" />
+        <span asp-validation-for="MemberObject.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.MemberObject.Address" class="control-label"></label>
+        <input asp-for="@Model.MemberObject.Address" class="form-control" />
+        <span asp-validation-for="MemberObject.Address" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.MemberObject.PostalCode" class="control-label"></label>
+        <input asp-for="@Model.MemberObject.PostalCode" class="form-control" />
+        <span asp-validation-for="MemberObject.PostalCode" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.MemberObject.City" class="control-label"></label>
+        <input asp-for="@Model.MemberObject.City" class="form-control" />
+        <span asp-validation-for="MemberObject.City" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.MemberObject.Municipality" class="control-label"></label>
+        <input asp-for="@Model.MemberObject.Municipality" class="form-control" />
+        <span asp-validation-for="MemberObject.Municipality" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.MemberObject.Phone" class="control-label"></label>
+        <input asp-for="@Model.MemberObject.Phone" class="form-control" />
+        <span asp-validation-for="MemberObject.Phone" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.MemberObject.OtherPhone" class="control-label"></label>
+        <input asp-for="@Model.MemberObject.OtherPhone" class="form-control" />
+        <span asp-validation-for="MemberObject.OtherPhone" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.MemberObject.Birthday" class="control-label"></label>
+        <input asp-for="@Model.MemberObject.Birthday" class="form-control" />
+        <span asp-validation-for="MemberObject.Birthday" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Køn</label>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" asp-for="MemberObject.Gender" value="Kvinde" id="genderKvinde" />
+            <label class="form-check-label" for="genderKvinde">Kvinde</label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" asp-for="MemberObject.Gender" value="Mand" id="genderMand" />
+            <label class="form-check-label" for="genderMand">Mand</label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" asp-for="MemberObject.Gender" value="Andet" id="genderAndet" />
+            <label class="form-check-label" for="genderAndet">Andet</label>
+        </div>
+
+        <span asp-validation-for="MemberObject.Gender" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.MemberObject.Email" class="control-label"></label>
+        <input asp-for="@Model.MemberObject.Email" class="form-control" />
+        <span asp-validation-for="MemberObject.Email" class="text-danger"></span>
+    </div>
+    <div class="form-group form-check">
+        <input asp-for="MemberObject.NewsSubscriber" class="form-check-input" type="checkbox" />
+        <label asp-for="MemberObject.NewsSubscriber" class="form-check-label">Tilmeld nyhedsbrev</label>
+        <span asp-validation-for="MemberObject.NewsSubscriber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.MemberObject.Username" class="control-label"></label>
+        <input asp-for="@Model.MemberObject.Username" class="form-control" />
+        <span asp-validation-for="MemberObject.Username" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.MemberObject.Password" class="control-label"></label>
+        <input asp-for="@Model.MemberObject.Password" class="form-control" autocomplete="off" />
+        <span asp-validation-for="MemberObject.Password" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="ProfileImage">Upload profilbillede (Valgfrit)</label>
+        <input type="file" class="form-control" name="ProfileImage" id="ProfileImage" />
+    </div>
+    <h4>Vælg medlemskabstype</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Vælg</th>
+                <th>Kategori</th>
+                <th>Kontingent</th>
+                <th>Rettigheder</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input type="radio" asp-for="MemberObject.MemberType" value="Seniorer" />
+                </td>
+                <td>Seniorer</td>
+                <td>Kr. 700,-</td>
+                <td>Ret til banebooking, træningsdeltagelse samt mulighed for tilmelding til klubbens øvrige arrangementer.</td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="radio" asp-for="MemberObject.MemberType" value="Ung-Seniorer (18-25 år)" />
+                </td>
+                <td>Ung-Seniorer (18-25 år)</td>
+                <td>Kr. 450,-</td>
+                <td>Ret til banebooking, træningsdeltagelse samt mulighed for tilmelding til klubbens øvrige arrangementer.</td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="radio" asp-for="MemberObject.MemberType" value="Juniorer (op til 18 år)" />
+                </td>
+                <td>Juniorer (op til 18 år)</td>
+                <td>Kr. 300,-</td>
+                <td>Ret til banebooking, træningsdeltagelse samt mulighed for tilmelding til klubbens øvrige arrangementer.</td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="radio" asp-for="MemberObject.MemberType" value="Familiemedlemskab
+(Familie med samme adresse)" />
+                </td>
+                <td>Familiemedlemskab<br /><small>(Familie med samme adresse)</small></td>
+                <td>Kr. 1.500,-</td>
+                <td>Ret til banebooking, træningsdeltagelse samt mulighed for tilmelding til klubbens øvrige arrangementer.</td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="radio" asp-for="MemberObject.MemberType" value="Passivt medlemskab" />
+                </td>
+                <td>Passivt medlemskab</td>
+                <td>Kr. 100,-</td>
+                <td>Du kan komme til arrangementer såsom tennisfest til medlemspris</td>
+            </tr>
+        </tbody>
+    </table>
+    <span asp-validation-for="MemberObject.MemberType" class="text-danger"></span>
+
+    @{
+        var pictureConsentOptions = new List<SelectListItem>
+    {
+    new SelectListItem { Value = "Ja til alle billeder", Text = "Ja til alle billeder" },
+    new SelectListItem { Value = "Ja til fokusbillede, nej til portrætbillede", Text = "Ja til fokusbillede, nej til portrætbillede" },
+    new SelectListItem { Value = "Nej til fokusbillede og portrætbillede", Text = "Nej til fokusbillede og portrætbillede" }
+    };
+    }
+    <div class="form-group">
+        <label asp-for="MemberObject.PictureConsent" class="control-label"></label>
+        <select asp-for="MemberObject.PictureConsent" class="form-control"
+                asp-items="pictureConsentOptions">
+        </select>
+        <span asp-validation-for="MemberObject.PictureConsent" class="text-danger"></span>
+    </div>
+
+    <p>
+        <div class="form-group">
+            <input type="submit" value="Opdater bruger" class="btn btn-primary" />
+        </div>
+    </p>
+
+</form>

@@ -10,7 +10,7 @@ namespace GadevangTennisklub2025.Interfaces
 
         Task<bool> CreateCourtAsync(TennisField tennisField);
 
-        Task<bool> UpdateHotelAsync(TennisField tennisField);
+        Task<bool> UpdateCourtAsync(TennisField tennisField);
 
         Task<TennisField> DeleteCourtAsync(int courtId);
     }
