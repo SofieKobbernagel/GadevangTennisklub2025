@@ -12,6 +12,8 @@ builder.Services.AddTransient<IRelationshipsServicesAsync, RelationshipsServices
 builder.Services.AddTransient<IBookingServiceAsync, BookingServiceAsync>();
 builder.Services.AddSession();    //Nyt
 builder.Services.AddHttpContextAccessor();//Nyt
+builder.Services.AddScoped<IMembershipService, MembershipService>();
+
 
 
 var app = builder.Build();
