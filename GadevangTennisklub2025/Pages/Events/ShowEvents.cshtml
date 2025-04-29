@@ -9,9 +9,13 @@
 
 
 <h5>Number Of Events Is: @Model.EventList.Count;</h5>
-<a asp-page="CreateEvent">make an Event</a>
+@if (HttpContext.Session.GetString("IsAdmin") != null && bool.Parse(HttpContext.Session.GetString("IsAdmin")))
+{
+    <a asp-page="CreateEvent">make an Event</a>
+}
 
-<p> for month @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.month)</p>
+
+<p> Events i @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.month) måned</p>
 
 
 

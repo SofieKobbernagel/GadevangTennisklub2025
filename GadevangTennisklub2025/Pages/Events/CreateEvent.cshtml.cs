@@ -21,10 +21,17 @@ namespace GadevangTennisklub2025.Pages.Events
 
         public async Task<IActionResult> OnPost()
         {
-            try
-            {
-                await EventServicesAsync.CreateEventAsync(ev);
-                return Redirect("ShowEvents");
+            try { 
+
+
+                if (EventServicesAsync.GetEventsAsync().Result.Find(i => i.Date.Date == ev.Date.Date) == null) 
+                {
+                    await EventServicesAsync.CreateEventAsync(ev);
+                    return Redirect("ShowEvents");
+                }
+            ViewData["ErrorMessage"] = "Dato optaget";
+            return null;
+               
             }
 
             catch (Exception ex)
