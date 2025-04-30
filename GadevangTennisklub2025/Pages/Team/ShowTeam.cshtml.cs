@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using GadevangTennisklub2025.Models;
+using GadevangTennisklub2025.Interfaces;
 
 
 
@@ -11,21 +12,21 @@ namespace GadevangTennisklub2025.Pages.Team
         // This page should show the list of all the courses
         // Show the Courses title, description, and the number of places left in that course   maxNumOfAttendees - Attendees.Count
         #region Instance Fields
-       // private TeamRepository _TeamRepo;
+       private ITeamService _TeamRepo;
 
         #endregion
 
         #region Properties
-        public List<Team> ListOfTeams { get; private set; }
-        public Team team { get; set; }
+        public List<Models.Team> ListOfTeams { get; private set; }
+        
 
         #endregion
 
         #region Constructors
-        public ShowTeamModel(/*TeamRepository teamRepository*/)
+        public ShowTeamModel(List<Models.Team> teamList)
         {
-            //_TeamRepo = teamRepository;
-            //ListOfTeams = _TeamRepo.GetAll();
+            _TeamRepo = teamList;
+            ListOfTeams = _TeamRepo.GetAllTeamsAsync;
         }
 
         #endregion
