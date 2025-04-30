@@ -12,7 +12,8 @@ namespace GadevangTennisklub2025.Pages.Team
         // This page should show the list of all the courses
         // Show the Courses title, description, and the number of places left in that course   maxNumOfAttendees - Attendees.Count
         #region Instance Fields
-       private ITeamService _TeamRepo;
+       private ITeamService _teamService;
+        
 
         #endregion
 
@@ -23,10 +24,14 @@ namespace GadevangTennisklub2025.Pages.Team
         #endregion
 
         #region Constructors
-        public ShowTeamModel(List<Models.Team> teamList)
+        /*public ShowTeamModel(List<Models.Team> teamList)
         {
             _TeamRepo = teamList;
             ListOfTeams = _TeamRepo.GetAllTeamsAsync;
+        }*/
+        public ShowTeamModel(ITeamService teamService)
+        {
+            _teamService = teamService;
         }
 
         #endregion

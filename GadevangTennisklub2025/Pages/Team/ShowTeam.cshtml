@@ -21,8 +21,10 @@
         <tr>
             <th>Titel</th>
             <th>pladser tilbage</th>
-            <th>Kort Beskrivelse</th>
-            <th>hold lavet af</th>
+            <th>Medlemskabstype</th>
+            <th>Beskrivelse</th>
+            <th>Dag</th>
+            <th>Tidsrum</th>
         </tr>
     </thead>
     <tbody>
@@ -32,7 +34,10 @@
             <tr>
                 <td>@item.Name</td>
                 <td>@(item.AttendeeRange[1] - item.Attendees.Count)</td>
-                <td>@item.Master.Name</td>
+                <td>@item.MembershipType</td>
+                <td>@item.Description</td>
+                <td>@item.DayOfWeek</td>
+                <td>@item.TimeOfDay - @(item.TimeOfDay.Add(TimeSpan.FromHours(item.Length)))</td>
 
                 <td>
 
