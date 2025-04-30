@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GadevangTennisklub2025.Models.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace GadevangTennisklub2025.Models
 {
@@ -7,6 +8,7 @@ namespace GadevangTennisklub2025.Models
        
         [Display(Name = "Fødselsdag")]
         [Required(ErrorMessage = "Du skal angive din fødselsdag")]
+        [ValidBirthday]
         public DateOnly Birthday { get; set; }
 
         public int Age
