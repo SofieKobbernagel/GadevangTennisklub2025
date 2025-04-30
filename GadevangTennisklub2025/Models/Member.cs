@@ -4,7 +4,7 @@ namespace GadevangTennisklub2025.Models
 {
     public class Member
     {
-
+       
         [Display(Name = "Fødselsdag")]
         [Required(ErrorMessage = "Du skal angive din fødselsdag")]
         public DateOnly Birthday { get; set; }
@@ -36,10 +36,12 @@ namespace GadevangTennisklub2025.Models
 
         [Display(Name = "Tlf")]
         [Required(ErrorMessage = "Du skal angive et telefonnummer")]
+        [RegularExpression(@"^\d{8}$", ErrorMessage = "Telefonnummer skal være præcis 8 cifre og kun tal.")]
         public string Phone { get; set; }
 
         [Display(Name = "Postnummer")]
         [Required(ErrorMessage = "Du skal angive et postnummer")]
+        [RegularExpression(@"^\d{4}$", ErrorMessage = "Postnummer skal være præcis 4 cifre.")]
         public string PostalCode { get; set; }
 
         [Display(Name = "Køn")]
@@ -63,12 +65,15 @@ namespace GadevangTennisklub2025.Models
 
         [Display(Name = "Email")]
         [Required(ErrorMessage = "Der skal gives en email")]
+        [RegularExpression(@".+@.+\.(com|dk)", ErrorMessage = "Email skal slutte på .com eller .dk.")]
         public string Email { get; set; }
 
         public int BookingsLeft { get; set; }
 
         [Display(Name = "brugernavn")]
         [Required(ErrorMessage = "Du skal angive et brugernavn")]
+        [StringLength(20, MinimumLength = 3, ErrorMessage = "Brugernavn skal være mellem 3 og 20 karakterer.")]
+        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "Brugernavn må kun indeholde bogstaver, tal, - eller _.")]
         public string Username { get; set; }
 
         [Display(Name = "Samtykke til offentliggørelse af billeder")]
@@ -88,6 +93,7 @@ namespace GadevangTennisklub2025.Models
         public bool NewsSubscriber { get; set; } = false;
 
         [Display(Name = "Evt. Anden TLF (valgfri)")]
+        [RegularExpression(@"^\d{8}$", ErrorMessage = "Telefonnummer skal være præcis 8 cifre og kun tal.")]
         public string? OtherPhone { get; set; }
 
         [Display(Name = "Profilbillede")]
@@ -117,7 +123,5 @@ namespace GadevangTennisklub2025.Models
             PictureConsent = consent;
             Member_Id = memberId;
         }
-
-       
     }
 }

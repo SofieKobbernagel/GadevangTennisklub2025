@@ -41,12 +41,6 @@ namespace GadevangTennisklub2025.Pages.Member
                     return Page();
                 }
 
-                var (isValid, message) = await _memberService.ValidateMemberAsync(RegisterModel.Member);
-                if (!isValid)
-                {
-                    ModelState.AddModelError(string.Empty, message ?? "Ugyldige brugeroplysninger.");
-                    return Page();
-                }
 
                 if (ProfileImage != null && ProfileImage.Length > 0)
                 {
