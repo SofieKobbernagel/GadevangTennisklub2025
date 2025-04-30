@@ -19,6 +19,6 @@ namespace GadevangTennisklub2025.Interfaces
         Task<bool> IsUsernameUnique(string username);
 
         Task SubtrackHour(int id);
-        Task<(bool isValid, string message)> ValidateMemberAsync(Member member);
+     
     }
 }
