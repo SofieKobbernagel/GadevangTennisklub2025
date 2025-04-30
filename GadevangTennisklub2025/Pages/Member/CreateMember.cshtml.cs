@@ -38,6 +38,7 @@ namespace GadevangTennisklub2025.Pages.Member
             {
                 if (!ModelState.IsValid)
                 {
+                    Memberships = await _membershipService.GetAllMembershipsAsync();
                     return Page();
                 }
 
