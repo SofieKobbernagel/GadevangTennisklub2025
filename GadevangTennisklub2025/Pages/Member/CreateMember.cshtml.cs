@@ -1,4 +1,5 @@
 using GadevangTennisklub2025.Interfaces;
+using GadevangTennisklub2025.Models;
 using GadevangTennisklub2025.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,30 +9,39 @@ namespace GadevangTennisklub2025.Pages.Member
     public class CreateMemberModel : PageModel
     {
         private IMemberService _memberService;
+        private readonly IMembershipService _membershipService;
 
+        [BindProperty]
+        public List<Membership> Memberships { get; set; } = new();
         [BindProperty]
         public RegisterMemberViewModel RegisterModel { get; set; }
 
         [BindProperty]
         public IFormFile? ProfileImage { get; set; }
 
-        public CreateMemberModel(IMemberService memberService)
+        public CreateMemberModel(IMemberService memberService, IMembershipService membershipService)
         {
             _memberService = memberService;
+            _membershipService = membershipService;
         }
 
 
-     
+        public async Task<IActionResult> OnGetAsync()
+        {
+            Memberships = await _membershipService.GetAllMembershipsAsync();
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
+                    Memberships = await _membershipService.GetAllMembershipsAsync();
                     return Page();
                 }
 
-               
 
                 if (ProfileImage != null && ProfileImage.Length > 0)
                 {

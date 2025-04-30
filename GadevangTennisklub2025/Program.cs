@@ -10,8 +10,11 @@ builder.Services.AddTransient<ICourtService, CourtService>();
 builder.Services.AddTransient<IEventServiceAsync, EventServicesAsync>();
 builder.Services.AddTransient<IRelationshipsServicesAsync, RelationshipsServicesAsync>();
 builder.Services.AddTransient<IBookingServiceAsync, BookingServiceAsync>();
+builder.Services.AddTransient<ITeamService, TeamService>();
 builder.Services.AddSession();    //Nyt
 builder.Services.AddHttpContextAccessor();//Nyt
+builder.Services.AddScoped<IMembershipService, MembershipService>();
+
 
 
 var app = builder.Build();

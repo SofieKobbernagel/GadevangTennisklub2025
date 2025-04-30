@@ -2,6 +2,7 @@
 @model GadevangTennisklub2025.Pages.Member.CreateMemberModel
 @{
 }
+
 <form method="post" enctype="multipart/form-data">
 
     <div class="form-group">
@@ -40,10 +41,11 @@
         <span asp-validation-for="RegisterModel.Member.OtherPhone" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="@Model.RegisterModel.Member.Birthday" class="control-label"></label>
-        <input asp-for="@Model.RegisterModel.Member.Birthday" class="form-control" />
+        <label asp-for="RegisterModel.Member.Birthday" class="control-label"></label>
+        <input asp-for="RegisterModel.Member.Birthday" class="form-control" type="date" />
         <span asp-validation-for="RegisterModel.Member.Birthday" class="text-danger"></span>
     </div>
+
 
     <div class="form-group">
         <label class="control-label">Køn</label>
@@ -101,47 +103,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>
-                    <input type="radio" asp-for="RegisterModel.Member.MemberType" value="Seniorer" />
-                </td>
-                <td>Seniorer</td>
-                <td>Kr. 700,-</td>
-                <td>Ret til banebooking, træningsdeltagelse samt mulighed for tilmelding til klubbens øvrige arrangementer.</td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="radio" asp-for="RegisterModel.Member.MemberType" value="Ung-Seniorer (18-25 år)" />
-                </td>
-                <td>Ung-Seniorer (18-25 år)</td>
-                <td>Kr. 450,-</td>
-                <td>Ret til banebooking, træningsdeltagelse samt mulighed for tilmelding til klubbens øvrige arrangementer.</td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="radio" asp-for="RegisterModel.Member.MemberType" value="Juniorer (op til 18 år)" />
-                </td>
-                <td>Juniorer (op til 18 år)</td>
-                <td>Kr. 300,-</td>
-                <td>Ret til banebooking, træningsdeltagelse samt mulighed for tilmelding til klubbens øvrige arrangementer.</td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="radio" asp-for="RegisterModel.Member.MemberType" value="Familiemedlemskab
-(Familie med samme adresse)" />
-                </td>
-                <td>Familiemedlemskab<br /><small>(Familie med samme adresse)</small></td>
-                <td>Kr. 1.500,-</td>
-                <td>Ret til banebooking, træningsdeltagelse samt mulighed for tilmelding til klubbens øvrige arrangementer.</td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="radio" asp-for="RegisterModel.Member.MemberType" value="Passivt medlemskab" />
-                </td>
-                <td>Passivt medlemskab</td>
-                <td>Kr. 100,-</td>
-                <td>Du kan komme til arrangementer såsom tennisfest til medlemspris</td>
-            </tr>
+            @foreach (var membership in Model.Memberships)
+            {
+                <tr>
+                    <td>
+                        <input type="radio" asp-for="RegisterModel.Member.MemberType" value="@membership.MembershipType" />
+                    </td>
+                    <td>@membership.MembershipType</td>
+                    <td>Kr. @membership.Price,-</td>
+                    <td>@membership.Rights</td>
+                </tr>
+            }
         </tbody>
     </table>
     <span asp-validation-for="RegisterModel.Member.MemberType" class="text-danger"></span>
