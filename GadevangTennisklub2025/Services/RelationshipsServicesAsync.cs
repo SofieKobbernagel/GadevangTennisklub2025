@@ -1,5 +1,7 @@
 ﻿using GadevangTennisklub2025.Interfaces;
+using GadevangTennisklub2025.Models;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace GadevangTennisklub2025.Services
 {
@@ -32,6 +34,100 @@ namespace GadevangTennisklub2025.Services
                 }
 
             }
+        }
+
+        public async Task<bool> MemberAvailible(int memberID, DateTime start, DateTime end)
+        {
+            List<Booking> BookingList = new List<Booking>();
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("select * from Booking where Booking_Id=(select Booking_Id from RelMemberBooking where Member_Id=@Id)", con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Id", memberID);
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                    Thread.Sleep(1000);
+                    while (await reader.ReadAsync())
+                    {
+                        int BookingNr = reader.GetInt32("Booking_ID");
+                        DateTime Start= reader.GetDateTime("Start");
+                        DateTime End = reader.GetDateTime("End");
+                        int CourtId = reader.GetInt32("Court_Id");
+                        int TeamId = reader.GetInt32("Team_Id");
+                        int EventId = reader.GetInt32("Court_Id");
+                       
+                        Booking ev = new Booking(BookingNr, Start, End, CourtId, TeamId, EventId);
+                        BookingList.Add(ev);
+                    }
+                    reader.Close();
+                   
+                    con.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+            }
+            if(BookingList.Exists(i=>start >i.Start&& end <=start || start<end)) return false;
+            return true;
+
+        }
+
+        public async Task<bool> CourtAvailible(int CourtID, DateTime start, DateTime end)
+        {
+            List<Booking> BookingList = new List<Booking>();
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("select * from Booking where Court_Id=@ID ", con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Id", CourtID);
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                    Thread.Sleep(1000);
+                    while (await reader.ReadAsync())
+                    {
+                        int BookingNr = reader.GetInt32("Booking_ID");
+                        DateTime Start = reader.GetDateTime("Start");
+                        DateTime End = reader.GetDateTime("End");
+                        int CourtId = reader.GetInt32("Court_Id");
+                        int? TeamId = null;
+                        int? EventId = null;
+
+                        Booking ev = new Booking(BookingNr, Start, End, CourtId, TeamId, EventId);
+                        BookingList.Add(ev);
+                    }
+                    reader.Close();
+
+                    con.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+            }
+            if (BookingList.Exists(i => start > i.Start && end <= start || start < end)) return false;
+            return true;
+
         }
     }
 }

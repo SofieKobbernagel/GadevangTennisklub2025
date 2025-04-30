@@ -379,7 +379,7 @@ namespace GadevangTennisklub2025.Services
 
         public async Task SubtrackHour(int id) 
         {
-            throw new NotImplementedException();
+            return;
         }
     }
 }
