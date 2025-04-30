@@ -1,4 +1,5 @@
 using GadevangTennisklub2025.Interfaces;
+using GadevangTennisklub2025.Models;
 using GadevangTennisklub2025.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,24 +9,61 @@ namespace GadevangTennisklub2025.Pages.Member
     public class CreateMemberModel : PageModel
     {
         private IMemberService _memberService;
+        private readonly IMembershipService _membershipService;
 
+        [BindProperty]
+        public List<Membership> Memberships { get; set; } = new();
         [BindProperty]
         public RegisterMemberViewModel RegisterModel { get; set; }
 
-        public CreateMemberModel(IMemberService memberService)
+        [BindProperty]
+        public IFormFile? ProfileImage { get; set; }
+
+        public CreateMemberModel(IMemberService memberService, IMembershipService membershipService)
         {
             _memberService = memberService;
+            _membershipService = membershipService;
         }
 
 
-     
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnGetAsync()
+        {
+            Memberships = await _membershipService.GetAllMembershipsAsync();
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
                     return Page();
+                }
+
+                var (isValid, message) = await _memberService.ValidateMemberAsync(RegisterModel.Member);
+                if (!isValid)
+                {
+                    ModelState.AddModelError(string.Empty, message ?? "Ugyldige brugeroplysninger.");
+                    return Page();
+                }
+
+                if (ProfileImage != null && ProfileImage.Length > 0)
+                {
+                    // Generate a unique filename (so people don't overwrite each other’s pictures)
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfileImage.FileName);
+
+                    // Build the path to /images/ProfilePictures/
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/ProfilePictures", fileName);
+
+                    // Save the file to the server
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ProfileImage.CopyToAsync(stream);
+                    }
+
+                    // Save the relative path to the database
+                    RegisterModel.Member.ProfileImagePath = "/images/ProfilePictures/" + fileName;
                 }
 
                 bool success = await _memberService.CreateMemberAsync(RegisterModel.Member);

@@ -1,0 +1,30 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.TennisField.ShowCourtsModel
+@{
+    ViewData["Title"] = "ShowCourts";
+}
+<h1>Baner:</h1>
+<a asp-page="/TennisField/CreateCourt">Opret Bane</a>
+
+<p>Antal oprettede baner: @Model.Courts.Count</p>
+<table style="width:85%" class="table">
+    <thead style="background-color:lightskyblue;border-radius:60px">
+        <tr>
+            <td>Bane ID</td>
+            <td>Type</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Models.TennisField courts in Model.Courts)
+        {
+            <tr>
+                <td>@courts.CourtId</td>
+                <td>@courts.Type</td>
+                <td style ="background-color:lightgray;text-align:center"><a asp-page="EditCourt" asp-route-Id="@courts.CourtId">Rediger</a></td>
+                <td style="background-color:lightgray;text-align:center"><a asp-page="DeleteCourt" asp-route-deleteId="@courts.CourtId">Slet</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

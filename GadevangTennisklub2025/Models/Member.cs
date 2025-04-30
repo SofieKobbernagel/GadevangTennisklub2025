@@ -81,22 +81,25 @@ namespace GadevangTennisklub2025.Models
 
 
 
-        [Display(Name = "Is Admin")]
+        [Display(Name = "Er Admin")]
         public bool IsAdmin { get; set; }
 
+        [Display(Name = "Tilmeldt nyhedsbrev")]
         public bool NewsSubscriber { get; set; } = false;
 
-        public string? OtherPhone {  get; set; } 
-      
+        [Display(Name = "Evt. Anden TLF (valgfri)")]
+        public string? OtherPhone { get; set; }
+
+        [Display(Name = "Profilbillede")]
         public string? ProfileImagePath { get; set; }
 
 
         public Member()
         {
-            
+
         }
 
-        public Member(string username, string name, DateOnly birthday, string membertype, string city, string phone, string postalcode, string gender, string address, string email, string password, string municipality, string consent)
+        public Member(string username, string name, DateOnly birthday, string membertype, string city, string phone, string postalcode, string gender, string address, string email, string password, string municipality, string consent, int memberId)
         {
             IsAdmin = false;
             Name = name;
@@ -112,8 +115,9 @@ namespace GadevangTennisklub2025.Models
             Username = username;
             Municipality = municipality;
             PictureConsent = consent;
+            Member_Id = memberId;
         }
+
        
-        
     }
 }

@@ -1,0 +1,30 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.TennisField.DeleteCourtModel
+@{
+    ViewData["Title"] = "Slet Bane";
+}
+<h1>Slet Bane</h1>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="@Model.Court.CourtId" class="control-label"></label>
+                <input asp-for="@Model.Court.CourtId" readonly class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Court.Type" class="control-label"></label>
+                <input asp-for="@Model.Court.Type" readonly class="form-control" />
+            </div>
+            <span class="text-danger">@Model.MessageError</span>
+            <div class="form-group">
+                <input asp-for="@Model.Confirm" type="checkbox" id="Confirm" /> Bekræft, at du ønsker at slette denne bane
+            </div>
+            <div class="formgroup">
+                <input type="submit" value="Delete" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div>
+        <a asp-page="ShowCourts">Tilbage til listen</a>
+    </div>
+</div>

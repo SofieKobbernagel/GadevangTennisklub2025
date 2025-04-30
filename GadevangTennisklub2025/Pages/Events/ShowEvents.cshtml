@@ -1,0 +1,212 @@
+﻿@page
+@using System.Globalization
+@using Models
+@model GadevangTennisklub2025.Pages.Events.ShowEventsModel
+@{
+    ViewData["Title"] = "ShowEvents";
+}
+<h4>List Of Events</h4>
+
+
+<h5>Number Of Events Is: @Model.EventList.Count;</h5>
+@if (HttpContext.Session.GetString("IsAdmin") != null && bool.Parse(HttpContext.Session.GetString("IsAdmin")))
+{
+    <a asp-page="CreateEvent">make an Event</a>
+}
+
+
+<p> Events i @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.month) måned</p>
+
+
+
+<form method="post">
+    <Input type="submit" value="Last Month" class="btn btn-primary" asp-page-handler="Backwards" />
+    <Input type="submit" value="Next Month" class="btn btn-primary" asp-page-handler="Forward" />
+</form>
+
+<svg width="100%" height="500" x>
+    @{
+        double Width = 100.0 / 7;
+        double Height = 100.0 / 7;
+        int date = 0;
+        for (int i = 0; i < 7; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+
+                Console.WriteLine(i + " " + j);
+
+                <rect x="@(j*Width)%" y="@(i*Height)%" rx="0" width="@Width%" height="@Height%" stroke="black"
+                fill="none" />
+                if (i == 0)
+                {
+                    <foreignObject x="@(j*Width+Width/9)%" y="0" width="@Width%" height="160">
+                        @{
+                            switch (j)
+                            {
+                                case 0:
+                                    <p>@DayOfWeek.Monday</p>
+                                    break;
+                                case 1:
+                                    <p>@DayOfWeek.Tuesday</p>
+                                    break;
+                                case 2:
+                                    <p>@DayOfWeek.Wednesday</p>
+                                    break;
+                                case 3:
+                                    <p>@DayOfWeek.Thursday</p>
+                                    break;
+                                case 4:
+                                    <p>@DayOfWeek.Friday</p>
+                                    break;
+                                case 5:
+                                    <p>@DayOfWeek.Saturday</p>
+                                    break;
+                                case 6:
+                                    <p>@DayOfWeek.Sunday</p>
+                                    break;
+                            }
+                        }
+
+                    </foreignObject>
+
+                }
+                if (i != 0)
+                {
+                    int dv = (int)new DateOnly(Model.year, Model.month, 1).DayOfWeek == 0 ? 7 : (int)new DateOnly(Model.year, Model.month, 1).DayOfWeek;
+                    if (i != 1 || i == 1 && j >= dv-1)
+                    {
+                        if (date < DateTime.DaysInMonth(Model.year, Model.month) )
+                        {
+                            <foreignObject x="@(j * Width + Width / 9)%" y="@(i * Height)%" width="@Width%" height="160">
+                                @{
+                                    date++;
+                                    <p>@date</p>
+                                }
+                            </foreignObject>
+                            int yt = Model.year;
+                            int mt = Model.month;
+                            Event et = Model.EventList.Find(e => e.Date.Month == mt && e.Date.Year == yt && e.Date.Day == date);
+                            if (et != null)
+                            {
+                                <rect x="@(j*Width + Width / 9)%" y="@(i*Height+ Height/3.5)%" rx="0" width="@(Width/1.25)%" height="@(Height/1.5)%" stroke="black"
+                                      fill="none" />
+                                <foreignObject x="@(j * Width + Width / 9+(j * Width + Width / 9)/30)%" y="@(i * Height+ Height/5)%" width="@Width%" height="160">
+                                    @{
+                                        <p>
+                                            <a asp-page="EventPage" asp-route-EventId="@et.Id">@et.Title</a>
+                                            <br>
+                                            @et.Date.TimeOfDay
+                                        </p>
+                                    }
+                                </foreignObject>
+                            }
+                        }
+                        else
+                        {
+
+                            <foreignObject x="@(j * Width + Width / 9)%" y="@(i * Height)%" width="@Width%" height="160">
+                                @{
+                                    date++;
+                                    <p>@(date - DateTime.DaysInMonth(Model.year, Model.month))</p>
+                                }
+                            </foreignObject>
+                            int yt = Model.month == 12 ? Model.year + 1 : Model.year;
+                            int mt = Model.month == 12 ? 0 : Model.month+1;
+                            Event et = Model.EventList.Find(e => e.Date.Month == mt && e.Date.Year == yt && e.Date.Day == date-DateTime.DaysInMonth(Model.year, Model.month));
+                            if (et != null)
+                            {
+                                <rect x="@(j*Width + Width / 9)%" y="@(i*Height+ Height/3.5)%" rx="0" width="@(Width/1.25)%" height="@(Height/1.5)%" stroke="black"
+                                      fill="none" />
+                                <foreignObject x="@(j * Width + Width / 9+(j * Width + Width / 9)/30)%" y="@(i * Height+ Height/5)%" width="@Width%" height="160">
+                                    @{
+                                        <p>
+                                            <a asp-page="EventPage" asp-route-EventId="@et.Id">@et.Title</a>
+                                            <br>
+                                            @et.Date.TimeOfDay
+                                        </p>
+                                    }
+                                </foreignObject>
+                            }
+                        }
+                    } else
+                    {
+                            <foreignObject x="@(j * Width + Width / 9)%" y="@(i * Height)%" width="@Width%" height="160">
+                                @{
+                                    Console.WriteLine("");
+                                <p>@(DateTime.DaysInMonth(Model.year, Model.month == 1 ? 12 : Model.month - 1) - (dv-2)+j)</p>
+                                }
+                            </foreignObject>
+                        int yt = Model.month == 0 ? Model.year - 1 : Model.year;
+                        int mt = Model.month == 0 ? 12 : Model.month - 1;
+                        Event et = Model.EventList.Find(e => e.Date.Month == mt && e.Date.Year == yt && e.Date.Day == DateTime.DaysInMonth(Model.year, Model.month == 1 ? 12 : Model.month - 1) - (dv - 2) + j);
+                        if (et != null)
+                        {
+                            <rect x="@(j*Width + Width / 9)%" y="@(i*Height+ Height/3.5)%" rx="0" width="@(Width/1.25)%" height="@(Height/1.5)%" stroke="black"
+                                  fill="none" />
+                            <foreignObject x="@(j * Width + Width / 9+(j * Width + Width / 9)/30)%" y="@(i * Height+ Height/5)%" width="@Width%" height="160">
+                                @{
+                                    <p>
+                                        <a asp-page="EventPage" asp-route-EventId="@et.Id">@et.Title</a>
+                                        <br>
+                                       @et.Date.TimeOfDay
+                                    </p>
+                                  
+                                }
+                            </foreignObject>
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+    }
+</svg>
+
+@* <form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="@Model.Search" class="control-label"></label>
+        <input asp-for="@Model.Search" class="form-control" required="true" />
+    </div>
+    <div class="formgroup">
+        <input type="submit" value="Update Hotel" class="btn btn-primary" asp-page-handler="Filter" />
+    </div>
+</form> *@
+
+@* <table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Description</th>
+
+        </tr>
+
+
+    </thead>
+    @foreach (var e in Model.EventList)
+    {
+
+        <tr>
+            <th>@e.Id</th>
+            <th>@e.Title</th>
+            <th>@e.Date</th>
+            <th>@e.Description</th>
+            <th>
+            <th>
+             <td><a asp-page="EditHotel" asp-route-Hotel_No="@h.Id">Edit</a></td></th>
+            <th>
+            <td><a asp-page="DeleteHotel" asp-route-Hotel_No="@h.Id">Delete</a></td></th>
+            <th>
+            <td><a asp-page="/room/GetAllRoomsFromHotel" asp-route-Hotel_No="@h.Id">See Rooms</a></td></th>
+ 
+        </tr>
+
+
+    }
+
+
+</table> *@

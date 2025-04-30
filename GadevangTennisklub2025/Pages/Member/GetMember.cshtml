@@ -1,8 +1,8 @@
 ﻿@page
-@model GadevangTennisklub2025.Pages.Member.MyProfileModel
+@model GadevangTennisklub2025.Pages.Member.GetMemberModel
 @{
 }
-<h2>Min Profil</h2>
+<h2>Profil tilhørende @Model.Member.Name</h2>
 
 <form method="post" enctype="multipart/form-data">
     <div class="form-group">
@@ -74,11 +74,6 @@
         <label asp-for="@Model.Member.PictureConsent"></label>
         <input asp-for="@Model.Member.PictureConsent" class="form-control" readonly />
     </div>
-  
-    <a class="btn btn-primary btn-sm" title="Edit"
-       asp-page="EditMember" asp-route-member_Id="@Model.Member.Member_Id">Rediger Profil</a>
-    <a class="btn btn-danger btn-sm " type="button" title="Delete"
-       asp-page="DeleteMember" asp-route-member_Id="@Model.Member.Member_Id">Slet profil</a>
+    <a asp-page="/Member/GetAllMembers" class="btn btn-secondary" style="background-color: #a06ae5; color: white;">Tilbage til medlemsliste</a>
 
 </form>
-
