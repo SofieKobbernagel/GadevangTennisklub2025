@@ -1,5 +1,6 @@
 using GadevangTennisklub2025.Interfaces;
 using GadevangTennisklub2025.Services;
+using static System.Console;
 
 var builder = WebApplication.CreateBuilder(args);
 
