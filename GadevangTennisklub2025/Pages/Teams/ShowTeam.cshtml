@@ -1,6 +1,6 @@
 ﻿@page
 @using Models;
-@model GadevangTennisklub2025.Pages.Team.ShowTeamModel
+@model GadevangTennisklub2025.Pages.Teams.ShowTeamModel
 @{
     ViewData["Title"] = "Klubbens Hold";
 }
@@ -8,13 +8,11 @@
 <h3>Klubbens Hold</h3>
 
 <btn>
-    <a class="nav-link text-dark bg-primary" asp-page="AddTeam">Opret nyt Hold</a>
+    <a class="nav-link text-dark bg-primary" asp-page="CreateTeam">Opret nyt Hold</a>
 </btn>
 
 
-<form style="display: inline;" asp-page-handler="SignIn">
-    <input type="submit" value="SignIn" />
-</form>
+
 
 <table class="table">
     <thead>
@@ -42,7 +40,7 @@
                 <td>
 
                     <form style="display: inline;" asp-page-handler="Edit" asp-route-id="@item.Id">
-                        <input type="image" src="~/Images/pencil-square.svg" />
+                        <input type="image" src="~/Images/edit-button-icon.png" />
                     </form>
 
 
