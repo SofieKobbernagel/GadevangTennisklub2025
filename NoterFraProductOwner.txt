@@ -1,0 +1,17 @@
+Events can have guests 
+
+Domainemodel: Løn og kontrakt kan udeholdes fra træner
+
+Bruger: Kun administrator kan slette bruger
+
+Baner: Baner kan have nogle ikoner eller billeder / farver til forskellige baner
+
+Baner: Bane CRUD kun som admin
+
+Booking: Booking Oversigt lidt bedre
+
+Booking: Vis tilgængelige baner
+
+Booking: Booking kan vise tilgængelige tider på enhver bane udfra DATO.
+
+Sprint: Lav Sprint Retrospective.

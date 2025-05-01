@@ -17,9 +17,20 @@ namespace GadevangTennisklub2025.Pages.TennisField
             _courtService = courtService;
         }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            Courts = await _courtService.GetAllCourtsAsync();
+            try
+            {
+                Courts = await _courtService.GetAllCourtsAsync();
+                if (Courts == null)
+                    return RedirectToPage("Index");
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+                return RedirectToPage("Error");
+            }
         }
     }
 }
