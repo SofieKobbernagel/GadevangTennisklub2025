@@ -1,0 +1,103 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.Bookingpages.MakeBooking2Model
+@{
+    ViewData["Title"] = "MakeBooking2";
+}
+
+<svg width="100%" height="700" >
+    @{
+        double Width = 100.0 / 7;
+        double Height = 100.0 / 15;
+        @*  <rect x="@(j*Width + Width / 9)%" y="@(i*Height+ Height/3.5)%" rx="0" width="@(Width/1.25)%" height="@(Height/1.5)%" stroke="black"
+              fill="none" />
+        <foreignObject x="@(j * Width + Width / 9+(j * Width + Width / 9)/30)%" y="@(i * Height+ Height/5)%" width="@Width%" height="160">
+            @{
+                <p>
+                    <a asp-page="EventPage" asp-route-EventId="@et.Id">@et.Title</a>
+                    <br>
+                     @et.Date.TimeOfDay 
+                </p>
+            }
+        </foreignObject> *@
+        for (int i = 0; i < 7; i++)
+        {
+
+            <rect x="@(i*Width)%" y="0" rx="0" width="@(Width)%" height="100%" stroke="black"
+            fill="none" />
+
+            <foreignObject x="@(i * Width+Width/4)%" y="0" width="@Width%" height="160"> 
+                <p> @((DayOfWeek)(i == 0 ? 1 : (i + 1) == 7 ? 0 : i + 1)) 
+                    <br/>
+                    @{
+                        DateTime td = DateTime.Now.AddDays(i + 1 - ((int)(DateTime.Now.DayOfWeek) == 0 ? 7 : (int)(DateTime.Now.DayOfWeek)));
+                    }
+                    @((td.Day))/@((td.Month))/@((td.Year))</p>
+            </foreignObject>
+
+
+            for (int z=0;z<15;z++)
+            {
+                for (int jj=0;jj<4;jj++)
+                {
+                    if (z==0)continue;
+                    if (jj != 0)
+                    {
+                        @switch (Model.BookingType[i+1][jj][z])
+                        {
+                            case 0:
+                                <foreignObject x="@(i*Width+jj*Width/4)%" y="@(z*Height+Height/4)%" width="@(Width)%" height="@(Height)%">
+                                    <form action="/Index">
+                                        <button type="input"><img src="https://gadevangtennisklub.dk/cms/images/user_add.png" title="Book Bane" /></button>
+                                    </form>
+
+                                </foreignObject>
+                                break;
+                            case 1:
+                                <foreignObject x="@(i*Width+jj*Width/4)%" y="@(z*Height+Height/4)%" width="@(Width/7)%" height="@(Height)%">
+                                    <img src="https://gadevangtennisklub.dk/cms/images/user_delete.png" title="Bane Optaget" />
+                                </foreignObject>
+                                break;
+                            case 2:
+                                <foreignObject x="@(i*Width+jj*Width/4)%" y="@(z*Height+Height/4)%" width="@(Width/7)%" height="@(Height)%">
+                                    <img src="https://gadevangtennisklub.dk/cms/images/user_gray.png" title="Bane Optaget" />
+                                </foreignObject>
+                                break;
+                            case 3:
+                                <foreignObject x="@(i*Width+jj*Width/4)%" y="@(z*Height+Height/4)%" width="@(Width/7)%" height="@(Height)%">
+                                    <div style="background-color:darkblue">
+                                        <img src="https://gadevangtennisklub.dk/cms/images/user_gray.png" title="Booket til event"  />
+                                    </div>
+                                </foreignObject>
+                                break;
+                            case 4:
+                                
+                                break;
+
+
+                        }
+                                @* <foreignObject x="@(i*Width+jj*Width/4)%" y="@(z*Height+Height/4)%" width="@(Width)%" height="@(Height)%">
+                                    <form action="https://orteil.dashnet.org/cookieclicker/">
+                                        <button type="input"><img src="https://gadevangtennisklub.dk/cms/images/user_add.png"  /></button>
+                                        
+                                    </form>
+
+                                </foreignObject>*@
+                            }
+                            else
+                            {
+                               <foreignObject x="@(i*Width)%" y="@(z*Height+Height/4)%" width="@(Width/3.75)%" height="@(Height)%">
+
+                                   @(z+7).00   
+                                   
+                               </foreignObject>
+                            }
+
+                        }    
+
+                    }
+                
+           
+        }
+
+    }
+</svg>

@@ -3,11 +3,13 @@
 @{
     ViewData["Title"] = "Home page";
 }
-
-<form method="post">
-    <Input type="submit" value="LogOut" class="btn btn-primary" asp-page-handler="Mod" />
-    <Input type="submit" value="LogOut" class="btn btn-primary" asp-page-handler="post" />
+@* 
+<form action="https://orteil.dashnet.org/cookieclicker/">
+    <button type="Input"><img src="https://gadevangtennisklub.dk/cms/images/user_add.png"></button>
+    <img src="https://gadevangtennisklub.dk/cms/images/user_delete.png" title="Bane Optaget" />
 </form>
 <p>@((int)new DateOnly(2024, 12, 2).DayOfWeek )</p>
-
-
+@* <img src="https://www.icegif.com/wp-content/uploads/2024/09/subway-surfers-icegif-5.gif" alt="Girl in a jacket" width="500" height="600"> 
+<img src="https://gadevangtennisklub.dk/cms/images/user_add.png" alt="Alternate Text" />
+<img src="https://gadevangtennisklub.dk/cms/images/user_delete.png" alt="Alternate Text" /> *@
+@((new DateTime(2025,5,2)-new DateTime(2025,5,3)).TotalDays)

@@ -1,6 +1,7 @@
 ﻿using GadevangTennisklub2025.Interfaces;
 using GadevangTennisklub2025.Models;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace GadevangTennisklub2025.Services
 {
@@ -46,9 +47,62 @@ namespace GadevangTennisklub2025.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<Booking>> GetAllBookings()
+        public async Task<List<Booking>> GetAllBookings()
         {
-            throw new NotImplementedException();
+            List<Booking> BookingList = new List<Booking>();
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+
+                try
+                {
+                    SqlCommand com = new SqlCommand("Select * from Booking", con);
+                    await com.Connection.OpenAsync();
+                    SqlDataReader reader = await com.ExecuteReaderAsync();
+                    Thread.Sleep(1000);
+                    while (await reader.ReadAsync())
+                    {
+                        int BookingId = reader.GetInt32("Booking_ID");
+                        DateTime start= reader.GetDateTime("Start");
+                        DateTime end= reader.GetDateTime("End");
+                        int CourtId= reader.GetInt32("Court_Id");
+                        int? TeamId = null;
+                        int? EventId = null;
+                        try {
+                            TeamId = reader.GetInt32("Team_Id");
+                            EventId = reader.GetInt32("Event_Id");
+                        } 
+                        catch 
+                        (Exception e) 
+                        {
+                            try
+                            {
+                                EventId = reader.GetInt32("Event_Id");
+                            }
+                            catch
+                            (Exception en)
+                            { }
+                        }
+                        
+                        Booking ev = new Booking(BookingId, start, end, CourtId,TeamId,EventId);
+                        BookingList.Add(ev);
+                    }
+                    reader.Close();
+
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Databse fail " + e.Message);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("General fail " + e.Message);
+                }
+                finally
+                {
+
+                }
+            }
+            return BookingList;
         }
 
         public Task GetBookingsByUser(int uid)
