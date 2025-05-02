@@ -5,7 +5,7 @@ using GadevangTennisklub2025.Interfaces;
 
 
 
-namespace GadevangTennisklub2025.Pages.Team
+namespace GadevangTennisklub2025.Pages.Teams
 {
     public class ShowTeamModel : PageModel
     {
@@ -24,38 +24,37 @@ namespace GadevangTennisklub2025.Pages.Team
         #endregion
 
         #region Constructors
-        /*public ShowTeamModel(List<Models.Team> teamList)
-        {
-            _TeamRepo = teamList;
-            ListOfTeams = _TeamRepo.GetAllTeamsAsync;
-        }*/
         public ShowTeamModel(ITeamService teamService)
         {
             _teamService = teamService;
         }
-
         #endregion
 
         #region Methods
-
-
-
-
         public IActionResult OnPostEdit(int id)
         {
-            return RedirectToPage("EditTeam", new { id });
+            return RedirectToPage("UpdateTeam", new { id });
         }
 
-
-        public IActionResult OnPostSignIn()
+        public IActionResult OnPostAttend(int id)
         {
-            Console.WriteLine("ShowTeam/OnPostSignIn just ran");
-            return RedirectToPage("SignInTeam");
+            return RedirectToPage("AttendTeam", new { id });
         }
 
-        public void OnGet()
+        public IActionResult OnPostCreate()
         {
+            Console.WriteLine("ShowTeam/OnPostCreate just ran");
+            return RedirectToPage("CreateTeam");
+        }
 
+        public async Task OnGetAsync()
+        {
+            if (ListOfTeams == null)
+            {
+                ListOfTeams = await _teamService.GetAllTeamsAsync();
+                Thread.Sleep(1000);
+            }
+            Console.WriteLine("OnGetAsync is done");
         }
         #endregion
     }

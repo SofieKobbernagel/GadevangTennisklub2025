@@ -19,10 +19,7 @@ namespace GadevangTennisklub2025.Pages.Member
             _memberService = memberService;
         }
 
-        public void OnGet()
-        {
-        }
-
+      
         public IActionResult OnGetLogout()
         {
             HttpContext.Session.Clear();

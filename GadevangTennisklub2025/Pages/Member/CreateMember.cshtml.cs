@@ -42,6 +42,13 @@ namespace GadevangTennisklub2025.Pages.Member
                     return Page();
                 }
 
+                bool isUnique = await _memberService.IsUsernameUnique(RegisterModel.Member.Username);
+                if (!isUnique)
+                {
+                    ModelState.AddModelError("RegisterModel.Member.Username", "Brugernavnet er taget, vælg venligst et andet.");
+                    Memberships = await _membershipService.GetAllMembershipsAsync();
+                    return Page();
+                }
 
                 if (ProfileImage != null && ProfileImage.Length > 0)
                 {
