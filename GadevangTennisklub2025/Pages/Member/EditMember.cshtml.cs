@@ -72,9 +72,16 @@ namespace GadevangTennisklub2025.Pages.Member
                 }
                 MemberObject.ProfileImagePath = "/Images/ProfilePictures/" + fileName;
             }
+            else
+            {
+                // Behold eksisterende billede
+                MemberObject.ProfileImagePath = existingMember.ProfileImagePath;
+            }
 
-          
+
+
             await _memberService.UpdateMemberAsync(MemberObject, MemberObject.Member_Id);
+            TempData["SuccessMessage"] = "Brugeroplysninger er opdateret.";
             return RedirectToPage("MyProfile");
 
 

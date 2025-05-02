@@ -3,11 +3,54 @@
 @{
     ViewData["Title"] = "Home page";
 }
+<style>
+    .background-wrapper {
+        background-image: url('/Images/Baggrund.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        padding: 2rem;
+    }
 
-<form method="post">
-    <Input type="submit" value="LogOut" class="btn btn-primary" asp-page-handler="Mod" />
-    <Input type="submit" value="LogOut" class="btn btn-primary" asp-page-handler="post" />
-</form>
-<p>@((int)new DateOnly(2024, 12, 2).DayOfWeek )</p>
+    .banner-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: 1rem;
+    }
 
+    .white-box {
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 2rem;
+        border-radius: 12px;
+        max-width: 900px;
+        margin: 0 auto;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+</style>
 
+<div class="background-wrapper">
+    <img src="/Images/GadevangTennisBanner.png" class="banner-img" alt="Gadevang Tennis Banner" />
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="white-box">
+        <h2>Træning i Gadevang - tilmeldning fra 16. april 2025</h2>
+        <p>
+            Forventet opstart 28. april 2025, slut 14. september 2025 (pause i sommerferien følger skoleferien uge 27-32).<br />
+            I år kan Hillerød desværre ikke stille med en træner.<br /><br />
+
+            Heldigvis kan vores unge ungdomstalente Oscar Storm Munkholm og Felix Schoeller, som har været til trænerkurser, godt træne nogle timer om ugen.<br /><br />
+
+            Eneste træningsdag bliver torsdag mellem kl. 16 og 21. Der bliver 1 minihold (6-9 år), 1 juniorhold (10-14 år) og nogle seniorhold på forskellige niveauer: let øvet, øvet og rutineret.<br /><br />
+
+            Holdene bliver lavet om, hvis der er behov for en anden sammensætning, alt efter efterspørgslen. Skriv gerne til mig på <a href="mailto:jschoeller@gmx.de">jschoeller@gmx.de</a>, hvis der ikke er et hold der passer til lige netop dig eller dit barn.
+        </p>
+    </div>
+</div>
