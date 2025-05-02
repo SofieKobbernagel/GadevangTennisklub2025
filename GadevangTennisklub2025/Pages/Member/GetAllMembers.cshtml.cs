@@ -37,6 +37,8 @@ namespace GadevangTennisklub2025.Pages.Member
                 ViewData["ErrorMessage"] = ex.Message;
                 return RedirectToPage("Error");
             }
+        
         }
+     
     }
 }

@@ -20,7 +20,7 @@ namespace GadevangTennisklub2025.Pages.Member
         public GadevangTennisklub2025.Models.Member Member { get; set; }
 
         [BindProperty]
-        public IFormFile UploadImage { get; set; }
+        public IFormFile ProfileImage { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -38,17 +38,17 @@ namespace GadevangTennisklub2025.Pages.Member
 
             var existingMember = await _memberService.GetMemberById(member_Id);
 
-            if (UploadImage != null)
+            if (ProfileImage != null)
             {
                 var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
                 Directory.CreateDirectory(uploadsFolder);
 
-                var fileName = $"{Guid.NewGuid()}_{UploadImage.FileName}";
+                var fileName = $"{Guid.NewGuid()}_{ProfileImage.FileName}";
                 var filePath = Path.Combine(uploadsFolder, fileName);
 
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    await UploadImage.CopyToAsync(fileStream);
+                    await ProfileImage.CopyToAsync(fileStream);
                 }
 
                 existingMember.ProfileImagePath = "/uploads/" + fileName;
