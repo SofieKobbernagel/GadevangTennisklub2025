@@ -19,24 +19,30 @@ namespace GadevangTennisklub2025.Pages.Teams
         [BindProperty]
         public string MembershipType { get; set; }
         [BindProperty]
-        public int DayOfWeek {  get; set; }
+        public int DayOfWeek { get; set; }
         [BindProperty]
-        public TimeOnly TimeOfDay {  get; set; }
+        public TimeOnly TimeOfDay { get; set; }
         [BindProperty]
-        public int Length {  get; set; }
+        public int Length { get; set; }
         [BindProperty]
-        public int[] AttendeeRange {  get; set; }
+        public int MinMembers { get; set; }
         [BindProperty]
-        public List<Models.Member> Attendees {  get; set; }
+        public int MaxMembers { get; set; }
         [BindProperty]
-        public Models.Member Master {  get; set; }
+        public List<Models.Member> Attendees { get; set; }
+
         [BindProperty]
-        public string Description {  get; set; }
+        public string Description { get; set; }
+        public int[] AttendeeRange = new int[2];
         #endregion
+        
+        
         #region constructor
         public CreateTeamModel(ITeamService teamService) // dependency injection
         {
             _teamService = teamService; // parameter overført 
+            //AttendeeRange[0] = MinMembers;
+           // AttendeeRange[1] = MaxMembers;
         }
         #endregion
 
@@ -47,7 +53,9 @@ namespace GadevangTennisklub2025.Pages.Teams
         }
         public IActionResult OnPost(int id)
         {
-            Team team = new Team(Id, Name, MembershipType, DayOfWeek,TimeOfDay,Length, AttendeeRange,Attendees,Master, Description);
+            AttendeeRange[0] = MinMembers;
+            AttendeeRange[1] = MaxMembers;
+            Team team = new Team(Id, Name, MembershipType, DayOfWeek, TimeOfDay, Length, AttendeeRange,Attendees, Description);
             _teamService.CreateTeamAsync(team);
             return RedirectToPage("ShowTeam");
         }
