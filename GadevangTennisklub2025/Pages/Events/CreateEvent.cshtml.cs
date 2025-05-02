@@ -9,7 +9,7 @@ namespace GadevangTennisklub2025.Pages.Events
     {
         public IEventServiceAsync EventServicesAsync;
         [BindProperty]
-        public Event ev { get; set; }
+        public  Event ev { get; set; }
         public CreateEventModel(IEventServiceAsync IESA)
         {
             EventServicesAsync = IESA;
