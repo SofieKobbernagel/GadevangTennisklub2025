@@ -4,7 +4,6 @@ using GadevangTennisklub2025.Models;
 using GadevangTennisklub2025.Interfaces;
 
 
-
 namespace GadevangTennisklub2025.Pages.Teams
 {
     public class ShowTeamModel : PageModel

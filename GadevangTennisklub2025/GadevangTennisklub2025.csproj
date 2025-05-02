@@ -14,4 +14,8 @@
     <Folder Include="wwwroot\Images\ProfilePictures\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\Images\buttons\edit-button-icon.png" />
+  </ItemGroup>
+
 </Project>
