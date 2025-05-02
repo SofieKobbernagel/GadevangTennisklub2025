@@ -41,6 +41,7 @@ namespace GadevangTennisklub2025.Pages.Member
                 }
 
                 Models.Member deletedMember = await _memberService.DeleteMemberAsync(Member.Member_Id);
+                TempData["SuccessMessage"] = "Din profil er blevet slettet";
                 if (deletedMember == null)
                     return RedirectToPage("/Index");
                 else
