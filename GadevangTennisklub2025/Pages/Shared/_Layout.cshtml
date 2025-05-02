@@ -37,6 +37,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Team/ShowTeam">Hold</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="omKlubbenDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Om klubben
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="omKlubbenDropdown">
+                                <li><a class="dropdown-item" href="/Coaches">Trænere</a></li>
+                                <li><a class="dropdown-item" href="/About/Rules">Banepleje og etikette</a></li>
+                            </ul>
+                        </li>
                         @{
                             var IsAdmin = Context.Session.GetString("IsAdmin") == "true";
                         }
