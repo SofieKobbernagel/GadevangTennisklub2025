@@ -3,16 +3,32 @@
 @{
     ViewData["Title"] = "Home page";
 }
+<style>
+    .background-wrapper {
+        background-image: url('/Images/Baggrund.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        padding: 2rem;
+    }
+
+    .banner-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="background-wrapper">
+    <img src="/Images/GadevangTennisBanner.png" class="banner-img" alt="Gadevang Tennis Banner" />
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success">
         @TempData["SuccessMessage"]
     </div>
 }
-<form method="post">
-    <Input type="submit" value="LogOut" class="btn btn-primary" asp-page-handler="Mod" />
-    <Input type="submit" value="LogOut" class="btn btn-primary" asp-page-handler="post" />
-</form>
-<p>@((int)new DateOnly(2024, 12, 2).DayOfWeek )</p>
+
 
 
