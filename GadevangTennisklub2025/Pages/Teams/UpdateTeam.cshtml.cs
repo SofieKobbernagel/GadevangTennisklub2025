@@ -46,10 +46,10 @@ namespace GadevangTennisklub2025.Pages.Teams
             public async Task<IActionResult> OnGet(int ID)
             {
                 Teams = sTeams;
-
+            
                 tEAM = await _teamService.GetTeamFromIdAsync(ID);
-
-                Id = tEAM.Id;
+            Console.WriteLine("Updater/OnGet/ length is: " + tEAM.Length);
+            Id = tEAM.Id;
                 Name = tEAM.Name;
                 MembershipType = tEAM.MembershipType;
                 DayOfWeek = tEAM.DayOfWeek;

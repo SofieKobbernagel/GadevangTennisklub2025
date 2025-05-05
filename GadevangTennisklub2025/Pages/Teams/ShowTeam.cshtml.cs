@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using GadevangTennisklub2025.Models;
 using GadevangTennisklub2025.Interfaces;
+using GadevangTennisklub2025.Services;
 
 
 namespace GadevangTennisklub2025.Pages.Teams
@@ -18,7 +19,11 @@ namespace GadevangTennisklub2025.Pages.Teams
 
         #region Properties
         public List<Models.Team> ListOfTeams { get; private set; }
-        
+        private TimeOnly temp = new TimeOnly(23,50);
+       
+            //Console.WriteLine("endTime: "+(temp));
+            
+
 
         #endregion
 
@@ -26,6 +31,7 @@ namespace GadevangTennisklub2025.Pages.Teams
         public ShowTeamModel(ITeamService teamService)
         {
             _teamService = teamService;
+            Console.WriteLine("TimeSlot: "+temp.AddHours(1.12));
         }
         #endregion
 
@@ -49,6 +55,7 @@ namespace GadevangTennisklub2025.Pages.Teams
 
         public async Task OnGetAsync()
         {
+            //Console.WriteLine("Teams/ShowTeam/OnGetAsync  timeslot is: "+(.TimeOfDay.Add(TimeSpan.FromHours(item.Length))));
             if (ListOfTeams == null)
             {
                 ListOfTeams = await _teamService.GetAllTeamsAsync();
