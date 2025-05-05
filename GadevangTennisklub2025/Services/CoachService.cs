@@ -9,7 +9,7 @@ namespace GadevangTennisklub2025.Services
     {
         private string connectionString = Secret.ConnectionString;
         private string selectAllCoachesSql = "SELECT * FROM Coach";
-        private string insertCoachSql = "INSERT INTO Coach (Sallary, Address, ContractFilePath, Name, Tlf, Email, City, PostalCode, ProfileImagePath) VALUES (@Sallary, @Address, @ContractFilePath, @Name, @Tlf, @Email, @City, @PostalCode, @ProfileImagePath)";
+        private string insertCoachSql = "INSERT INTO Coach (Salary, Address, ContractFilePath, Name, Tlf, Email, City, PostalCode, ProfileImagePath) VALUES ( @Salary, @Address, @ContractFilePath, @Name, @Tlf, @Email, @City, @PostalCode, @ProfileImagePath)";
         private string updateCoachSql = "UPDATE Coach SET Name = @Name, ProfileImagePath = @ProfileImagePath WHERE Coach_Id = @Coach_Id";
         private string deleteCoachSql = "DELETE FROM Coach WHERE Coach_Id = @Coach_Id";
         private string selectCoachByIdSql = "SELECT * FROM Coach WHERE Coach_Id = @Coach_Id";
@@ -22,7 +22,8 @@ namespace GadevangTennisklub2025.Services
                 try
                 {
                     SqlCommand command = new SqlCommand(insertCoachSql, connection);
-                    command.Parameters.AddWithValue("@Sallary", coach.Sallary);
+                    command.Parameters.AddWithValue("@Coach_Id", coach.Coach_Id);
+                    command.Parameters.AddWithValue("@Salary", coach.Salary);
                     command.Parameters.AddWithValue("@Address", coach.Address);
                     command.Parameters.AddWithValue("@ContractFilePath", coach.ContractFilePath);
                     command.Parameters.AddWithValue("@Tlf", coach.Phone);
@@ -69,12 +70,12 @@ namespace GadevangTennisklub2025.Services
                     await command.Connection.OpenAsync();
                     SqlDataReader reader = await command.ExecuteReaderAsync();
                     while (await reader.ReadAsync())
-                    {
+                    {              
                         string name = reader.GetString("Name");
                         string city = reader.GetString("City");
                         string phone = reader.GetString("TLF");              
                         string postalcode = reader.GetString("PostalCode");
-                        string sallary = reader.GetString("Sallary");
+                        decimal sallary = reader.GetDecimal("Salary");
                         string contractFilePath = reader.GetString("ContractFilePath");
                         string address = reader.GetString("Address");
                         int id = reader.GetInt32("Coach_Id");

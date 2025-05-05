@@ -25,7 +25,7 @@ namespace GadevangTennisklub2025.Models
         public string Email { get; set; }
 
         [Display(Name = "Løn")]
-        public decimal Sallary { get; set; }
+        public decimal Salary { get; set; }
 
         [Display(Name = "Kontrakt")]
         public string ContractFilePath { get; set; }
