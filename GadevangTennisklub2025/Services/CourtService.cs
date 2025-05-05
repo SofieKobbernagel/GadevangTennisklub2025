@@ -151,6 +151,41 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
+        public async Task<List<TennisField>> GetCourtFromTypeAsync(string type)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                List<TennisField> courts = new List<TennisField>();
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString + " where Type like @Search", connection);
+                    command.Parameters.AddWithValue("@Search", "%" + type + "%");
+                    await command.Connection.OpenAsync();
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    while (await reader.ReadAsync()) // reads from data not from console
+                    {
+                        int courtId = reader.GetInt32("Court_Id");
+                        string cType = reader.GetString("Type");
+                        TennisField court = new TennisField(courtId, cType);
+                        courts.Add(court);
+                    }
+                    reader.Close();
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error" + sqlExp.Message);
+                    throw sqlExp;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Generel fejl: " + ex.Message);
+                    throw ex;
+                }
+                finally { }
+                return courts;
+            }
+        }
+
         public async Task<bool> UpdateCourtAsync(TennisField tennisField)
         {
             bool temp = false;
@@ -186,9 +221,6 @@ namespace GadevangTennisklub2025.Services
             return temp;
         }
 
-        public Task<bool> UpdateHotelAsync(TennisField tennisField)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

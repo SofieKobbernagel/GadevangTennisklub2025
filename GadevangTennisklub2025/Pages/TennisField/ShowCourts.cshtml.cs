@@ -11,12 +11,18 @@ namespace GadevangTennisklub2025.Pages.TennisField
     {
         public ICourtService _courtService;
 
+        [BindProperty(SupportsGet = true)] public string FilterCriteria { get; set; }
+        [BindProperty(SupportsGet = true)] public string SortBy { get; set; }
+        [BindProperty(SupportsGet = true)] public string SortOrder { get; set; }
+
         public List<Models.TennisField> Courts { get; set; }
 
         public List<SelectListItem> SelectList { get; set; }
 
         public ShowCourtsModel(ICourtService courtService)
         {
+            SortOrder = "CourtId";
+            Courts = new List<Models.TennisField>();
             _courtService = courtService;
             SelectList = new List<SelectListItem>();
         }
@@ -34,15 +40,24 @@ namespace GadevangTennisklub2025.Pages.TennisField
             try
             {
                 await LoadList();
-                Courts = await _courtService.GetAllCourtsAsync();
+                if (!String.IsNullOrEmpty(FilterCriteria))
+                {
+                    Courts = await _courtService.GetCourtFromTypeAsync(FilterCriteria);
+                }
+                else
+                {
+                    Courts = await _courtService.GetAllCourtsAsync(); // fylder listen med data
+                }
                 if (Courts == null)
                     return RedirectToPage("Index");
+                if (SortBy == "Type") { Courts.Sort(); }
+                if (SortOrder == "Descending") { Courts.Reverse(); }
                 return Page();
             }
             catch (Exception ex)
             {
                 ViewData["ErrorMessage"] = ex.Message;
-                return RedirectToPage("Error");
+                return RedirectToPage("Pages/Error");
             }
         }
     }

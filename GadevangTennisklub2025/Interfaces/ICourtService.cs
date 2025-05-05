@@ -8,6 +8,8 @@ namespace GadevangTennisklub2025.Interfaces
 
         Task<TennisField> GetCourtFromIdAsync(int courtId);
 
+        Task<List<TennisField>> GetCourtFromTypeAsync(string type);
+
         Task<bool> CreateCourtAsync(TennisField tennisField);
 
         Task<bool> UpdateCourtAsync(TennisField tennisField);
