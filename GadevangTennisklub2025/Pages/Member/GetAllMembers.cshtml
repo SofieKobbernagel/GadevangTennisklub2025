@@ -2,6 +2,26 @@
 @model GadevangTennisklub2025.Pages.Member.GetAllMembersModel
 @{
 }
+<form method="get">
+    <p>
+        Search: <input type="text" asp-for="@Model.FilterCriteria" onchange="this.form.submit()" />
+        <div class="form-group">
+            <label class="custom-control-label">Sort By</label>
+            <input type="radio" asp-for="@Model.SortBy" value="Name" onclick="this.form.submit()">Navn</input>
+            <input type="radio" asp-for="@Model.SortBy" value="Email" onclick="this.form.submit()">Email</input>
+            <input type="radio" asp-for="@Model.SortBy" value="Phone" onclick="this.form.submit()">Telefon</input>
+            <input type="radio" asp-for="@Model.SortBy" value="Age" onclick="this.form.submit()">Alder</input>
+        </div>
+
+        <div class="form-group">
+            <label class="custom-control-label">Sort Order</label>
+            <select asp-for="@Model.SortOrder" onchange="this.form.submit()">
+                <option value="Ascending">Ascending</option>
+                <option value="Descending">Descending</option>
+            </select>
+        </div>
+    </p>
+</form>
 
 <h4>Alle klubbens medlemmer</h4>
 <table class="table table-bordered table-hover table-striped">

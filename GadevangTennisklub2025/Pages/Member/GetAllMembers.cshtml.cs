@@ -9,6 +9,9 @@ namespace GadevangTennisklub2025.Pages.Member
     {
         private IMemberService _memberService;
         public bool IsAdmin { get; set; } = false;
+        [BindProperty(SupportsGet = true)] public string FilterCriteria { get; set; }
+        [BindProperty(SupportsGet = true)] public string SortBy { get; set; }
+        [BindProperty(SupportsGet = true)] public string SortOrder { get; set; }
 
 
         public List<Models.Member> Members { get; set; }
@@ -28,8 +31,39 @@ namespace GadevangTennisklub2025.Pages.Member
             try
             {
                 Members = await _memberService.GetAllMembersAsync();
+
                 if (Members == null)
                     return RedirectToPage("Index");
+
+
+                if (!string.IsNullOrWhiteSpace(FilterCriteria))
+                {
+                    string criteria = FilterCriteria.ToLower();
+                    Members = Members.Where(m =>
+                        (!string.IsNullOrEmpty(m.Name) && m.Name.ToLower().Contains(criteria)) ||
+                        (!string.IsNullOrEmpty(m.Email) && m.Email.ToLower().Contains(criteria)) ||
+                        (!string.IsNullOrEmpty(m.Phone) && m.Phone.ToLower().Contains(criteria))
+                    ).ToList();
+                }
+
+
+                if (!string.IsNullOrEmpty(SortBy))
+                {
+                    Func<Models.Member, object> keySelector = SortBy switch
+                    {
+                        "Name" => m => m.Name,
+                        "Email" => m => m.Email,
+                        "Phone" => m => m.Phone,
+                        "Age" => m => m.Age,
+                        _ => m => m.Name
+                    };
+
+                    if (SortOrder == "Descending")
+                        Members = Members.OrderByDescending(keySelector).ToList();
+                    else
+                        Members = Members.OrderBy(keySelector).ToList();
+                }
+
                 return Page();
             }
             catch (Exception ex)
@@ -37,8 +71,7 @@ namespace GadevangTennisklub2025.Pages.Member
                 ViewData["ErrorMessage"] = ex.Message;
                 return RedirectToPage("Error");
             }
-        
         }
-     
+
     }
 }
