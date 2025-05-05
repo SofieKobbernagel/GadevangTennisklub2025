@@ -12,7 +12,7 @@ namespace GadevangTennisklub2025.Services
     {
         private string connectionString = Secret.ConnectionString;
         private string queryString = "SELECT  Team_Id, MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers, Attendees, Description FROM Team";
-        private string updateQuery = "UPDATE Team SET MemberType = @MemberType, Name = @Name, Length = @Length, TimeOfDay = @TimeOfDay, DayOfWeek = @DayOfWeek, MinMembers = @MinMembers, MaxMembers = @MaxMembers, Attendees = @Attendees, Description = @Description WHERE Team_Id = @Team_Id";
+        private string updateQuery = "UPDATE Team SET Team_Id = @Team_Id, MemberType = @MemberType, Name = @Name, Length = @Length, TimeOfDay = @TimeOfDay, DayOfWeek = @DayOfWeek, MinMembers = @MinMembers, MaxMembers = @MaxMembers, Attendees = @Attendees, Description = @Description WHERE Team_Id = @Team_Id";
         private string deleteQuery = "DELETE FROM Team WHERE Name=@Name;";
         private string createQuery = "INSERT INTO Team ( Team_Id, MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers, Attendees, Description)\r\nVALUES ( @Team_Id, @MemberType, @Name, @Length, @TimeOfDay, @DayOfWeek, @MinMembers, @MaxMembers, @Attendees, @Description);";
 
@@ -50,7 +50,7 @@ namespace GadevangTennisklub2025.Services
             List<int> output=new List<int>();
             List<string> outStrings=new List<string>(strings.Length);
             int k=0;
-            if (strings == null || strings.Length == 0)
+            if (strings == null || strings.Length == 0 || strings==" ")
             {
                 return output;
             }
@@ -373,6 +373,7 @@ namespace GadevangTennisklub2025.Services
                     SqlCommand command = new SqlCommand(updateQuery, connection);
 
                     // Add parameters to prevent SQL injection
+                    command.Parameters.AddWithValue("@Team_Id", team.Id);
                     command.Parameters.AddWithValue("@MemberType", team.MembershipType);
                     command.Parameters.AddWithValue("@Name", team.Name);
                     command.Parameters.AddWithValue("@Length", team.Length);

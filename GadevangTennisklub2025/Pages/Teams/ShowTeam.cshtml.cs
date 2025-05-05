@@ -30,9 +30,10 @@ namespace GadevangTennisklub2025.Pages.Teams
         #endregion
 
         #region Methods
-        public IActionResult OnPostEdit(int id)
+        public IActionResult OnPostEdit(int ID)
         {
-            return RedirectToPage("UpdateTeam", new { id });
+            Console.WriteLine("ShowTeam/OnPostEdit here and id = "+ ID );
+            return RedirectToPage("UpdateTeam", new { ID });
         }
 
         public IActionResult OnPostAttend(int id)
@@ -53,7 +54,7 @@ namespace GadevangTennisklub2025.Pages.Teams
                 ListOfTeams = await _teamService.GetAllTeamsAsync();
                 Thread.Sleep(1000);
             }
-            Console.WriteLine("OnGetAsync is done");
+            Console.WriteLine("Team/ShowTeam/OnGetAsync is done");
         }
         #endregion
     }

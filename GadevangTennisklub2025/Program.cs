@@ -15,6 +15,8 @@ builder.Services.AddTransient<ITeamService, TeamService>();
 builder.Services.AddSession();    //Nyt
 builder.Services.AddHttpContextAccessor();//Nyt
 builder.Services.AddScoped<IMembershipService, MembershipService>();
+builder.Services.AddScoped<ICoachService, CoachService>();
+
 
 
 

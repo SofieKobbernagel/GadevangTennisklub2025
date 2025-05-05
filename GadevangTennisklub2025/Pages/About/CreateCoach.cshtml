@@ -2,3 +2,60 @@
 @model GadevangTennisklub2025.Pages.About.CreateCoachModel
 @{
 }
+<form method="post" enctype="multipart/form-data">
+
+    <div class="form-group">
+        <label asp-for="@Model.Coach.Name" class="control-label"></label>
+        <input asp-for="@Model.Coach.Name" class="form-control" />
+        <span asp-validation-for="Coach.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Coach.Address" class="control-label"></label>
+        <input asp-for="@Model.Coach.Address" class="form-control" />
+        <span asp-validation-for="Coach.Address" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Coach.PostalCode" class="control-label"></label>
+        <input asp-for="@Model.Coach.PostalCode" class="form-control" />
+        <span asp-validation-for="Coach.PostalCode" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Coach.City" class="control-label"></label>
+        <input asp-for="@Model.Coach.City" class="form-control" />
+        <span asp-validation-for="Coach.City" class="text-danger"></span>
+    </div>
+  
+    <div class="form-group">
+        <label asp-for="@Model.Coach.Phone" class="control-label"></label>
+        <input asp-for="@Model.Coach.Phone" class="form-control" />
+        <span asp-validation-for="Coach.Phone" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.Coach.Email" class="control-label"></label>
+        <input asp-for="@Model.Coach.Email" class="form-control" />
+        <span asp-validation-for="Coach.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.Coach.Salary" class="control-label"></label>
+        <input asp-for="@Model.Coach.Salary" class="form-control" />
+        <span asp-validation-for="Coach.Salary" class="text-danger"></span>
+    </div>
+   
+    <div class="form-group">
+        <label for="ProfileImage">Upload profilbillede</label>
+        <input type="file" class="form-control" name="ProfileImage" id="ProfileImage" />
+    </div>
+    <div class="form-group">
+        <label for="ContractFile">Upload kontrakt</label>
+        <input type="file" class="form-control" name="ContractFile" id="ContractFile" />
+    </div>
+  
+    <p>
+        <div class="form-group">
+            <input type="submit" value="Opret træner" class="btn btn-primary" />
+        </div>
+    </p>
+
+</form>
