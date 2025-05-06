@@ -24,7 +24,7 @@
     <Input type="submit" value="Next Month" class="btn btn-primary" asp-page-handler="Forward" />
 </form>
 
-<svg width="100%" height="500" x>
+<svg width="100%" height="500">
     @{
         double Width = 100.0 / 7;
         double Height = 100.0 / 7;
@@ -36,11 +36,11 @@
 
                 Console.WriteLine(i + " " + j);
 
-                <rect x="@(j*Width)%" y="@(i*Height)%" rx="0" width="@Width%" height="@Height%" stroke="black"
+                <rect x="@(j*Width).ToString(CultureInfo.InvariantCulture)%" y="@(i*Height).ToString(CultureInfo.InvariantCulture)%" rx="0" width="@Width.ToString(CultureInfo.InvariantCulture)%" height="@Height.ToString(CultureInfo.InvariantCulture)%" stroke="black"
                 fill="none" />
                 if (i == 0)
                 {
-                    <foreignObject x="@(j*Width+Width/9)%" y="0" width="@Width%" height="160">
+                    <foreignObject x="@(j*Width+Width/9).ToString(CultureInfo.InvariantCulture)%" y="0" width="@Width.ToString(CultureInfo.InvariantCulture)%" height="160">
                         @{
                             switch (j)
                             {
@@ -78,7 +78,7 @@
                     {
                         if (date < DateTime.DaysInMonth(Model.year, Model.month) )
                         {
-                            <foreignObject x="@(j * Width + Width / 9)%" y="@(i * Height)%" width="@Width%" height="160">
+                            <foreignObject x="@(j * Width + Width / 9).ToString(CultureInfo.InvariantCulture)%" y="@(i * Height).ToString(CultureInfo.InvariantCulture)%" width="@Width.ToString(CultureInfo.InvariantCulture)%" height="160">
                                 @{
                                     date++;
                                     <p>@date</p>
@@ -89,9 +89,9 @@
                             Event et = Model.EventList.Find(e => e.Date.Month == mt && e.Date.Year == yt && e.Date.Day == date);
                             if (et != null)
                             {
-                                <rect x="@(j*Width + Width / 9)%" y="@(i*Height+ Height/3.5)%" rx="0" width="@(Width/1.25)%" height="@(Height/1.5)%" stroke="black"
+                                <rect x="@(j*Width + Width / 9).ToString(CultureInfo.InvariantCulture)%" y="@(i*Height+ Height/3.5).ToString(CultureInfo.InvariantCulture)%" rx="0" width="@(Width/1.25).ToString(CultureInfo.InvariantCulture)%" height="@(Height/1.5).ToString(CultureInfo.InvariantCulture)%" stroke="black"
                                       fill="none" />
-                                <foreignObject x="@(j * Width + Width / 9+(j * Width + Width / 9)/30)%" y="@(i * Height+ Height/5)%" width="@Width%" height="160">
+                                <foreignObject x="@(j * Width + Width / 9+(j * Width + Width / 9)/30).ToString(CultureInfo.InvariantCulture)%" y="@(i * Height+ Height/5).ToString(CultureInfo.InvariantCulture)%" width="@Width.ToString(CultureInfo.InvariantCulture)%" height="160">
                                     @{
                                         <p>
                                             <a asp-page="EventPage" asp-route-EventId="@et.Id">@et.Title</a>
@@ -105,7 +105,7 @@
                         else
                         {
 
-                            <foreignObject x="@(j * Width + Width / 9)%" y="@(i * Height)%" width="@Width%" height="160">
+                            <foreignObject x="@(j * Width + Width / 9).ToString(CultureInfo.InvariantCulture)%" y="@(i * Height).ToString(CultureInfo.InvariantCulture)%" width="@Width.ToString(CultureInfo.InvariantCulture)%" height="160">
                                 @{
                                     date++;
                                     <p>@(date - DateTime.DaysInMonth(Model.year, Model.month))</p>
@@ -116,9 +116,9 @@
                             Event et = Model.EventList.Find(e => e.Date.Month == mt && e.Date.Year == yt && e.Date.Day == date-DateTime.DaysInMonth(Model.year, Model.month));
                             if (et != null)
                             {
-                                <rect x="@(j*Width + Width / 9)%" y="@(i*Height+ Height/3.5)%" rx="0" width="@(Width/1.25)%" height="@(Height/1.5)%" stroke="black"
+                                <rect x="@(j*Width + Width / 9).ToString(CultureInfo.InvariantCulture)%" y="@(i*Height+ Height/3.5).ToString(CultureInfo.InvariantCulture)%" rx="0" width="@(Width/1.25).ToString(CultureInfo.InvariantCulture)%" height="@(Height/1.5).ToString(CultureInfo.InvariantCulture)%" stroke="black"
                                       fill="none" />
-                                <foreignObject x="@(j * Width + Width / 9+(j * Width + Width / 9)/30)%" y="@(i * Height+ Height/5)%" width="@Width%" height="160">
+                                <foreignObject x="@(j * Width + Width / 9+(j * Width + Width / 9)/30).ToString(CultureInfo.InvariantCulture)%" y="@(i * Height+ Height/5).ToString(CultureInfo.InvariantCulture)%" width="@Width.ToString(CultureInfo.InvariantCulture)%" height="160">
                                     @{
                                         <p>
                                             <a asp-page="EventPage" asp-route-EventId="@et.Id">@et.Title</a>
@@ -131,7 +131,7 @@
                         }
                     } else
                     {
-                            <foreignObject x="@(j * Width + Width / 9)%" y="@(i * Height)%" width="@Width%" height="160">
+                        <foreignObject x="@(j * Width + Width / 9).ToString(CultureInfo.InvariantCulture)%" y="@(i * Height).ToString(CultureInfo.InvariantCulture)%" width="@Width.ToString(CultureInfo.InvariantCulture)%" height="160">
                                 @{
                                     Console.WriteLine("");
                                 <p>@(DateTime.DaysInMonth(Model.year, Model.month == 1 ? 12 : Model.month - 1) - (dv-2)+j)</p>
@@ -142,9 +142,9 @@
                         Event et = Model.EventList.Find(e => e.Date.Month == mt && e.Date.Year == yt && e.Date.Day == DateTime.DaysInMonth(Model.year, Model.month == 1 ? 12 : Model.month - 1) - (dv - 2) + j);
                         if (et != null)
                         {
-                            <rect x="@(j*Width + Width / 9)%" y="@(i*Height+ Height/3.5)%" rx="0" width="@(Width/1.25)%" height="@(Height/1.5)%" stroke="black"
+                            <rect x="@(j*Width + Width / 9).ToString(CultureInfo.InvariantCulture)%" y="@(i*Height+ Height/3.5).ToString(CultureInfo.InvariantCulture)%" rx="0" width="@(Width/1.25).ToString(CultureInfo.InvariantCulture)%" height="@(Height/1.5).ToString(CultureInfo.InvariantCulture)%" stroke="black"
                                   fill="none" />
-                            <foreignObject x="@(j * Width + Width / 9+(j * Width + Width / 9)/30)%" y="@(i * Height+ Height/5)%" width="@Width%" height="160">
+                            <foreignObject x="@(j * Width + Width / 9+(j * Width + Width / 9)/30).ToString(CultureInfo.InvariantCulture)%" y="@(i * Height+ Height/5).ToString(CultureInfo.InvariantCulture)%" width="@Width.ToString(CultureInfo.InvariantCulture)%" height="160">
                                 @{
                                     <p>
                                         <a asp-page="EventPage" asp-route-EventId="@et.Id">@et.Title</a>
