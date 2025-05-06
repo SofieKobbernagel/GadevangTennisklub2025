@@ -42,9 +42,10 @@ namespace GadevangTennisklub2025.Pages.Teams
             return RedirectToPage("UpdateTeam", new { ID });
         }
 
-        public IActionResult OnPostAttend(int id)
+        public IActionResult OnPostAttend()
         {
-            return RedirectToPage("AttendTeam", new { id });
+            Console.WriteLine("ShowTeam/OnPostAttend just ran");
+            return RedirectToPage("AttendTeam");
         }
 
         public IActionResult OnPostCreate()

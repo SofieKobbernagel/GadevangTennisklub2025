@@ -21,6 +21,8 @@ namespace GadevangTennisklub2025.Services
         private string searchNameQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Attendees,Description FROM Team WHERE Name = @Name";
         private string searchMembershipTypeQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Attendees,Description FROM Team WHERE MemberType = @MemberType";
         public MemberService memberService = new MemberService();
+
+        public Member SelectedMember { get; set; }
         public List<Member> Members()
         {
             return  memberService.GetAllMembersAsync().Result;
@@ -472,6 +474,7 @@ namespace GadevangTennisklub2025.Services
 
             return teams;
         }
+        
     }
 }
 
