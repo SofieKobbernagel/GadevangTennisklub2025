@@ -12,6 +12,7 @@
         <div class="form-group">
             <label class="custom-control-label">Sort By</label>
             <input type="radio" asp-for="@Model.SortBy" value="CourtId" onclick="this.form.submit()">BaneId</input>
+            <input type="radio" asp-for="@Model.SortBy" value="Name" onclick="this.form.submit()">Navn</input>
             <input type="radio" asp-for="@Model.SortBy" value="Type" onclick="this.form.submit()">Type</input>
         </div>
 
@@ -30,6 +31,7 @@
     <thead style="background-color:lightskyblue;border-radius:60px">
         <tr>
             <td>Bane ID</td>
+            <td>Navn</td>
             <td>Type</td>
             <td></td>
             <td></td>
@@ -40,6 +42,7 @@
         {
             <tr>
                 <td>@courts.CourtId</td>
+                <td>@courts.Name</td>
                 <td>@courts.Type</td>
                 <td style ="background-color:lightgray;text-align:center"><a asp-page="EditCourt" asp-route-Id="@courts.CourtId">Rediger</a></td>
                 <td style="background-color:lightgray;text-align:center"><a asp-page="DeleteCourt" asp-route-deleteId="@courts.CourtId">Slet</a></td>

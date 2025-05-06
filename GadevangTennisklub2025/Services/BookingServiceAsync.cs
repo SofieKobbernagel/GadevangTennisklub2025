@@ -41,6 +41,76 @@ namespace GadevangTennisklub2025.Services
             }
         
         }
+        public async Task CreateTeamBooking(Booking b, int TeamId)
+        {
+
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("INSERT INTO Booking VALUES ( @Start, @End, @CourtId, @TeamId ,NULL );", con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@ID", b.Id);
+                    cmd.Parameters.AddWithValue("@Start", b.Start);
+                    cmd.Parameters.AddWithValue("@End", b.End);
+                    cmd.Parameters.AddWithValue("@CourtId", b.Court_Id);
+                    cmd.Parameters.AddWithValue("@TeamId", TeamId);
+                    //cmd.Parameters.AddWithValue("@EventId", null);
+                    await cmd.ExecuteNonQueryAsync();
+                    con.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+
+            }
+
+        }
+        public async Task CreateEventBooking(Booking b, int EventId)
+        {
+
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("INSERT INTO Booking VALUES ( @Start, @End, @CourtId, Null,@EventId );", con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@ID", b.Id);
+                    cmd.Parameters.AddWithValue("@Start", b.Start);
+                    cmd.Parameters.AddWithValue("@End", b.End);
+                    cmd.Parameters.AddWithValue("@CourtId", b.Court_Id);
+                    //cmd.Parameters.AddWithValue("@TeamId", 8);
+                    cmd.Parameters.AddWithValue("@EventId", EventId);
+                    await cmd.ExecuteNonQueryAsync();
+                    con.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+
+            }
+
+        }
+
+        
 
         public Task DeleteBooking(Booking b)
         {

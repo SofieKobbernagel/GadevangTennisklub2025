@@ -50,6 +50,7 @@ namespace GadevangTennisklub2025.Pages.TennisField
                 }
                 if (Courts == null)
                     return RedirectToPage("Index");
+                if (SortBy == "Name") { Courts.Sort(); }
                 if (SortBy == "Type") { Courts.Sort(); }
                 if (SortOrder == "Descending") { Courts.Reverse(); }
                 return Page();

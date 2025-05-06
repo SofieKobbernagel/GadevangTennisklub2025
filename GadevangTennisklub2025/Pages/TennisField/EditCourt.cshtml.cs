@@ -30,6 +30,11 @@ namespace GadevangTennisklub2025.Pages.TennisField
         {
             await LoadList();
             Court = await _courtService.GetCourtFromIdAsync(id);
+            var isAdmin = HttpContext.Session.GetString("IsAdmin");
+            if (isAdmin != "true")
+            {
+                return RedirectToPage("/Index");
+            }
             return Page();
         }
         public async Task<IActionResult> OnPostAsync()
