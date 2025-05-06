@@ -54,8 +54,7 @@ namespace GadevangTennisklub2025.Pages.Member
                         "Name" => m => m.Name,
                         "Email" => m => m.Email,
                         "Phone" => m => m.Phone,
-                        "Age" => m => m.Age,
-                        _ => m => m.Name
+                        "Age" => m => m.Age
                     };
 
                     if (SortOrder == "Descending")
