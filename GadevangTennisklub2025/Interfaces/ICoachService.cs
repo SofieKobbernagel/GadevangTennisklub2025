@@ -6,7 +6,7 @@ namespace GadevangTennisklub2025.Interfaces
     {
         Task<bool> CreateCoachAsync(Coach coach);
         Task<bool> UpdateCoachAsync(Coach coach);
-        Task<bool> DeleteCoachAsync(int coachId);
+        Task<Coach> DeleteCoachAsync(int coachId);
         Task<Coach?> GetCoachByIdAsync(int coachId);
         Task<List<Coach>> GetAllCoachesAsync();
     }

@@ -10,7 +10,7 @@ namespace GadevangTennisklub2025.Services
         private string connectionString = Secret.ConnectionString;
         private string selectAllCoachesSql = "SELECT * FROM Coach";
         private string insertCoachSql = "INSERT INTO Coach (Salary, Address, ContractFilePath, Name, Tlf, Email, City, PostalCode, ProfileImagePath) VALUES ( @Salary, @Address, @ContractFilePath, @Name, @Tlf, @Email, @City, @PostalCode, @ProfileImagePath)";
-        private string updateCoachSql = "UPDATE Coach SET Name = @Name, ProfileImagePath = @ProfileImagePath WHERE Coach_Id = @Coach_Id";
+        private string updateCoachSql = "UPDATE Coach SET Salary = @Salary, Address = @Address, ContractFilePath = @ContractFilePath, Name = @Name, TLF = @TLF, Email = @Email, City = @City, PostalCode = @PostalCode, ProfileImagePath = @ProfileImagePath WHERE Coach_Id = @Coach_Id";
         private string deleteCoachSql = "DELETE FROM Coach WHERE Coach_Id = @Coach_Id";
         private string selectCoachByIdSql = "SELECT * FROM Coach WHERE Coach_Id = @Coach_Id";
 
@@ -54,7 +54,7 @@ namespace GadevangTennisklub2025.Services
             return isCreated;
         }
 
-        public Task<bool> DeleteCoachAsync(int coachId)
+        public Task<Coach> DeleteCoachAsync(int coachId)
         {
             throw new NotImplementedException();
         }
