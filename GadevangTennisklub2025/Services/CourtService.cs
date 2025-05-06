@@ -9,10 +9,10 @@ namespace GadevangTennisklub2025.Services
     {
         private string connectionString = Secret.ConnectionString;
 
-        private string queryString = "SELECT Court_Id, Type FROM Court";
-        private string findCourtByIDSql = "select Court_Id, Type FROM Court WHERE Court_Id = @ID";
-        private string insertSql = "Insert INTO Court Values(@ID, @Type)";
-        private string updateSql = "UPDATE Court SET Type = @Type WHERE Court_Id = @ID";
+        private string queryString = "SELECT Court_Id, Name, Type FROM Court";
+        private string findCourtByIDSql = "select Court_Id, Name, Type FROM Court WHERE Court_Id = @ID";
+        private string insertSql = "Insert INTO Court Values(@ID, @Name, @Type)";
+        private string updateSql = "UPDATE Court SET Type = @Type, Name = @Name WHERE Court_Id = @ID";
         private string deleteSql = "DELETE FROM Court WHERE Court_Id = @ID";
 
         public async Task<bool> CreateCourtAsync(TennisField tennisField)
@@ -24,6 +24,7 @@ namespace GadevangTennisklub2025.Services
                 try
                 {
                     command.Parameters.AddWithValue("@ID", tennisField.CourtId);
+                    command.Parameters.AddWithValue("@Name", tennisField.Name);
                     command.Parameters.AddWithValue("@Type", tennisField.Type);
 
                     await command.Connection.OpenAsync();
@@ -90,8 +91,10 @@ namespace GadevangTennisklub2025.Services
                     while (await reader.ReadAsync())
                     {
                         int courtId = reader.GetInt32("Court_Id");
+                        string courtName = reader.GetString("Name");
                         string courtType = reader.GetString("Type");
                         TennisField court = new TennisField(courtId, courtType);
+                        court.Name = courtName;
                         courts.Add(court);
                     }
                     reader.Close();
@@ -128,8 +131,10 @@ namespace GadevangTennisklub2025.Services
                     if (await reader.ReadAsync())
                     {
                         int cNr = reader.GetInt32("Court_Id");
+                        string courtName = reader.GetString("Name");
                         string courtType = reader.GetString("Type");
                         court = new TennisField(cNr, courtType);
+                        court.Name = courtName;
                     }
                     reader.Close();
                 }
@@ -165,8 +170,10 @@ namespace GadevangTennisklub2025.Services
                     while (await reader.ReadAsync()) // reads from data not from console
                     {
                         int courtId = reader.GetInt32("Court_Id");
+                        string courtName = reader.GetString("Name");
                         string cType = reader.GetString("Type");
                         TennisField court = new TennisField(courtId, cType);
+                        court.Name = courtName;
                         courts.Add(court);
                     }
                     reader.Close();
@@ -195,6 +202,7 @@ namespace GadevangTennisklub2025.Services
                 {
                     SqlCommand command = new SqlCommand(updateSql, connection);
                     command.Parameters.AddWithValue("@ID", tennisField.CourtId);
+                    command.Parameters.AddWithValue("@Name", tennisField.Name);
                     command.Parameters.AddWithValue("@Type", tennisField.Type);
                     
                     await command.Connection.OpenAsync();

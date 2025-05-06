@@ -32,6 +32,11 @@ namespace GadevangTennisklub2025.Pages.TennisField
         public async Task<IActionResult> OnGetAsync()
         {
             await LoadList();
+            var isAdmin = HttpContext.Session.GetString("IsAdmin");
+            if (isAdmin != "true")
+            {
+                return RedirectToPage("/Index");
+            }
             return Page();
         }
         public async Task<IActionResult> OnPostAsync()
