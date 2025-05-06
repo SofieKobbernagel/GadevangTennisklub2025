@@ -36,6 +36,35 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
+        public async Task BookingMemberRelation(int MemberId, int BookingId) 
+        {
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("INSERT INTO RelMemberBooking VALUES (@Member_Id,@Booking_Id);", con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Member_Id", MemberId);
+                    cmd.Parameters.AddWithValue("@Booking_Id", BookingId);
+                    await cmd.ExecuteNonQueryAsync();
+                    con.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+
+            }
+        }
+
         public async Task<bool> MemberAvailible(int memberID, DateTime start, DateTime end)
         {
             List<Booking> BookingList = new List<Booking>();
@@ -44,7 +73,8 @@ namespace GadevangTennisklub2025.Services
                 
                 try
                 {
-                    SqlCommand cmd = new SqlCommand("select * from Booking where Booking_Id=(select Booking_Id from RelMemberBooking where Member_Id=@Id)", con);
+                    //SqlCommand cmd = new SqlCommand("select * from Booking where Booking_Id=(select Booking_Id from RelMemberBooking where Member_Id=@Id)", con);
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM Booking INNER JOIN RelMemberBooking ON Booking.Booking_Id = RelMemberBooking.Booking_Id where Member_Id=@Id", con);
                     con.Open();
                     cmd.Parameters.AddWithValue("@Id", memberID);
                     SqlDataReader reader = await cmd.ExecuteReaderAsync();
@@ -55,8 +85,9 @@ namespace GadevangTennisklub2025.Services
                         DateTime Start= reader.GetDateTime("Start");
                         DateTime End = reader.GetDateTime("End");
                         int CourtId = reader.GetInt32("Court_Id");
-                        int TeamId = reader.GetInt32("Team_Id");
-                        int EventId = reader.GetInt32("Court_Id");
+                        
+                        int? TeamId = null;
+                        int? EventId = null; 
                        
                         Booking ev = new Booking(BookingNr, Start, End, CourtId, TeamId, EventId);
                         BookingList.Add(ev);
@@ -78,7 +109,7 @@ namespace GadevangTennisklub2025.Services
                     //return false;
                 }
             }
-            if(BookingList.Exists(i=>start >i.Start&& end <=start || start<end)) return false;
+            if(BookingList.Exists(i=>start ==i.Start )) return false;
             return true;
 
         }

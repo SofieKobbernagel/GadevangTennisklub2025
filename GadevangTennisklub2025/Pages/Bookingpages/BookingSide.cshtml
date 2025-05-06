@@ -1,0 +1,86 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.Bookingpages.BookingSideModel
+@{
+    ViewData["Title"] = "BookingSide";
+}
+<p style="color:red">@Model.Message</p>
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="@Model.b.Start" class="control-label"></label>
+        <input asp-for="@Model.b.Start" class="form-control" required="true" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.b.End" class="control-label"></label>
+        <input asp-for="@Model.b.End" class="form-control" required="true" readonly/>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.b.Court_Id" class="control-label"></label>
+        <input asp-for="@Model.b.Court_Id" class="form-control" required="true" readonly />
+    </div>
+    @if (HttpContext.Session.GetString("IsAdmin") == "true")
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    <label for="Booking">Booking</label>
+                    <input type="radio" asp-for="@Model.type" value="@i" name="type" id="Booking" />
+                    <br>
+                    <div class="form-group">
+                        <label asp-for="@Model.me" class="control-label"></label>
+                        <select asp-for="@Model.me" class="form-control"
+                                asp-items="@Model.ints">
+                        </select>
+                    </div>
+                    break;
+                case 1:
+                    <label for="Event">Event</label>
+                    <input type="radio" asp-for="@Model.type" value="@i" name="type" id="Event" />
+                    <br>
+                    <div class="form-group">
+                        <label asp-for="@Model.ev" class="control-label"></label>
+                        <select asp-for="@Model.ev" class="form-control"
+                                asp-items="@Model.intse">
+                        </select>
+                       
+                    </div>
+                    break;
+                case 2:
+                    <label for="Team">Team</label>
+                    <input type="radio" asp-for="@Model.type" value="@i" name="type" id="Teams" />
+                    <br>
+                    <div class="form-group">
+                        <label asp-for="@Model.te" class="control-label"></label>
+                        <select asp-for="@Model.te" class="form-control"
+                                asp-items="@Model.intst">
+                        </select>
+                        
+                    </div>
+                    break;
+
+            }
+        }
+        
+             <div class="form-group">
+                <input type="submit" asp-page-handler="Admin" value="Opret bruger" class="btn btn-primary" />
+            </div>
+    }
+    else
+    {
+        <div class="form-group">
+            <label asp-for="@Model.me" class="control-label"></label>
+            <select asp-for="@Model.me" class="form-control"
+                    asp-items="@Model.ints">
+            </select>
+        </div>
+             <div class="form-group">
+            <input type="submit" asp-page-handler="User" value="Opret bruger" class="btn btn-primary" />
+        </div>
+    }
+
+       
+
+    
+</form>
+

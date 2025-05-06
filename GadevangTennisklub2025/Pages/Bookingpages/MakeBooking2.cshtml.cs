@@ -43,10 +43,12 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
             List<Booking> temp= bookingService.GetAllBookings().Result;
             temp.RemoveAll(i=> i.Start<=DateTime.Now);
             temp.RemoveAll(i => (i.Start - DateTime.Now).TotalDays > (7 - (int)DateTime.Now.DayOfWeek==0? 7: (int)DateTime.Now.DayOfWeek));
+            //temp.RemoveAll(i => (i.Start - DateTime.Now).TotalDays > ( 0-((int)DateTime.Now.DayOfWeek==0? 7: (int)DateTime.Now.DayOfWeek)));
            
             
             foreach (Booking booking in temp) 
             {
+
                 if(booking.Event_Id==null && booking.Team_Id==null ) BookingType[(int)booking.Start.DayOfWeek == 0 ? 7 : (int)booking.Start.DayOfWeek][booking.Court_Id][booking.Start.Hour-7] = 1;
                 if(booking.Event_Id==null && booking.Team_Id!=null ) BookingType[(int)booking.Start.DayOfWeek == 0 ? 7 : (int)booking.Start.DayOfWeek][booking.Court_Id][booking.Start.Hour-7] = 2;
                 if(booking.Event_Id!=null && booking.Team_Id==null ) BookingType[(int)booking.Start.DayOfWeek == 0 ? 7 : (int)booking.Start.DayOfWeek][booking.Court_Id][booking.Start.Hour-7] = 3;

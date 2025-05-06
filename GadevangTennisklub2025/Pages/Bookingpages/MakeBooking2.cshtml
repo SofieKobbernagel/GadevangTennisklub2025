@@ -4,6 +4,9 @@
     ViewData["Title"] = "MakeBooking2";
 }
 
+
+
+
 <svg width="100%" height="700" >
     @{
         double Width = 100.0 / 7;
@@ -39,16 +42,27 @@
             {
                 for (int jj=0;jj<4;jj++)
                 {
-                    if (z==0)continue;
+                    if (z == 0)
+                    {
+                        if (jj != 0)
+                        {
+                            <foreignObject x="@(i*Width+jj*Width/4)%" y="@(Height)%" width="@(Width)%" height="@(Height)%">
+                                <p>@jj</p>
+
+                            </foreignObject>
+                            continue;
+                        }
+                        continue;
+                    }
                     if (jj != 0)
                     {
                         @switch (Model.BookingType[i+1][jj][z])
                         {
                             case 0:
                                 <foreignObject x="@(i*Width+jj*Width/4)%" y="@(z*Height+Height/4)%" width="@(Width)%" height="@(Height)%">
-                                    <form action="/Index">
-                                        <button type="input"><img src="https://gadevangtennisklub.dk/cms/images/user_add.png" title="Book Bane" /></button>
-                                    </form>
+                                    <a asp-page="BookingSide" asp-route-date="@(td)" asp-route-hour="@(z+7)" asp-route-Court="@jj">
+                                        <img src="https://gadevangtennisklub.dk/cms/images/user_add.png" title="Book Bane" />
+                                    </a>
 
                                 </foreignObject>
                                 break;
