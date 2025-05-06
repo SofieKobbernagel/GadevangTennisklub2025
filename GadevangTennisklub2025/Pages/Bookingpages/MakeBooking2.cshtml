@@ -29,7 +29,7 @@
             <rect x="@((i*Width).ToString(CultureInfo.InvariantCulture))%" y="0" rx="0" width="@(Width.ToString(CultureInfo.InvariantCulture))%" height="100%" stroke="black"
             fill="none" />
 
-            <foreignObject x="@((i * Width+Width/4).ToString(CultureInfo.InvariantCulture))%" y="0" width="@Width%" height="160">
+            <foreignObject x="@((i * Width+Width/4).ToString(CultureInfo.InvariantCulture))%" y="0" width="@(Width.ToString(CultureInfo.InvariantCulture))%" height="160">
                 <p> @((DayOfWeek)(i == 0 ? 1 : (i + 1) == 7 ? 0 : i + 1)) 
                     <br/>
                     @{
