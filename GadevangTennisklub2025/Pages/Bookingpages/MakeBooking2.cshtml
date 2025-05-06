@@ -1,4 +1,5 @@
 ﻿@page
+@using System.Globalization
 @model GadevangTennisklub2025.Pages.Bookingpages.MakeBooking2Model
 @{
     ViewData["Title"] = "MakeBooking2";
@@ -25,10 +26,10 @@
         for (int i = 0; i < 7; i++)
         {
 
-            <rect x="@(i*Width)%" y="0" rx="0" width="@(Width)%" height="100%" stroke="black"
+            <rect x="@((i*Width).ToString(CultureInfo.InvariantCulture))%" y="0" rx="0" width="@(Width.ToString(CultureInfo.InvariantCulture))%" height="100%" stroke="black"
             fill="none" />
 
-            <foreignObject x="@(i * Width+Width/4)%" y="0" width="@Width%" height="160"> 
+            <foreignObject x="@((i * Width+Width/4).ToString(CultureInfo.InvariantCulture))%" y="0" width="@Width%" height="160">
                 <p> @((DayOfWeek)(i == 0 ? 1 : (i + 1) == 7 ? 0 : i + 1)) 
                     <br/>
                     @{
@@ -46,7 +47,7 @@
                     {
                         if (jj != 0)
                         {
-                            <foreignObject x="@(i*Width+jj*Width/4)%" y="@(Height)%" width="@(Width)%" height="@(Height)%">
+                            <foreignObject x="@((i*Width+jj*Width/4).ToString(CultureInfo.InvariantCulture))%" y="@(Height.ToString(CultureInfo.InvariantCulture))%" width="@(Width.ToString(CultureInfo.InvariantCulture))%" height="@(Height.ToString(CultureInfo.InvariantCulture))%">
                                 <p>@jj</p>
 
                             </foreignObject>
@@ -59,7 +60,7 @@
                         @switch (Model.BookingType[i+1][jj][z])
                         {
                             case 0:
-                                <foreignObject x="@(i*Width+jj*Width/4)%" y="@(z*Height+Height/4)%" width="@(Width)%" height="@(Height)%">
+                                <foreignObject x="@((i*Width+jj*Width/4).ToString(CultureInfo.InvariantCulture))%" y="@((z*Height+Height/4).ToString(CultureInfo.InvariantCulture))%" width="@(Width.ToString(CultureInfo.InvariantCulture))%" height="@(Height.ToString(CultureInfo.InvariantCulture))%">
                                     <a asp-page="BookingSide" asp-route-date="@(td)" asp-route-hour="@(z+7)" asp-route-Court="@jj">
                                         <img src="https://gadevangtennisklub.dk/cms/images/user_add.png" title="Book Bane" />
                                     </a>
@@ -67,17 +68,17 @@
                                 </foreignObject>
                                 break;
                             case 1:
-                                <foreignObject x="@(i*Width+jj*Width/4)%" y="@(z*Height+Height/4)%" width="@(Width/7)%" height="@(Height)%">
+                                <foreignObject x="@((i*Width+jj*Width/4).ToString(CultureInfo.InvariantCulture))%" y="@((z*Height+Height/4).ToString(CultureInfo.InvariantCulture))%" width="@((Width/7).ToString(CultureInfo.InvariantCulture))%" height="@(Height.ToString(CultureInfo.InvariantCulture))%">
                                     <img src="https://gadevangtennisklub.dk/cms/images/user_delete.png" title="Bane Optaget" />
                                 </foreignObject>
                                 break;
                             case 2:
-                                <foreignObject x="@(i*Width+jj*Width/4)%" y="@(z*Height+Height/4)%" width="@(Width/7)%" height="@(Height)%">
+                                <foreignObject x="@((i*Width+jj*Width/4).ToString(CultureInfo.InvariantCulture))%" y="@((z*Height+Height/4).ToString(CultureInfo.InvariantCulture))%" width="@((Width/7).ToString(CultureInfo.InvariantCulture))%" height="@(Height.ToString(CultureInfo.InvariantCulture))%">
                                     <img src="https://gadevangtennisklub.dk/cms/images/user_gray.png" title="Bane Optaget" />
                                 </foreignObject>
                                 break;
                             case 3:
-                                <foreignObject x="@(i*Width+jj*Width/4)%" y="@(z*Height+Height/4)%" width="@(Width/7)%" height="@(Height)%">
+                                <foreignObject x="@((i*Width+jj*Width/4).ToString(CultureInfo.InvariantCulture))%" y="@((z*Height+Height/4).ToString(CultureInfo.InvariantCulture))%" width="@((Width/7).ToString(CultureInfo.InvariantCulture))%" height="@(Height.ToString(CultureInfo.InvariantCulture))%">
                                     <div style="background-color:darkblue">
                                         <img src="https://gadevangtennisklub.dk/cms/images/user_gray.png" title="Booket til event"  />
                                     </div>
@@ -99,7 +100,7 @@
                             }
                             else
                             {
-                               <foreignObject x="@(i*Width)%" y="@(z*Height+Height/4)%" width="@(Width/3.75)%" height="@(Height)%">
+                        <foreignObject x="@((i*Width).ToString(CultureInfo.InvariantCulture))%" y="@((z*Height+Height/4).ToString(CultureInfo.InvariantCulture))%" width="@((Width/3.75).ToString(CultureInfo.InvariantCulture))%" height="@(Height.ToString(CultureInfo.InvariantCulture))%">
 
                                    @(z+7).00   
                                    
