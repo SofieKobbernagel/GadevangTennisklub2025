@@ -23,7 +23,7 @@ namespace GadevangTennisklub2025.Pages.Teams
         [BindProperty]
         public TimeOnly TimeOfDay { get; set; }
         [BindProperty]
-        public int Length { get; set; }
+        public Double Length { get; set; }
         [BindProperty]
         public int MinMembers { get; set; }
         [BindProperty]

@@ -1,0 +1,57 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.About.GetAllCoachesModel
+@{
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<h4>Klubbens trænere</h4>
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Profilbillede</th>
+            <th>Navn</th>
+            <th>Email</th>
+            <th>Telefon</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model.Coaches)
+        {
+            <tr>
+                <td class="form-group">
+
+                    @if (!string.IsNullOrEmpty(c.ProfileImagePath))
+                    {
+                        <img src="@c.ProfileImagePath" width="150" height="150" />
+                    }
+                    else
+                    {
+                        <p>Intet profilbillede.</p>
+                    }
+
+                </td>
+                <td>
+                    @c.Name
+                </td>
+                <td>
+                    @c.Email
+                </td>
+                <td>
+                    @c.Phone
+                </td>
+            </tr>
+        }
+        @if (@Model.IsAdmin)
+        {
+            <a class="btn btn-primary btn-sm" title="CreateCoach"
+               asp-page="CreateCoach">Opret ny træner</a>
+
+        }
+    </tbody>
+
+

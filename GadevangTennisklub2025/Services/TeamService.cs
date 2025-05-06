@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Diagnostics.Metrics;
+using System.Globalization;
 
 namespace GadevangTennisklub2025.Services
 {
@@ -12,7 +13,7 @@ namespace GadevangTennisklub2025.Services
     {
         private string connectionString = Secret.ConnectionString;
         private string queryString = "SELECT  Team_Id, MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers, Attendees, Description FROM Team";
-        private string updateQuery = "UPDATE Team SET MemberType = @MemberType, Name = @Name, Length = @Length, TimeOfDay = @TimeOfDay, DayOfWeek = @DayOfWeek, MinMembers = @MinMembers, MaxMembers = @MaxMembers, Attendees = @Attendees, Description = @Description WHERE Team_Id = @Team_Id";
+        private string updateQuery = "UPDATE Team SET Team_Id = @Team_Id, MemberType = @MemberType, Name = @Name, Length = @Length, TimeOfDay = @TimeOfDay, DayOfWeek = @DayOfWeek, MinMembers = @MinMembers, MaxMembers = @MaxMembers, Attendees = @Attendees, Description = @Description WHERE Team_Id = @Team_Id";
         private string deleteQuery = "DELETE FROM Team WHERE Name=@Name;";
         private string createQuery = "INSERT INTO Team ( Team_Id, MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers, Attendees, Description)\r\nVALUES ( @Team_Id, @MemberType, @Name, @Length, @TimeOfDay, @DayOfWeek, @MinMembers, @MaxMembers, @Attendees, @Description);";
 
@@ -50,7 +51,7 @@ namespace GadevangTennisklub2025.Services
             List<int> output=new List<int>();
             List<string> outStrings=new List<string>(strings.Length);
             int k=0;
-            if (strings == null || strings.Length == 0)
+            if (strings == null || strings.Length == 0 || strings==" ")
             {
                 return output;
             }
@@ -100,7 +101,8 @@ namespace GadevangTennisklub2025.Services
                     command.Parameters.AddWithValue("@Team_Id", team.Id);
                     command.Parameters.AddWithValue("@MemberType", team.MembershipType);
                     command.Parameters.AddWithValue("@Name", team.Name);
-                    command.Parameters.AddWithValue("@Length", team.Length);
+                    command.Parameters.AddWithValue("@Length", team.Length.ToString(CultureInfo.InvariantCulture));
+                    Console.WriteLine("TeamService/CreateTeam/ double length = " + team.Length + " , ,  string length = " + team.Length.ToString(CultureInfo.InvariantCulture));
                     command.Parameters.AddWithValue("@TimeOfDay", team.TimeOfDay);
                     command.Parameters.AddWithValue("@DayOfWeek", team.DayOfWeek);
                     command.Parameters.AddWithValue("@MinMembers", team.AttendeeRange[0]);
@@ -174,7 +176,7 @@ namespace GadevangTennisklub2025.Services
                             string teamNavn = reader.GetString("Name");
                             int dayOfWeek = reader.GetInt32("DayOfWeek");
                             string startTime = reader.GetString("TimeOfDay"); //ex. 14:30
-                            string length = reader.GetString("Length");
+                            double length = double.Parse(reader.GetString("Length"), CultureInfo.InvariantCulture);
                             int[] attendeeRange = { reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers") };
                             string attendeesID = reader.GetString("Attendees");//"memberID,memberID,memberID..."
                             string description = reader.GetString("Description");
@@ -182,7 +184,7 @@ namespace GadevangTennisklub2025.Services
 
                             List<Member> Attendees = IdsToMembers(ListIntFromString(attendeesID));
 
-                            Team team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), double.Parse(length), attendeeRange, Attendees, description);
+                            Team team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
                             if (Attendees.Contains(member))
                             {
                                 teams.Add(team);
@@ -225,15 +227,16 @@ namespace GadevangTennisklub2025.Services
                             string teamNavn = reader.GetString("Name");
                             int dayOfWeek = reader.GetInt32("DayOfWeek");
                             string startTime = reader.GetString("TimeOfDay"); //ex. 14:30
-                            string length = reader.GetString("Length");
+                            double length = double.Parse(reader.GetString("Length"), CultureInfo.InvariantCulture);
                             int[] attendeeRange = { reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers") };
+                            Console.WriteLine("getallTeamsAsync/ length = "+length);
                             string attendeesID = reader.GetString("Attendees");//"memberID,memberID,memberID..."
                             string description = reader.GetString("Description");
                             string membershipType = reader.GetString("MemberType");
 
                             List<Member> Attendees = IdsToMembers(ListIntFromString(attendeesID));
 
-                            Team team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), double.Parse(length), attendeeRange, Attendees, description);
+                            Team team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
 
                             teams.Add(team);
                         }
@@ -275,7 +278,7 @@ namespace GadevangTennisklub2025.Services
                             string teamNavn = reader.GetString("Name");
                             int dayOfWeek = reader.GetInt32("DayOfWeek");
                             string startTime = reader.GetString("TimeOfDay"); //ex. 14:30
-                            string length = reader.GetString("Length");
+                            double length = double.Parse(reader.GetString("Length"), CultureInfo.InvariantCulture);
                             int[] attendeeRange = { reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers") };
                             string attendeesID = reader.GetString("Attendees");//"memberID,memberID,memberID..."
                             string description = reader.GetString("Description");
@@ -284,8 +287,9 @@ namespace GadevangTennisklub2025.Services
                             List<Member> Attendees = IdsToMembers(ListIntFromString(attendeesID));
                             if (searchID == teamID)
                             {
-                                result_team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), double.Parse(length), attendeeRange, Attendees, description);
+                                result_team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
                             }
+                            
 
                         }
                         reader.Close();
@@ -328,7 +332,7 @@ namespace GadevangTennisklub2025.Services
                             string teamNavn = reader.GetString("Name");
                             int dayOfWeek = reader.GetInt32("DayOfWeek");
                             string startTime = reader.GetString("TimeOfDay"); //ex. 14:30
-                            string length = reader.GetString("Length");
+                            double length = double.Parse(reader.GetString("Length"), CultureInfo.InvariantCulture);
                             int[] attendeeRange = { reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers") };
                             string attendeesID = reader.GetString("Attendees");//"memberID,memberID,memberID..."
                             string description = reader.GetString("Description");
@@ -338,7 +342,7 @@ namespace GadevangTennisklub2025.Services
 
                             if (teamNavn == name)
                             {
-                                Team team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), double.Parse(length), attendeeRange, Attendees, description);
+                                Team team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
                                 teams.Add(team);
                             }
 
@@ -373,9 +377,11 @@ namespace GadevangTennisklub2025.Services
                     SqlCommand command = new SqlCommand(updateQuery, connection);
 
                     // Add parameters to prevent SQL injection
+                    command.Parameters.AddWithValue("@Team_Id", team.Id);
                     command.Parameters.AddWithValue("@MemberType", team.MembershipType);
                     command.Parameters.AddWithValue("@Name", team.Name);
-                    command.Parameters.AddWithValue("@Length", team.Length);
+                    Console.WriteLine("TeamService/UpdateTeamAsync length = "+team.Length);
+                    command.Parameters.AddWithValue("@Length", team.Length.ToString(CultureInfo.InvariantCulture));
                     command.Parameters.AddWithValue("@TimeOfDay", team.TimeOfDay);
                     command.Parameters.AddWithValue("@DayOfWeek", team.DayOfWeek);
                     command.Parameters.AddWithValue("@MinMembers", team.AttendeeRange[0]);

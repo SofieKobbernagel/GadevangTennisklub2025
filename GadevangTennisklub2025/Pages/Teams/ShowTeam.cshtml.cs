@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using GadevangTennisklub2025.Models;
 using GadevangTennisklub2025.Interfaces;
-
+using GadevangTennisklub2025.Services;
 
 
 namespace GadevangTennisklub2025.Pages.Teams
@@ -19,7 +19,11 @@ namespace GadevangTennisklub2025.Pages.Teams
 
         #region Properties
         public List<Models.Team> ListOfTeams { get; private set; }
-        
+        private TimeOnly temp = new TimeOnly(23,50);
+       
+            //Console.WriteLine("endTime: "+(temp));
+            
+
 
         #endregion
 
@@ -27,13 +31,15 @@ namespace GadevangTennisklub2025.Pages.Teams
         public ShowTeamModel(ITeamService teamService)
         {
             _teamService = teamService;
+            Console.WriteLine("TimeSlot: "+temp.AddHours(1.12));
         }
         #endregion
 
         #region Methods
-        public IActionResult OnPostEdit(int id)
+        public IActionResult OnPostEdit(int ID)
         {
-            return RedirectToPage("UpdateTeam", new { id });
+            Console.WriteLine("ShowTeam/OnPostEdit here and id = "+ ID );
+            return RedirectToPage("UpdateTeam", new { ID });
         }
 
         public IActionResult OnPostAttend(int id)
@@ -49,12 +55,13 @@ namespace GadevangTennisklub2025.Pages.Teams
 
         public async Task OnGetAsync()
         {
+            //Console.WriteLine("Teams/ShowTeam/OnGetAsync  timeslot is: "+(.TimeOfDay.Add(TimeSpan.FromHours(item.Length))));
             if (ListOfTeams == null)
             {
                 ListOfTeams = await _teamService.GetAllTeamsAsync();
                 Thread.Sleep(1000);
             }
-            Console.WriteLine("OnGetAsync is done");
+            Console.WriteLine("Team/ShowTeam/OnGetAsync is done");
         }
         #endregion
     }

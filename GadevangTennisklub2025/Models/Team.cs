@@ -21,7 +21,7 @@
         {
         }
 
-        public Team(int id, string name, string membershipType , int dayOfWeek,TimeOnly startTime,double length, int[] attendeeRange, List<Member> attendees, string description)
+        public Team(int id, string name, string membershipType , int dayOfWeek,TimeOnly startTime, double length, int[] attendeeRange, List<Member> attendees, string description)
         {
             Id = id;
             MembershipType = membershipType;
@@ -32,6 +32,8 @@
             AttendeeRange = attendeeRange;
             Attendees = attendees;
             Description = description;
+
+            Console.WriteLine("Team.cs/ length is: " + Length);
         }
         public override string ToString()
         {
