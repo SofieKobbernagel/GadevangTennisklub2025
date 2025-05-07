@@ -18,6 +18,7 @@ namespace GadevangTennisklub2025.Pages.Teams
         #endregion
 
         #region Properties
+        public bool isAdmin { get; set; } = false;
         public List<Models.Team> ListOfTeams { get; private set; }
         private TimeOnly temp = new TimeOnly(23,50);
        
@@ -56,6 +57,10 @@ namespace GadevangTennisklub2025.Pages.Teams
 
         public async Task OnGetAsync()
         {
+            if (HttpContext.Session.GetString("IsAdmin")!=null && bool.Parse(HttpContext.Session.GetString("IsAdmin"))==true) 
+            { 
+                isAdmin = true;
+            }
             //Console.WriteLine("Teams/ShowTeam/OnGetAsync  timeslot is: "+(.TimeOfDay.Add(TimeSpan.FromHours(item.Length))));
             if (ListOfTeams == null)
             {
