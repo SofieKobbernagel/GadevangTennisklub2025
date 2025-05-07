@@ -57,6 +57,7 @@ namespace GadevangTennisklub2025.Pages.Teams
             AttendeeRange[1] = MaxMembers;
             Team team = new Team(Id, Name, MembershipType, DayOfWeek, TimeOfDay, Length, AttendeeRange,Attendees, Description);
             _teamService.CreateTeamAsync(team);
+            TempData["SuccessMessage"] = "Holdet er oprettet og er nu synligt for medlemmer!";
             return RedirectToPage("ShowTeam");
         }
         public IActionResult OnPostCancel()

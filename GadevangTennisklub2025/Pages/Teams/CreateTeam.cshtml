@@ -2,63 +2,56 @@
 @model GadevangTennisklub2025.Pages.Teams.CreateTeamModel
 @{
 }
-<h1>CreateTeam</h1>
-<form method="post">
-    <div class="form-group">
+<h1>Create Team</h1>
 
-        <label asp-for="@Model.Id" class="control-label"></label>
-        <input asp-for="@Model.Id" style="display: br; width: 30%;" class="form-control" />
-    </div>
+<form method="post" onsubmit="return confirmAction();">
     <div class="form-group">
-        <label asp-for="@Model.Name" class="control-label"></label>
-        <input asp-for="@Model.Name" style="display: br; width: 30%;" class="form-control" />
+        <label asp-for="Id" class="control-label"></label>
+        <input asp-for="Id" style="width: 30%;" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="@Model.MembershipType" class="control-label"></label>
-        <input asp-for="@Model.MembershipType" style="display: br; width: 30%;" class="form-control" />
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" style="width: 30%;" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="@Model.DayOfWeek" class="control-label"></label>
-        <input asp-for="@Model.DayOfWeek" style="display: br; width: 30%;" class="form-control" />
+        <label asp-for="MembershipType" class="control-label"></label>
+        <input asp-for="MembershipType" style="width: 30%;" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="@Model.TimeOfDay" class="control-label"></label>
-        <input asp-for="@Model.TimeOfDay" style="display: br; width: 30%;" class="form-control" />
+        <label asp-for="DayOfWeek" class="control-label"></label>
+        <input asp-for="DayOfWeek" style="width: 30%;" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="@Model.Length" class="control-label"></label>
-        <input asp-for="@Model.Length" style="display: br; width: 30%;" class="form-control" />
+        <label asp-for="TimeOfDay" class="control-label"></label>
+        <input asp-for="TimeOfDay" style="width: 30%;" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="@Model.MinMembers" class="control-label"></label>
-        <input asp-for="@Model.MinMembers" style="display: br; width: 30%;" class="form-control" />
+        <label asp-for="Length" class="control-label"></label>
+        <input asp-for="Length" style="width: 30%;" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="@Model.MaxMembers" class="control-label"></label>
-        <input asp-for="@Model.MaxMembers" style="display: br; width: 30%;" class="form-control" />
+        <label asp-for="MinMembers" class="control-label"></label>
+        <input asp-for="MinMembers" style="width: 30%;" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="@Model.Description" class="control-label"></label>
-        <input asp-for="@Model.Description" style="display: br; width: 30%;" class="form-control" />
+        <label asp-for="MaxMembers" class="control-label"></label>
+        <input asp-for="MaxMembers" style="width: 30%;" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <input asp-for="Description" style="width: 30%;" class="form-control" />
     </div>
 
-
-
-    <div class="formgroup">
-        <form style="display: inline;" asp-page-handler="Create" asp-route-id="0">
-            <input type="submit" value="Create Team" class="btn btn-primary" />
-        </form>
+    <div class="form-group">
+        <button type="submit" asp-page-handler="Create" class="btn btn-primary">Create Team</button>
+        <button type="submit" asp-page-handler="Cancel" class="btn btn-secondary">Cancel</button>
     </div>
-
-
-
-    <div class="col-md-4 text-center">
-        <form style="display: inline;" asp-page-handler="Cancel">
-            <input type="Submit" value="Cancel" class="btn btn-primary" />
-        </form>
-    </div>
-
-
-
-
 </form>
+
+@section Scripts {
+    <script>
+        function confirmAction() {
+            return confirm("Are you sure you want to create a team?");
+        }
+    </script>
+}
