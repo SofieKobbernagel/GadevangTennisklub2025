@@ -16,6 +16,8 @@ namespace GadevangTennisklub2025.Pages.TennisField
         [BindProperty(SupportsGet = true)] public string SortBy { get; set; }
         [BindProperty(SupportsGet = true)] public string SortOrder { get; set; }
 
+        public bool isAdmin { get; set; } = false;
+
         public List<Models.TennisField> Courts { get; set; }
 
         public List<SelectListItem> SelectList { get; set; }
@@ -40,9 +42,16 @@ namespace GadevangTennisklub2025.Pages.TennisField
         {
             try
             {
+                //Set a flag to detect if user is an admin or not.
+                if (HttpContext.Session.GetString("IsAdmin") != null && bool.Parse(HttpContext.Session.GetString("IsAdmin")) == true)
+                {
+                    isAdmin = true;
+                }
+
                 await LoadList();
-                Courts = await _courtService.GetAllCourtsAsync();
-                if (!string.IsNullOrWhiteSpace(FilterCriteria))
+
+                Courts = await _courtService.GetAllCourtsAsync(); //Fill the list with data from the database.
+                if (!string.IsNullOrWhiteSpace(FilterCriteria)) //Search bar reads through name and type.
                 {
                     string criteria = FilterCriteria.ToLower();
                     Courts = Courts.Where(m =>
@@ -50,9 +59,10 @@ namespace GadevangTennisklub2025.Pages.TennisField
                         (!string.IsNullOrEmpty(m.Type) && m.Type.ToLower().Contains(criteria))
                     ).ToList();
                 }
-                if (Courts == null)
+                if (Courts == null) //If list is devoid of courts, send to front page.
                     return RedirectToPage("Index");
-                if (SortBy == "Name") { Courts.Sort(new CourtNameCompare()); }
+
+                if (SortBy == "Name") { Courts.Sort(new CourtNameCompare()); } //These two are radio buttons to sort by name and type.
                 if (SortBy == "Type") { Courts.Sort(); }
                 if (SortOrder == "Descending") { Courts.Reverse(); }
                 return Page();
