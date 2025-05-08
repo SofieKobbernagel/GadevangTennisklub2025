@@ -16,6 +16,7 @@ namespace GadevangTennisklub2025.Services
         private string updateQuery = "UPDATE Team SET Team_Id = @Team_Id, MemberType = @MemberType, Name = @Name, Length = @Length, TimeOfDay = @TimeOfDay, DayOfWeek = @DayOfWeek, MinMembers = @MinMembers, MaxMembers = @MaxMembers, Attendees = @Attendees, Description = @Description WHERE Team_Id = @Team_Id";
         private string deleteQuery = "DELETE FROM Team WHERE Name=@Name;";
         private string createQuery = "INSERT INTO Team ( Team_Id, MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers, Attendees, Description)\r\nVALUES ( @Team_Id, @MemberType, @Name, @Length, @TimeOfDay, @DayOfWeek, @MinMembers, @MaxMembers, @Attendees, @Description);";
+        private string attendTeamQuery = "UPDATE Team SET Attendees = CONCAT(Attendees, ',', @Member_Id) WHERE Team_Id = @Team_Id;";
 
         private string searchNrQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Attendees,Description FROM Team WHERE Team_Id = @Team_Id";
         private string searchNameQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Attendees,Description FROM Team WHERE Name = @Name";
@@ -48,32 +49,24 @@ namespace GadevangTennisklub2025.Services
             }
             return members;
         }
-        public List<int> ListIntFromString(string strings) 
+        
+        public List<int> ListIntFromString(string strings)
         {
-            List<int> output=new List<int>();
-            List<string> outStrings=new List<string>(strings.Length);
-            int k=0;
-            if (strings == null || strings.Length == 0 || strings==" ")
-            {
+            List<int> output = new List<int>();
+            if (string.IsNullOrWhiteSpace(strings))
                 return output;
-            }
-            for(int i=0;i<=strings.Length;i++){
-                if(strings[i] == ',')
-                {
-                    k++;
-                }
-                else {
-                    outStrings[k].Append(strings[i]);
-                }
 
-            }
-            foreach(string str in outStrings)
+            var parts = strings.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var part in parts)
             {
-                output.Add(int.Parse(str));
+                if (int.TryParse(part.Trim(), out int value))
+                {
+                    output.Add(value);
+                }
             }
             return output;
-
         }
+
 
         public string MembersToString(List<Member> members)
         {
@@ -140,7 +133,8 @@ namespace GadevangTennisklub2025.Services
                     SqlCommand command = new SqlCommand(deleteQuery, connection);
 
                     // Add parameters to prevent SQL injection
-                    command.Parameters.AddWithValue("@Name", GetTeamFromIdAsync(teamNr).Result.Name);
+                    Team te = await GetTeamFromIdAsync(teamNr);
+                    command.Parameters.AddWithValue("@Name", te.Name);
 
 
                     await connection.OpenAsync();
@@ -187,7 +181,7 @@ namespace GadevangTennisklub2025.Services
                             List<Member> Attendees = IdsToMembers(ListIntFromString(attendeesID));
 
                             Team team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
-                            if (Attendees.Contains(member))
+                            if (attendeesID.Contains(""+member.Member_Id)==true)
                             {
                                 teams.Add(team);
                             }
@@ -407,6 +401,39 @@ namespace GadevangTennisklub2025.Services
             }
             return false; // Return false if the update fails
         }
+
+        public async Task<bool> AttendTeamAsync(Team team, Member member)
+        {
+            //string updateQuery = "UPDATE Hotel SET HotelName = @HotelName, HotelAddress = @HotelAddress WHERE HotelNr = @HotelNr";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(attendTeamQuery, connection);
+
+                    // Add parameters to prevent SQL injection
+                    command.Parameters.AddWithValue("@Team_Id", team.Id);
+                    command.Parameters.AddWithValue("@Member_Id", member.Member_Id);
+                    
+
+                    await connection.OpenAsync();
+                    int rowsAffected = await command.ExecuteNonQueryAsync(); // Correct method for UPDATE
+
+                    return rowsAffected > 0; // Return true if at least one row was updated
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error: " + sqlExp.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("General error: " + ex.Message);
+                }
+            }
+            return false; // Return false if the update fails
+        }
+
 
         public async Task<List<Team>> Search(Search SearchI)
         {

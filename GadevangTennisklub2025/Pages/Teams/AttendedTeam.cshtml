@@ -1,25 +1,12 @@
 ﻿@page
 @using Models;
-@model GadevangTennisklub2025.Pages.Teams.ShowTeamModel
+@model GadevangTennisklub2025.Pages.Teams.AttendedTeamModel
 @{
     ViewData["Title"] = "Klubbens Hold";
 }
 
-<h3>Klubbens Hold</h3>
+<h3>Hold som er tilmeldt af @Model.SelectedMember</h3>
 
-@if(Model.isAdmin==true){
-<btn>
-    <a class="nav-link text-dark bg-primary" asp-page="CreateTeam">Opret nyt Hold</a>
-</btn>
-}
-
-<form style="display: inline;" asp-page-handler="AttendTeam" asp-route-ATTENDID="0">
-    <button type="submit" style="width: 24px; height: 24px;">Tilmeld Hold</button>
-</form>
-
-<btn>
-    <a class="nav-link text-dark bg-primary" asp-page="AttendedTeam">tildmeldte Hold</a>
-</btn>
 
 <table class="table">
     <thead>
@@ -30,10 +17,14 @@
             <th>Beskrivelse</th>
             <th>Dag</th>
             <th>Tidsrum</th>
+            @if (Model.isAdmin)
+            {
+                <th>tilmeldte folk</th>
+            }
         </tr>
     </thead>
     <tbody>
-        @foreach (Team item in Model.ListOfTeams)
+        @foreach (Team item in Model.ListOfAttendedTeams)
         {
             <tr>
                 <td>@item.Name</td>
@@ -42,13 +33,9 @@
                 <td>@item.Description</td>
                 <td>@item.week[item.DayOfWeek]</td>
                 <td>@item.TimeOfDay - @(item.TimeOfDay.Add(TimeSpan.FromHours(item.Length)))</td>
-                @if (Model.isAdmin == true)
+                @if (Model.isAdmin)
                 {
-                    <td>
-                        <form style="display: inline;" asp-page-handler="Edit" asp-route-ID="@item.Id">
-                            <input type="image" src="@Url.Content("~/Images/buttons/edit-button-icon.png")" style="width: 24px; height: 24px;" />
-                       </form>
-                    </td>
+                    <th>@item.AttendeesID</th>
                 }
             </tr>
         }

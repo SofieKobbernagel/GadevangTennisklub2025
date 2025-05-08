@@ -44,9 +44,9 @@
         {
             Attendees.Add(SelectedMember);
             Console.WriteLine($"\n added  {SelectedMember} to {Name},   ");
-            foreach (Member Member in Attendees)
+            foreach (Member member in Attendees)
             {
-                Console.WriteLine(Member.Name);
+             //   Console.WriteLine(member.Name);
             }
             Console.WriteLine();
         }

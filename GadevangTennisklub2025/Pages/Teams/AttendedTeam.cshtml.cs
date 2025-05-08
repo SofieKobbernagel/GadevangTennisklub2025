@@ -7,39 +7,40 @@ using GadevangTennisklub2025.Services;
 
 namespace GadevangTennisklub2025.Pages.Teams
 {
-    public class ShowTeamModel : PageModel
+    public class AttendedTeamModel : PageModel
     {
         // This page should show the list of all the courses
         // Show the Courses title, description, and the number of places left in that course   maxNumOfAttendees - Attendees.Count
         #region Instance Fields
-       private ITeamService _teamService;
-        
+        private ITeamService _teamService;
+
 
         #endregion
 
         #region Properties
         public bool isAdmin { get; set; } = false;
-        public List<Models.Team> ListOfTeams { get; private set; }
-        private TimeOnly temp = new TimeOnly(23,50);
-       
-            //Console.WriteLine("endTime: "+(temp));
-            
+        public List<Models.Team> ListOfAttendedTeams { get; private set; }
+        private TimeOnly temp = new TimeOnly(23, 50);
+
+        public Models.Member SelectedMember { get; set; }
+        //Console.WriteLine("endTime: "+(temp));
+
 
 
         #endregion
 
         #region Constructors
-        public ShowTeamModel(ITeamService teamService)
+        public AttendedTeamModel(ITeamService teamService)
         {
             _teamService = teamService;
-            Console.WriteLine("TimeSlot: "+temp.AddHours(1.12));
+            Console.WriteLine("TimeSlot: " + temp.AddHours(1.12));
         }
         #endregion
 
         #region Methods
         public IActionResult OnPostEdit(int ID)
         {
-            Console.WriteLine("ShowTeam/OnPostEdit here and id = "+ ID );
+            Console.WriteLine("ShowTeam/OnPostEdit here and id = " + ID);
             return RedirectToPage("UpdateTeam", new { ID });
         }
 
@@ -54,25 +55,22 @@ namespace GadevangTennisklub2025.Pages.Teams
             Console.WriteLine("ShowTeam/OnPostCreate just ran");
             return RedirectToPage("CreateTeam");
         }
-        public IActionResult OnPostAttendedTeam()
+
+        public async Task<IActionResult> OnGetAsync()
         {
-            Console.WriteLine("ShowTeam/OnPostAttendedTeam just ran");
-            return RedirectToPage("AttendedTeam");
-        }
-        
-        public async Task OnGetAsync()
-        {
-            if (HttpContext.Session.GetString("IsAdmin")!=null && bool.Parse(HttpContext.Session.GetString("IsAdmin"))==true) 
-            { 
+            SelectedMember = _teamService.MemberById(int.Parse(HttpContext.Session.GetString("Member_Id")));
+            if (HttpContext.Session.GetString("IsAdmin") != null && bool.Parse(HttpContext.Session.GetString("IsAdmin")) == true)
+            {
                 isAdmin = true;
             }
             //Console.WriteLine("Teams/ShowTeam/OnGetAsync  timeslot is: "+(.TimeOfDay.Add(TimeSpan.FromHours(item.Length))));
-            if (ListOfTeams == null)
+            if (ListOfAttendedTeams == null)
             {
-                ListOfTeams = await _teamService.GetAllTeamsAsync();
+                ListOfAttendedTeams = await _teamService.GetAllAttendedTeamsAsync(SelectedMember);
                 Thread.Sleep(1000);
             }
             Console.WriteLine("Team/ShowTeam/OnGetAsync is done");
+            return Page();
         }
         #endregion
     }

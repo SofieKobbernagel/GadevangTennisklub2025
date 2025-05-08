@@ -1,53 +1,38 @@
 ﻿@page
-@using GadevangTennisklub2025.Models;
+@using GadevangTennisklub2025.Models
 @model GadevangTennisklub2025.Pages.Teams.AttendTeamModel
 @{
     ViewData["Title"] = "Tilmeld dig Til Et Hold";
 }
 <h1>Tildmeld dig et Hold</h1>
 
+<h4>medlem = @(Model.SelectedMember!=null ? Model.SelectedMember.Name : "not logged in")</h4>
 
- 
+@{
+    List<Team> nonEnteredTeams = Model.NonEnteredTeamsByMember((Models.Member)Model.SelectedMember).Result;
+}
 
-<div class="dropdown">
-    <!-- Dropdown toggle button -->
-    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-        @Model.Teamrep.SelectedMember.Name
-    </button>
-
-    <!-- Dropdown menu -->
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        @foreach (Models.Member mem in Model.SortedMembers()) // Assuming `Members` is in your model
-        {
-            <div class="formgroup">
-                <form style="display: inline;" asp-page-handler="SelectMemberButton" asp-route-Name="@mem.Name">
-                    <input type="submit" value="@mem.Name" class="dropdown-item btn btn-primary" />
-                </form>
-            </div>
-        }
-    </div>
-</div>
-
-
-
-@foreach (Team team in Model.NonEnteredTeamsByMember((Models.Member)Model.Teamrep.SelectedMember))
+@if (nonEnteredTeams.Count == 0)
 {
-    @if (Model.NonEnteredTeamsByMember((Models.Member)Model.Teamrep.SelectedMember)[0].Name == " ")
+    <p>No teams available, this may happen if you are written up to all teams.</p>
+}
+else
+{
+    @foreach (Team team in nonEnteredTeams)
     {
-        <p> no teams avaliable, this may happen if you are written up to all teams</p>
-    }
-    else
-    {
-        <p>Name/Title @team.Name              </p>
-        <p>Day Of The Week= @team.DayOfWeek    session length(hours)= @team.Length</p>
-        <p>Min Number Of Attendees: @team.AttendeeRange[0]   Max Number Of Attendees: @team.AttendeeRange[1]</p>
-        <p>Numer Of Spots Left: @(team.AttendeeRange[1] - team.Attendees.Count)</p>
+        <p>Name/Title: @team.Name</p>
+        <p>Day of the Week: @team.DayOfWeek</p>
+        <p>Session Length (hours): @team.Length</p>
+        <p>Min Number of Attendees: @team.AttendeeRange[0]</p>
+        <p>Max Number of Attendees: @team.AttendeeRange[1]</p>
+        <p>Number of Spots Left: @(team.AttendeeRange[1] - team.Attendees.Count)</p>
         <p>Description: @team.Description</p>
 
-        <div class="formgroup">
-            <form style="display: inline;" asp-page-handler="AttendTeam" asp-route-Id="@team.Id">
+        <div class="form-group">
+            <form style="display: inline;" asp-page-handler="AttendTeam" asp-route-Id="@team.Id" asp-route-memberId="@Model.SelectedMember.Member_Id">
                 <input type="submit" value="Attend This Course" class="btn btn-primary" />
             </form>
         </div>
+
     }
 }
