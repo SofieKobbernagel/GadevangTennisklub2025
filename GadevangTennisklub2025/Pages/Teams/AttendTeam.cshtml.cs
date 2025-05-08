@@ -9,7 +9,7 @@ namespace GadevangTennisklub2025.Pages.Teams
     public class AttendTeamModel : PageModel
     {
             #region Instance Fields
-
+            
             private TeamService _TeamServ;
             private MemberService _MemberServ;
             #endregion
@@ -24,6 +24,7 @@ namespace GadevangTennisklub2025.Pages.Teams
             #region Constructors
             public AttendTeamModel(TeamService teamService, MemberService memberService)
             {
+                Console.WriteLine("AttendTeam.cshtml.cs is here");
                 _TeamServ = teamService;
                 _MemberServ = memberService;
                 Teams = _TeamServ.GetAllTeamsAsync().Result;

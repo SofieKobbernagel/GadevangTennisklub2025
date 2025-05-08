@@ -7,14 +7,15 @@
 
 <h3>Klubbens Hold</h3>
 
+@if(Model.isAdmin==true){
 <btn>
     <a class="nav-link text-dark bg-primary" asp-page="CreateTeam">Opret nyt Hold</a>
 </btn>
+}
 
-<btn>
-    <a class="nav-link text-dark bg-primary" asp-page="AttendTeam">Tilmeld Hold</a>
-</btn>
-
+<form style="display: inline;" asp-page-handler="AttendTeam" asp-route-ATTENDID="0">
+    <button type="submit" style="width: 24px; height: 24px;">Tilmeld Hold</button>
+</form>
 
 <table class="table">
     <thead>
@@ -28,7 +29,6 @@
         </tr>
     </thead>
     <tbody>
-
         @foreach (Team item in Model.ListOfTeams)
         {
             <tr>
@@ -36,20 +36,28 @@
                 <td>@(item.AttendeeRange[1] - item.Attendees.Count)</td>
                 <td>@item.MembershipType</td>
                 <td>@item.Description</td>
-                <td>@item.DayOfWeek</td>
+                <td>@item.week[item.DayOfWeek]</td>
                 <td>@item.TimeOfDay - @(item.TimeOfDay.Add(TimeSpan.FromHours(item.Length)))</td>
-
-                <td>
-
-                    <form style="display: inline;" asp-page-handler="Edit" asp-route-ID="@item.Id">
+                @if (Model.isAdmin == true)
+                {
+                    <td>
+                        <form style="display: inline;" asp-page-handler="Edit" asp-route-ID="@item.Id">
                         <input type="image" src="@Url.Content("~/Images/buttons/edit-button-icon.png")" style="width: 24px; height: 24px;" />
                     </form>
-
-
-
                 </td>
-
+                }
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                    alert('@TempData["SuccessMessage"]');
+            </text>
+        }
+    </script>
+}

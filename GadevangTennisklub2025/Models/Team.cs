@@ -15,7 +15,7 @@
         public string Description { get; set; }
 
 
-        private string[] week = { "Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday","Sunday" };
+        public string[] week = { "Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday","Sunday" };
 
         public Team()
         {
