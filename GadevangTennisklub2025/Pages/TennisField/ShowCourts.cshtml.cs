@@ -1,3 +1,4 @@
+using GadevangTennisklub2025.Helper;
 using GadevangTennisklub2025.Interfaces;
 using GadevangTennisklub2025.Models;
 using GadevangTennisklub2025.Services;
@@ -40,17 +41,18 @@ namespace GadevangTennisklub2025.Pages.TennisField
             try
             {
                 await LoadList();
-                if (!String.IsNullOrEmpty(FilterCriteria))
+                Courts = await _courtService.GetAllCourtsAsync();
+                if (!string.IsNullOrWhiteSpace(FilterCriteria))
                 {
-                    Courts = await _courtService.GetCourtFromTypeAsync(FilterCriteria);
-                }
-                else
-                {
-                    Courts = await _courtService.GetAllCourtsAsync(); // fylder listen med data
+                    string criteria = FilterCriteria.ToLower();
+                    Courts = Courts.Where(m =>
+                        (!string.IsNullOrEmpty(m.Name) && m.Name.ToLower().Contains(criteria)) ||
+                        (!string.IsNullOrEmpty(m.Type) && m.Type.ToLower().Contains(criteria))
+                    ).ToList();
                 }
                 if (Courts == null)
                     return RedirectToPage("Index");
-                if (SortBy == "Name") { Courts.Sort(); }
+                if (SortBy == "Name") { Courts.Sort(new CourtNameCompare()); }
                 if (SortBy == "Type") { Courts.Sort(); }
                 if (SortOrder == "Descending") { Courts.Reverse(); }
                 return Page();

@@ -12,6 +12,10 @@
                 <input asp-for="@Model.Court.CourtId" readonly class="form-control" />
             </div>
             <div class="form-group">
+                <label asp-for="@Model.Court.Name" class="control-label"></label>
+                <input asp-for="@Model.Court.Name" class="form-control" />
+            </div>
+            <div class="form-group">
                 <label asp-for="@Model.Court.Type" class="control-label"></label>
                 <input asp-for="@Model.Court.Type" readonly class="form-control" />
             </div>
@@ -20,7 +24,7 @@
                 <input asp-for="@Model.Confirm" type="checkbox" id="Confirm" /> Bekræft, at du ønsker at slette denne bane
             </div>
             <div class="formgroup">
-                <input type="submit" value="Delete" class="btn btn-primary" />
+                <input type="submit" value="Slet" class="btn btn-primary" />
             </div>
         </form>
     </div>
