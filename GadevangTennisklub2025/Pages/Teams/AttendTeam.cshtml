@@ -27,12 +27,14 @@ else
         <p>Max Number of Attendees: @team.AttendeeRange[1]</p>
         <p>Number of Spots Left: @(team.AttendeeRange[1] - team.Attendees.Count)</p>
         <p>Description: @team.Description</p>
-
-        <div class="form-group">
-            <form style="display: inline;" asp-page-handler="AttendTeam" asp-route-Id="@team.Id" asp-route-memberId="@Model.SelectedMember.Member_Id">
-                <input type="submit" value="Attend This Course" class="btn btn-primary" />
-            </form>
-        </div>
+        @if (team.Attendees.Count < team.AttendeeRange[1])
+        {
+            <div class="form-group">
+                <form style="display: inline;" asp-page-handler="AttendTeam" asp-route-Id="@team.Id" asp-route-memberId="@Model.SelectedMember.Member_Id">
+                   <input type="submit" value="Attend This Course" class="btn btn-primary" />
+                </form>
+            </div>
+        }
 
     }
 }
