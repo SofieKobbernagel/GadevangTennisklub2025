@@ -267,10 +267,14 @@ namespace GadevangTennisklub2025.Services
                         SqlCommand command = new SqlCommand(queryString, connection);
                         await command.Connection.OpenAsync();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        Thread.Sleep(1000);
+                       
                         while (await reader.ReadAsync())
                         {
                             int teamID = reader.GetInt32("Team_Id");
+                            if (searchID == teamID)
+                            {
+                            
+                            
                             string teamNavn = reader.GetString("Name");
                             int dayOfWeek = reader.GetInt32("DayOfWeek");
                             string startTime = reader.GetString("TimeOfDay"); //ex. 14:30
@@ -281,9 +285,8 @@ namespace GadevangTennisklub2025.Services
                             string membershipType = reader.GetString("MemberType");
 
                             List<Member> Attendees = IdsToMembers(ListIntFromString(attendeesID));
-                            if (searchID == teamID)
-                            {
                                 result_team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
+                                reader.Close();
                             }
                             
 

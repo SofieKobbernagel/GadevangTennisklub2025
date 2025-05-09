@@ -1,0 +1,45 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.Teams.DeleteTeamModel
+@{
+    ViewData["Title"] = "Delete Team";
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>pladser tilbage</th>
+            <th>Medlemskabstype</th>
+            <th>Beskrivelse</th>
+            <th>Dag</th>
+            <th>Tidsrum</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.team.Name</td>
+            <td>@(Model.team.AttendeeRange[1] - Model.team.Attendees.Count)</td>
+            <td>@Model.team.MembershipType</td>
+            <td>@Model.team.Description</td>
+            <td>@Model.team.week[Model.team.DayOfWeek]</td>
+            <td>@Model.team.TimeOfDay - @(Model.team.TimeOfDay.Add(TimeSpan.FromHours(Model.team.Length)))</td>
+            <td>
+                <form asp-page-handler="Delete" method="post" onsubmit="return confirmAction();" style="display:inline;" >
+                    <input type="hidden" name="id" value="@Model.team.Id" />
+                    <button type="submit" class="btn btn-danger">Fjern Hold</button>
+                </form>
+                <form asp-page-handler="Cancel" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-secondary">Cancel</button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        function confirmAction() {
+            return confirm("Are you sure you want to delete this team?");
+        }
+    </script>
+}

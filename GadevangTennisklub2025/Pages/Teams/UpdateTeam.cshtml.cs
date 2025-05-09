@@ -69,10 +69,10 @@ namespace GadevangTennisklub2025.Pages.Teams
                 _teamService.UpdateTeamAsync(team, id);
                 return RedirectToPage("ShowTeam");
             }
-            public IActionResult OnPostDelete(int DeleteTeamNr)
+            public IActionResult OnPostDelete(int deleteTeamId)
             {
 
-                return RedirectToPage("DeleteTeam", new { DeleteTeamNr });
+                return RedirectToPage("DeleteTeam", new { deleteTeamId });
             }
         }
     }
