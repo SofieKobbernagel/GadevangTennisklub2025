@@ -5,6 +5,7 @@ using GadevangTennisklub2025.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,7 +18,8 @@ namespace UnitTestGadevangTennisklub
     [TestClass]
     public sealed class MemberServiceTest
     {
-       MemberService Mem = new MemberService();
+       private readonly MemberService Mem;
+   
 
         [TestMethod]
         public void GetAll_ShouldSucceed()
@@ -29,16 +31,30 @@ namespace UnitTestGadevangTennisklub
         [TestMethod]
         public void UpdateMember_ShouldSucced()
         {
-            var mem = new Member("Hank Green", "Hank Green The Third", new DateOnly(1993, 06, 12), "Senior", "Valby", "30303020", "2500", "Mand", "Slotsvej 4", "hank.green.the3rd@gmail.com", "123", "København", "Ja", 100);
-            Mem.CreateMemberAsync(mem);
-            Mem.UpdateMemberAsync(mem, 100);
+            // Arrange
+            var original = new Member("Hank Green", "Hank Green The Third", new DateOnly(1993, 06, 12),
+                "Seniorer", "Valby", "30303020", "2500", "Mand", "Slotsvej 4", "hank.green.the3rd@gmail.com",
+                "123", "København", "Ja", 100);
+            Mem.CreateMemberAsync(original).GetAwaiter().GetResult();
+
+            var updated = new Member("Hank Green", "Hank Green The Third", new DateOnly(1993, 06, 12),
+                "Seniorer", "Valby", "30303020", "2500", "Andet", "Slotsvej 4", "hank.green.the3rd@gmail.com",
+                "123", "København", "Ja", 100);
+
+            // Act
+            Mem.UpdateMemberAsync(updated, 100).GetAwaiter().GetResult();
+            Member result = Mem.GetMemberById(100).GetAwaiter().GetResult();
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Andet", result.Gender);
 
         }
 
         [TestMethod]
         public void VerifyMember_ShouldSucced()
         {
-            var mem = new Member("Hank Green", "Hank Green The Third", new DateOnly(1993, 06, 12), "Senior", "Valby", "30303020", "2500", "Mand", "Slotsvej 4", "hank.green.the3rd@gmail.com", "123", "København", "Ja", 100);
+            var mem = new Member("Hank Green", "Hank Green The Third", new DateOnly(1993, 06, 12), "Seniorer", "Valby", "30303020", "2500", "Mand", "Slotsvej 4", "hank.green.the3rd@gmail.com", "123", "København", "Ja", 100);
             Mem.CreateMemberAsync(mem).GetAwaiter().GetResult();
             Member validMember = Mem.VerifyMember("Hank Green","123");
             Assert.IsNotNull(validMember);
@@ -61,7 +77,7 @@ namespace UnitTestGadevangTennisklub
         [TestMethod]
         public void GetMemberById_ShouldSucced()
         {
-            var mem = new Member("Hank Green", "Hank Green The Third", new DateOnly(1993, 06, 12), "Senior", "Valby", "30303020", "2500", "Mand", "Slotsvej 4", "hank.green.the3rd@gmail.com", "123", "København", "Ja", 100);
+            var mem = new Member("Hank Green", "Hank Green The Third", new DateOnly(1993, 06, 12), "Seniorer", "Valby", "30303020", "2500", "Mand", "Slotsvej 4", "hank.green.the3rd@gmail.com", "123", "København", "Ja", 100);
             Mem.CreateMemberAsync(mem).GetAwaiter().GetResult();
             Member validMember = Mem.GetMemberById(100).GetAwaiter().GetResult();
             Assert.IsNotNull(validMember);
@@ -96,6 +112,24 @@ namespace UnitTestGadevangTennisklub
             bool isUniqe = Mem.IsUsernameUnique("Hank Green").Result;
             Assert.IsTrue(isUniqe);
         }
+
+        [TestMethod]
+        public void CreateMember_ShouldSucceed()
+        {
+            var mem = new Member(
+                "Hank", "Hank Green The Third", new DateOnly(1993, 06, 12),
+                "Seniorer", "Valby", "30303020", "2500", "Mand", "Slotsvej 4",
+                "hank.green.the3rd@gmail.com", "123", "København", "Ja");
+
+            Mem.CreateMemberAsync(mem).GetAwaiter().GetResult();
+
+            var allMembers = Mem.GetAllMembersAsync().Result;
+            var match = allMembers.FirstOrDefault(m => m.Username == "Hank");
+
+            Assert.IsNotNull(match, "Member with ID 100 was not found after creation.");
+            Assert.AreEqual("Hank Green", match.Name);
+        }
+
 
     }
 }

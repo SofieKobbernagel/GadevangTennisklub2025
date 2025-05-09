@@ -138,6 +138,25 @@ namespace GadevangTennisklub2025.Models
             PictureConsent = consent;
             Member_Id = memberId;
             BookingsLeft = 4;
+
+        }
+        public Member(string username, string name, DateOnly birthday, string membertype, string city, string phone, string postalcode, string gender, string address, string email, string password, string municipality, string consent)
+        {
+            IsAdmin = false;
+            Name = name;
+            Birthday = birthday;
+            MemberType = membertype;
+            City = city;
+            Phone = phone;
+            PostalCode = postalcode;
+            Gender = gender;
+            Address = address;
+            Email = email;
+            Password = password;
+            Username = username;
+            Municipality = municipality;
+            PictureConsent = consent;
+            BookingsLeft = 4;
         }
     }
 }

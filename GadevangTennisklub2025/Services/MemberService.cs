@@ -24,6 +24,9 @@ namespace GadevangTennisklub2025.Services
         private string deleteSql = "DELETE FROM Members WHERE Member_Id = @Member_Id;";
         private string updateSql = @"Update Members Set Name = @Name,Address = @Address, Gender = @Gender, Email = @Email, PostalCode = @Postalcode, TLF= @TLF, City = @City, MembershipType = @MembershipType, Birthday = @Birthday, OtherTLF = @OtherTLF, NewsSubscriber = @NewsSubscriber, Username = @Username,Password = @Password, IsAdmin = @IsAdmin,Municipality =  @Municipality, PictureConsent = @PictureConsent, ProfileImagePath = @ProfileImagePath WHERE Member_Id = @Member_Id";
 
+
+      
+
         public async Task<bool> CreateMemberAsync(Member member)
         {
             bool isCreated = false;
@@ -104,7 +107,7 @@ namespace GadevangTennisklub2025.Services
                         string consent = reader.GetString("PictureConsent");
                         string filepath = reader.IsDBNull(reader.GetOrdinal("ProfileImagePath")) ? null : reader.GetString(reader.GetOrdinal("ProfileImagePath"));
 
-                        Member m = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password, municipality, consent,id);
+                        Member m = new Member(username, name, birthday, membertype, city, phone, postalcode, gender, address, email, password, municipality, consent, id);
                         m.IsAdmin = isAdmin;
                         m.NewsSubscriber = newsSubscriber;
                         m.OtherPhone = otherphone;
@@ -230,7 +233,7 @@ namespace GadevangTennisklub2025.Services
                         foundMember.NewsSubscriber = newsSubscriber;
                         foundMember.OtherPhone = otherphone;
                         foundMember.ProfileImagePath = filepath;
-                     
+
 
 
                     }
@@ -247,7 +250,7 @@ namespace GadevangTennisklub2025.Services
                     Console.WriteLine("Generel fejl: " + ex.Message);
                     return null;
                 }
-       
+
                 return foundMember;
             }
         }
@@ -295,12 +298,12 @@ namespace GadevangTennisklub2025.Services
             foreach (Member m in members)
             {
                 if (m.Username == username)
-                    isuniqe= false;
+                    isuniqe = false;
             }
             return isuniqe;
         }
 
-        public async Task SubtrackHour(int id) 
+        public async Task SubtrackHour(int id)
         {
             return;
         }
