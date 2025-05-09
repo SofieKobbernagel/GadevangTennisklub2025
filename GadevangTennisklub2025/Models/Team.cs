@@ -1,4 +1,6 @@
-﻿namespace GadevangTennisklub2025.Models
+﻿using GadevangTennisklub2025.Services;
+
+namespace GadevangTennisklub2025.Models
 {
     public class Team
     {
@@ -11,7 +13,7 @@
         public int[] AttendeeRange { get; set; }
         //new int[2];
         public List<Member> Attendees { get; set; }
-        public string AttendeesID { get { string Out = " "; if(Attendees!=null){ foreach (Member me in Attendees) { Out.Concat(me.Member_Id + ","); } } return Out; } }
+        //public string AttendeesID { get { string Out = " "; if(Attendees!=null){ foreach (Member me in Attendees) { Out.Concat(me.Member_Id + ","); } } return Out; } }
         public string Description { get; set; }
 
 
@@ -21,7 +23,7 @@
         {
         }
 
-        public Team(int id, string name, string membershipType , int dayOfWeek,TimeOnly startTime, double length, int[] attendeeRange, List<Member> attendees, string description)
+        public Team(int id, string name, string membershipType , int dayOfWeek,TimeOnly startTime, double length, int[] attendeeRange, List<Member> Attendees, string description)
         {
             Id = id;
             MembershipType = membershipType;
@@ -30,27 +32,18 @@
             TimeOfDay = startTime;
             Length = length;
             AttendeeRange = attendeeRange;
-            Attendees = attendees;
+            
+            
             Description = description;
 
             Console.WriteLine("Team.cs/ length is: " + Length);
         }
         public override string ToString()
         {
-            return $"id: {Id} \n MembershipType required: {MembershipType} \n Name: {Name} \n  timeslot   from: TimeSlot[0], to:TimeSlot[1] \n time of day start: {TimeOfDay}, end:  {TimeOfDay.AddHours(Length)}   Repeated every {week[DayOfWeek]} \n  Minimum Number of Attendees: {AttendeeRange[0]} ,  Max Number of Attendees: {AttendeeRange[1]}  \n  places left: {((Attendees.Count < AttendeeRange[1]) ? $"der er {AttendeeRange[1] - Attendees.Count} pladser tilbage" : $"der er ikke flere pladser {Attendees.Count} ud af {AttendeeRange[1]} \n  description: {Description}" + $"")}";
+            return $"id: {Id} \n MembershipType required: {MembershipType} \n Name: {Name} \n  timeslot   from: TimeSlot[0], to:TimeSlot[1] \n time of day start: {TimeOfDay}, end:  {TimeOfDay.AddHours(Length)}   Repeated every {week[DayOfWeek]} \n  Minimum Number of Attendees: {AttendeeRange[0]} ,  Max Number of Attendees: {AttendeeRange[1]}  \n  description: {Description} ";
         }
 
-        public void AttendTeam(Member SelectedMember)
-        {
-            Attendees.Add(SelectedMember);
-            Console.WriteLine($"\n added  {SelectedMember} to {Name},   ");
-            foreach (Member member in Attendees)
-            {
-             //   Console.WriteLine(member.Name);
-            }
-            Console.WriteLine();
-        }
-
+       
 
 
        

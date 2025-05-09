@@ -25,9 +25,9 @@ else
         <p>Session Length (hours): @team.Length</p>
         <p>Min Number of Attendees: @team.AttendeeRange[0]</p>
         <p>Max Number of Attendees: @team.AttendeeRange[1]</p>
-        <p>Number of Spots Left: @(team.AttendeeRange[1] - team.Attendees.Count)</p>
+        <p>Number of Spots Left: @(team.AttendeeRange[1] - (team.Attendees==null?0:team.Attendees.Count))</p>
         <p>Description: @team.Description</p>
-        @if (team.Attendees.Count < team.AttendeeRange[1])
+        @if ((team.Attendees == null ? 0 : team.Attendees.Count) < team.AttendeeRange[1])
         {
             <div class="form-group">
                 <form style="display: inline;" asp-page-handler="AttendTeam" asp-route-Id="@team.Id" asp-route-memberId="@Model.SelectedMember.Member_Id">

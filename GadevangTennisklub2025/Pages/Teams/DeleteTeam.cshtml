@@ -18,7 +18,7 @@
     <tbody>
         <tr>
             <td>@Model.team.Name</td>
-            <td>@(Model.team.AttendeeRange[1] - Model.team.Attendees.Count)</td>
+            <td>@(Model.team.AttendeeRange[1] - (Model.team.Attendees == null ? 0 : Model.team.Attendees.Count))</td>
             <td>@Model.team.MembershipType</td>
             <td>@Model.team.Description</td>
             <td>@Model.team.week[Model.team.DayOfWeek]</td>

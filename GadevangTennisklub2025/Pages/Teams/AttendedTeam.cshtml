@@ -5,7 +5,7 @@
     ViewData["Title"] = "Klubbens Hold";
 }
 
-<h3>Hold som er tilmeldt af @Model.SelectedMember</h3>
+<h3>Hold som er tilmeldt af @Model.SelectedMember.Name</h3>
 
 
 <table class="table">
@@ -35,7 +35,7 @@
                 <td>@item.TimeOfDay - @(item.TimeOfDay.Add(TimeSpan.FromHours(item.Length)))</td>
                 @if (Model.isAdmin)
                 {
-                    <th>@item.AttendeesID</th>
+                    <th>@item.Attendees</th>
                 }
             </tr>
         }

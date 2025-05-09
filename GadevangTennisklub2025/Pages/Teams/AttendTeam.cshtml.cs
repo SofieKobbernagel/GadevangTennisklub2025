@@ -43,7 +43,7 @@ namespace GadevangTennisklub2025.Pages.Teams
         public async Task<List<Team>> NonEnteredTeamsByMember(Models.Member member)
         {
             List<Team> list = new List<Team>();
-            List<Team> attended = await _TeamServ.GetAllAttendedTeamsAsync(member);
+            List<Team> attended = await _TeamServ.GetAllAttendedTeamsAsync(member.Member_Id);
             string attId = "";
             foreach(Team team in attended)
             {

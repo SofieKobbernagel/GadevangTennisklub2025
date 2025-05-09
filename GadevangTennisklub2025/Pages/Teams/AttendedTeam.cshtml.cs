@@ -66,7 +66,7 @@ namespace GadevangTennisklub2025.Pages.Teams
             //Console.WriteLine("Teams/ShowTeam/OnGetAsync  timeslot is: "+(.TimeOfDay.Add(TimeSpan.FromHours(item.Length))));
             if (ListOfAttendedTeams == null)
             {
-                ListOfAttendedTeams = await _teamService.GetAllAttendedTeamsAsync(SelectedMember);
+                ListOfAttendedTeams = await _teamService.GetAllAttendedTeamsAsync(SelectedMember.Member_Id);
                 Thread.Sleep(1000);
             }
             Console.WriteLine("Team/ShowTeam/OnGetAsync is done");

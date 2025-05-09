@@ -7,5 +7,6 @@
 
         public Task<bool> MemberAvailible(int memberID,DateTime start, DateTime end);
         public Task<bool> CourtAvailible(int courtID,DateTime start, DateTime end);
+        public  Task TeamMemberRelation(int TeamId, int MemberId);
     }
 }

@@ -33,25 +33,37 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (Team item in Model.ListOfTeams)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@(item.AttendeeRange[1] - item.Attendees.Count)</td>
-                <td>@item.MembershipType</td>
-                <td>@item.Description</td>
-                <td>@item.week[item.DayOfWeek]</td>
-                <td>@item.TimeOfDay - @(item.TimeOfDay.Add(TimeSpan.FromHours(item.Length)))</td>
-                @if (Model.isAdmin == true)
-                {
-                    <td>
-                        <form style="display: inline;" asp-page-handler="Edit" asp-route-ID="@item.Id">
-                            <input type="image" src="@Url.Content("~/Images/buttons/edit-button-icon.png")" style="width: 24px; height: 24px;" />
-                       </form>
-                    </td>
-                }
-            </tr>
+        @{
+            var teams = Model.ListOfTeams;
         }
+        @if (teams != null)
+        {
+                @foreach (Team item in teams)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@(item.AttendeeRange[1] - (item.Attendees==null?0:item.Attendees.Count))</td>
+                        <td>@item.MembershipType</td>
+                        <td>@item.Description</td>
+                        <td>@item.week[item.DayOfWeek]</td>
+                        <td>@item.TimeOfDay - @(item.TimeOfDay.Add(TimeSpan.FromHours(item.Length)))</td>
+                        @if (Model.isAdmin == true)
+                        {
+                            <td>
+                                <form style="display: inline;" asp-page-handler="Edit" asp-route-ID="@item.Id">
+                                    <input type="image" src="@Url.Content("~/Images/buttons/edit-button-icon.png")" style="width: 24px; height: 24px;" />
+                                </form>
+                            </td>
+                        }
+                    </tr>
+                }
+            }
+        
+        else
+        {
+            <tr><td colspan="6">Ingen hold tilgængelige.</td></tr>
+        }
+
     </tbody>
 </table>
 
