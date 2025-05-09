@@ -5,9 +5,9 @@ namespace GadevangTennisklub2025.Interfaces
     public interface ICoachService
     {
         Task<bool> CreateCoachAsync(Coach coach);
-        Task<bool> UpdateCoachAsync(Coach coach);
-        Task<Coach> DeleteCoachAsync(int coachId);
-        Task<Coach?> GetCoachByIdAsync(int coachId);
+        Task<bool> UpdateCoachAsync(Coach coach, int coach_Id);
+        Task<Coach> DeleteCoachAsync(int coach_Id);
+        Task<Coach?> GetCoachByIdAsync(int coach_Id);
         Task<List<Coach>> GetAllCoachesAsync();
     }
 }

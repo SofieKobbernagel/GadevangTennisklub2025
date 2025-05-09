@@ -28,7 +28,7 @@ namespace GadevangTennisklub2025.Models
         public decimal Salary { get; set; }
 
         [Display(Name = "Kontrakt")]
-        public string ContractFilePath { get; set; }
+        public string? ContractFilePath { get; set; }
 
         [Display(Name = "Adresse")]
         [Required(ErrorMessage = "Du skal angive din adresse")]
@@ -54,7 +54,7 @@ namespace GadevangTennisklub2025.Models
 
         }
 
-        public Coach(string name, string phone, string email, int coachId, string address, string? profileImagePath, string contractFileRoute, string city, string postalCode)
+        public Coach(string name, string phone, string email, int coachId, string address, string? profileImagePath, string? contractFileRoute, string city, string postalCode, decimal salary)
         {
 
             Name = name;
@@ -66,7 +66,9 @@ namespace GadevangTennisklub2025.Models
             ContractFilePath = contractFileRoute;
             City = city;
             PostalCode = postalCode;
+            Salary = salary;
         }
+  
     }
 }
 

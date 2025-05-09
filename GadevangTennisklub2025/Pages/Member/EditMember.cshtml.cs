@@ -1,4 +1,6 @@
 using GadevangTennisklub2025.Interfaces;
+using GadevangTennisklub2025.Models;
+using GadevangTennisklub2025.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -7,22 +9,27 @@ namespace GadevangTennisklub2025.Pages.Member
     public class EditMemberModel : PageModel
     {
         private readonly IMemberService _memberService;
+        private readonly IMembershipService _membershipService;
 
 
-
-        public EditMemberModel(IMemberService memberService)
+        public EditMemberModel(IMemberService memberService, IMembershipService membershipService)
         {
             _memberService = memberService;
+            _membershipService = membershipService;
         }
 
         [BindProperty]
+        public List<Membership> Memberships { get; set; } = new();
+        [BindProperty]
         public Models.Member MemberObject { get; set; }
-
+        [BindProperty]
+        public RegisterMemberViewModel RegisterModel { get; set; }
         [BindProperty]
         public IFormFile? ProfileImage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int member_Id)
         {
+            Memberships = await _membershipService.GetAllMembershipsAsync();
             try
             {
                 MemberObject = await _memberService.GetMemberById(member_Id);
@@ -48,6 +55,7 @@ namespace GadevangTennisklub2025.Pages.Member
 
             if (!ModelState.IsValid)
             {
+                Memberships = await _membershipService.GetAllMembershipsAsync();
                 // Debugging: Log model state errors
                 foreach (var state in ModelState)
                 {
