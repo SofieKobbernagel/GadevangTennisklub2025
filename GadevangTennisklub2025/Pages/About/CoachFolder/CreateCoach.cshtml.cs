@@ -91,7 +91,7 @@ namespace GadevangTennisklub2025.Pages.About
                 if (success)
                 {
                     TempData["SuccessMessage"] = "Træner oprettet succesfuldt!";
-                    return RedirectToPage("/About/GetAllCoaches");
+                    return RedirectToPage("/About/CoachFolder/GetAllCoaches");
 
                 }
                 else
