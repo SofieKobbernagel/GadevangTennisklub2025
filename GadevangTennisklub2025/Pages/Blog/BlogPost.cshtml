@@ -1,0 +1,54 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.Blog.BlogPostModel
+@{
+    ViewData["Title"] = "BlogPost";
+}
+
+@if (HttpContext.Session.GetString("Member_Id") != null && (int.Parse(HttpContext.Session.GetString("Member_Id")) == Model.Post.Id || bool.Parse(HttpContext.Session.GetString("IsAdmin"))))
+{
+    <form method="post" enctype="multipart/form-data">
+
+        <div class="form-group">
+            <label asp-for="@Model.Post.Title" class="control-label"></label>
+            <input asp-for="@Model.Post.Title" class="form-control" />
+            <span asp-validation-for="Post.Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Post.Content" class="control-label"></label>
+            <input asp-for="@Model.Post.Content" class="form-control" />
+            <span asp-validation-for="@Model.Post.Content" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="slet Post" class="btn btn-primary" asp-page-handler="Delete"/>
+            <input type="submit" value="opdater Post" class="btn btn-primary" asp-page-handler="Update"/>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Post.Id" class="control-label" hidden></label>
+            <input asp-for="@Model.Post.Id" class="form-control" hidden/>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Post.MemberId" class="control-label" hidden></label>
+            <input asp-for="@Model.Post.MemberId" class="form-control" hidden/>
+        </div>
+    </form>
+
+}
+else
+{
+    <h1>@Model.Post.Title</h1>
+    <h2> indlæg af @Model.Member</h2>
+    <p>@Model.Post.Content</p>
+    <div class="form-group">
+        <label asp-for="@Model.Post.Id" class="control-label"></label>
+        <input asp-for="@Model.Post.Id" class="form-control" hidden />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Post.MemberId" class="control-label"></label>
+        <input asp-for="@Model.Post.MemberId" class="form-control" hidden />
+    </div>
+}
+
+
+
+
+

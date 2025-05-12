@@ -24,7 +24,7 @@ namespace GadevangTennisklub2025.Pages.Events
             month = IndexModel.scuffedMonth;
             year = IndexModel.scuffedYear;
             EventList = await EventService.GetEventsAsync();
-
+            
         }
 
         public async Task<IActionResult> OnPostForward() 
