@@ -299,6 +299,7 @@ namespace GadevangTennisklub2025.Services
             {
                 if (m.Username == username)
                     isuniqe = false;
+                break;
             }
             return isuniqe;
         }
