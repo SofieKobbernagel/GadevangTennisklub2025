@@ -22,7 +22,11 @@
             <p>Intet profilbillede.</p>
         }
     </div>
-
+    <div>
+        <a class="btn btn-primary btn-sm" title="Edit"
+           asp-page="MyRegistrations" asp-route-member_Id="@Model.Member.Member_Id">Se dine tilmeldinger og bookinger</a>
+    </div>
+   
     <div class="form-group">
         <label asp-for="@Model.Member.Username"></label>
         <input asp-for="@Model.Member.Username" class="form-control" readonly />
