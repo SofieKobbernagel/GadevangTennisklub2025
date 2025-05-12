@@ -177,7 +177,7 @@ namespace GadevangTennisklub2025.Services
 
         public Task GetBookingsByUser(int uid)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public Task UpdateBooking(Booking b)
