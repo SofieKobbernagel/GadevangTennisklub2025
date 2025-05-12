@@ -32,11 +32,9 @@ namespace GadevangTennisklub2025.Models
             TimeOfDay = startTime;
             Length = length;
             AttendeeRange = attendeeRange;
-            
-            
             Description = description;
 
-            Console.WriteLine("Team.cs/ length is: " + Length);
+            //Console.WriteLine("Team.cs/ length is: " + Length);
         }
         public override string ToString()
         {

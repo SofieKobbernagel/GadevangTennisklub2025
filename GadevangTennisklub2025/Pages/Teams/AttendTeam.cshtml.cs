@@ -77,7 +77,7 @@ namespace GadevangTennisklub2025.Pages.Teams
             Members = _MemberServ.GetAllMembersAsync().Result;
 
                 SelectedMember = _TeamServ.MemberById(int.Parse(HttpContext.Session.GetString("Member_Id")));
-                Console.WriteLine($"SelectedMember is {SelectedMember}");
+                Console.WriteLine($"SelectedMember is {SelectedMember.Name}");
             return Page();
         }
 
@@ -87,13 +87,13 @@ namespace GadevangTennisklub2025.Pages.Teams
             var member = await _MemberServ.GetMemberById(memberId);
             var team = await _TeamServ.GetTeamFromIdAsync(id);
             await _TeamServ.AttendTeamAsync(team, member);
-            return RedirectToPage("AttendTeam");
+            return RedirectToPage("ShowTeam");
         }
 
         public IActionResult OnPostSelectMemberButton(int id)
         {
             SelectedMember = (Models.Member)_MemberServ.GetMemberById(id).Result;
-            Console.WriteLine($"Selected Member = {SelectedMember}");
+            //Console.WriteLine($"Selected Member = {SelectedMember.Name}");
             if (SelectedMember == null)
             {
                 Console.WriteLine("SelectedMember is NULL");

@@ -32,7 +32,7 @@ namespace GadevangTennisklub2025.Pages.Teams
         public ShowTeamModel(ITeamService teamService)
         {
             _teamService = teamService;
-            Console.WriteLine("TimeSlot: "+temp.AddHours(1.12));
+           
             ListOfTeams =  _teamService.GetAllTeamsAsync().Result;
         }
         #endregion

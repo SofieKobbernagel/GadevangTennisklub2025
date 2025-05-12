@@ -14,7 +14,8 @@ namespace GadevangTennisklub2025.Interfaces
         public Task<Team> DeleteTeamAsync(int teamNr);
 
         public Task AttendTeamAsync(Team team, Member member);
-        // Member? SelectedMember { get; set; }
+        public Task LeaveTeamAsync(Team team, Member member);
+        
         public Member MemberById(int id);
 
     }

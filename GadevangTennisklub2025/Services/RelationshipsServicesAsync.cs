@@ -189,5 +189,31 @@ namespace GadevangTennisklub2025.Services
 
             }
         }
+        public async Task RemoveTeamMemberRelation(int TeamId, int MemberId)
+        {
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("DELETE FROM RelMemberTeam WHERE Member_Id = @Member_Id AND Team_Id = @Team_Id;", con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Member_Id", MemberId);
+                    cmd.Parameters.AddWithValue("@Team_Id", TeamId);
+                    await cmd.ExecuteNonQueryAsync();
+                    con.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("General error " + e.Message);
+                    throw;
+                }
+            }
+        }
+
     }
 }
