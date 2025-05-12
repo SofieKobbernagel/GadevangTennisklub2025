@@ -1,0 +1,12 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.About.CoachFolder.DeleteCoachModel
+@{
+}
+<h1>Bækræft sletning</h1>
+<div class="alert alert-danger">
+    <h5>Er du sikker på at du gerne vil slette træner ved navn - @Model.Coach.Name? Dette kan ikke gøres om.</h5>
+    <form method="post">
+        <button type="submit" class="btn btn-danger">Ja</button>
+        <a class="btn btn-primary" asp-page="GetAllCoaches">Nej</a>
+    </form>
+</div>

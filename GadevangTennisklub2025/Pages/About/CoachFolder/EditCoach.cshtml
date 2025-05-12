@@ -1,0 +1,75 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.About.CoachFolder.UpdateCoachModel
+@{
+}
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="CoachObject.Coach_Id" />
+    <div class="form-group">
+        <label asp-for="@Model.CoachObject.Name" class="control-label"></label>
+        <input asp-for="@Model.CoachObject.Name" class="form-control" />
+        <span asp-validation-for="CoachObject.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.CoachObject.Address" class="control-label"></label>
+        <input asp-for="@Model.CoachObject.Address" class="form-control" />
+        <span asp-validation-for="CoachObject.Address" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.CoachObject.PostalCode" class="control-label"></label>
+        <input asp-for="@Model.CoachObject.PostalCode" class="form-control" />
+        <span asp-validation-for="CoachObject.PostalCode" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.CoachObject.City" class="control-label"></label>
+        <input asp-for="@Model.CoachObject.City" class="form-control" />
+        <span asp-validation-for="CoachObject.City" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.CoachObject.Phone" class="control-label"></label>
+        <input asp-for="@Model.CoachObject.Phone" class="form-control" />
+        <span asp-validation-for="CoachObject.Phone" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.CoachObject.Email" class="control-label"></label>
+        <input asp-for="@Model.CoachObject.Email" class="form-control" />
+        <span asp-validation-for="CoachObject.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.CoachObject.Salary" class="control-label"></label>
+        <input asp-for="@Model.CoachObject.Salary" class="form-control" />
+        <span asp-validation-for="CoachObject.Salary" class="text-danger"></span>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.CoachObject.ProfileImagePath))
+    {
+        <div class="form-group">
+            <label>Nuværende profilbillede:</label>
+            <br />
+            <img src="@Model.CoachObject.ProfileImagePath" alt="Profilbillede" width="150" />
+        </div>
+    }
+    <div class="form-group">
+        <label for="ProfileImage">Upload profilbillede</label>
+        <input type="file" class="form-control" name="ProfileImage" id="ProfileImage" />
+    </div>
+    @if (!string.IsNullOrEmpty(Model.CoachObject.ContractFilePath))
+    {
+        <a href="@Model.CoachObject.ContractFilePath" download class="btn btn-secondary">
+            Download Nuværende kontrakt
+        </a>
+    }
+    <div class="form-group">
+        <label for="ContractFile">Upload kontrakt</label>
+        <input type="file" class="form-control" name="ContractFile" id="ContractFile" />
+    </div>
+
+    <p>
+        <div class="form-group">
+            <input type="submit" value="Opdater træner" class="btn btn-primary" />
+        </div>
+    </p>
+
+</form>

@@ -16,6 +16,10 @@
             <th>Navn</th>
             <th>Email</th>
             <th>Telefon</th>
+            @if (@Model.IsAdmin)
+            {
+                <th>Handlinger</th>
+            }
 
         </tr>
     </thead>
@@ -44,6 +48,15 @@
                 <td>
                     @c.Phone
                 </td>
+                @if (@Model.IsAdmin)
+                {
+                    <td>
+                        <a class="btn btn-primary btn-sm" title="EditCoach"
+                           asp-page="EditCoach" asp-route-coach_Id="@c.Coach_Id">Rediger</a>
+                        <a class="btn btn-danger btn-sm" title="DeleteCoach"
+                           asp-page="DeleteCoach" asp-route-coach_Id="@c.Coach_Id">Slet</a>
+                    </td>
+                }
             </tr>
         }
         @if (@Model.IsAdmin)

@@ -54,9 +54,40 @@ namespace GadevangTennisklub2025.Services
             return isCreated;
         }
 
-        public Task<Coach> DeleteCoachAsync(int coachId)
+        public async Task<Coach> DeleteCoachAsync(int coach_Id)
         {
-            throw new NotImplementedException();
+            Coach? deletedCoach = await GetCoachByIdAsync(coach_Id);
+            if (deletedCoach == null)
+            {
+                return null;
+            }
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(deleteCoachSql, connection);
+                    command.Parameters.AddWithValue("@Coach_Id", coach_Id);
+                    await connection.OpenAsync();
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                    if (rowsAffected == 0)
+                        deletedCoach = null;
+                }
+
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error: " + sqlExp.Message);
+                    deletedCoach = null;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("General error: " + ex.Message);
+                    deletedCoach = null;
+                }
+                return deletedCoach;
+            }
         }
 
         public async Task<List<Coach>> GetAllCoachesAsync()
@@ -82,7 +113,7 @@ namespace GadevangTennisklub2025.Services
                         string email = reader.GetString("Email");        
                         string filepath = reader.IsDBNull(reader.GetOrdinal("ProfileImagePath")) ? null : reader.GetString(reader.GetOrdinal("ProfileImagePath"));
 
-                        Coach c = new Coach(name, phone, email, id, address, filepath,contractFilePath,city,postalcode);
+                        Coach c = new Coach(name, phone, email, id, address, filepath,contractFilePath,city,postalcode, sallary);
                   
                         coaches.Add(c);
 
@@ -103,15 +134,95 @@ namespace GadevangTennisklub2025.Services
             return coaches;
         }
     
-
-        public Task<Coach?> GetCoachByIdAsync(int coachId)
+        public async Task<Coach?> GetCoachByIdAsync(int coach_Id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                Coach? foundCoach = null;
+                try
+                {
+
+                    SqlCommand command = new SqlCommand(selectCoachByIdSql, connection);
+                    command.Parameters.AddWithValue("@Coach_Id", coach_Id);
+
+                    await connection.OpenAsync();
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                    if (await reader.ReadAsync())
+                    {
+                        string name = reader.GetString("Name");
+                        string city = reader.GetString("City");
+                        string phone = reader.GetString("TLF");
+                        string postalcode = reader.GetString("PostalCode");
+                        decimal sallary = reader.GetDecimal("Salary");
+                        string contractFilePath = reader.GetString("ContractFilePath");
+                        string address = reader.GetString("Address");
+                        int id = reader.GetInt32("Coach_Id");
+                        string email = reader.GetString("Email");
+                        string filepath = reader.IsDBNull(reader.GetOrdinal("ProfileImagePath")) ? null : reader.GetString(reader.GetOrdinal("ProfileImagePath"));
+
+                        foundCoach = new Coach(name, phone, email, id, address, filepath, contractFilePath, city, postalcode, sallary);
+                        
+
+
+                    }
+                    reader.Close();
+
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error" + sqlExp.Message);
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Generel fejl: " + ex.Message);
+                    return null;
+                }
+
+                return foundCoach;
+            }
         }
 
-        public Task<bool> UpdateCoachAsync(Coach coach)
+        public async Task<bool> UpdateCoachAsync(Coach coach, int coach_Id)
         {
-            throw new NotImplementedException();
+            bool isUpdated = false;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(updateCoachSql, connection);
+                    command.Parameters.AddWithValue("@Coach_Id", coach.Coach_Id);
+                    command.Parameters.AddWithValue("@Salary", coach.Salary);
+                    command.Parameters.AddWithValue("@Address", coach.Address);
+                    command.Parameters.AddWithValue("@ContractFilePath", coach.ContractFilePath);
+                    command.Parameters.AddWithValue("@Tlf", coach.Phone);
+                    command.Parameters.AddWithValue("@Email", coach.Email);
+                    command.Parameters.AddWithValue("@City", coach.City);
+                    command.Parameters.AddWithValue("@PostalCode", coach.PostalCode);
+                    command.Parameters.AddWithValue("@Name", coach.Name);
+                    command.Parameters.AddWithValue("@ProfileImagePath", coach.ProfileImagePath);
+
+                    await connection.OpenAsync();
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    if (rowsAffected > 0)
+                    {
+                        isUpdated = true;
+                    }
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error: " + sqlExp.Message);
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("General error: " + ex.Message);
+                    return false;
+                }
+            }
+            return isUpdated;
         }
     }
 }

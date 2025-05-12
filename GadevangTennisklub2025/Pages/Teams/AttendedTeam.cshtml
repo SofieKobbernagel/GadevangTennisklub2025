@@ -1,0 +1,59 @@
+﻿@page
+@using Models;
+@model GadevangTennisklub2025.Pages.Teams.AttendedTeamModel
+@{
+    ViewData["Title"] = "Klubbens Hold";
+}
+
+<h3>Hold som er tilmeldt af @Model.SelectedMember.Name</h3>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>pladser tilbage</th>
+            <th>Medlemskabstype</th>
+            <th>Beskrivelse</th>
+            <th>Dag</th>
+            <th>Tidsrum</th>
+            @if (Model.isAdmin)
+            {
+                <th>tilmeldte folk</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Team item in Model.ListOfAttendedTeams)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@(item.AttendeeRange[1] - item.Attendees.Count)</td>
+                <td>@item.MembershipType</td>
+                <td>@item.Description</td>
+                <td>@item.week[item.DayOfWeek]</td>
+                <td>@item.TimeOfDay - @(item.TimeOfDay.Add(TimeSpan.FromHours(item.Length)))</td>
+                @if (Model.isAdmin)
+                {
+                    <th>@item.Attendees</th>
+                }
+                <td>
+                    <form style="display: inline;" asp-page-handler="LeaveTeam" asp-route-LEAVEID="@item.Id">
+                        <button type="submit" style="width: 24px; height: 24px;">LeaveTeam</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                    alert('@TempData["SuccessMessage"]');
+            </text>
+        }
+    </script>
+}

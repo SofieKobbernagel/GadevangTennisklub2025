@@ -12,14 +12,14 @@ namespace GadevangTennisklub2025.Services
     public class TeamService : ITeamService
     {
         private string connectionString = Secret.ConnectionString;
-        private string queryString = "SELECT  Team_Id, MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers, Attendees, Description FROM Team";
-        private string updateQuery = "UPDATE Team SET Team_Id = @Team_Id, MemberType = @MemberType, Name = @Name, Length = @Length, TimeOfDay = @TimeOfDay, DayOfWeek = @DayOfWeek, MinMembers = @MinMembers, MaxMembers = @MaxMembers, Attendees = @Attendees, Description = @Description WHERE Team_Id = @Team_Id";
+        private string queryString = "SELECT  Team_Id, MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers, Description FROM Team";
+        private string updateQuery = "UPDATE Team SET Team_Id = @Team_Id, MemberType = @MemberType, Name = @Name, Length = @Length, TimeOfDay = @TimeOfDay, DayOfWeek = @DayOfWeek, MinMembers = @MinMembers, MaxMembers = @MaxMembers, Description = @Description WHERE Team_Id = @Team_Id";
         private string deleteQuery = "DELETE FROM Team WHERE Name=@Name;";
-        private string createQuery = "INSERT INTO Team ( Team_Id, MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers, Attendees, Description)\r\nVALUES ( @Team_Id, @MemberType, @Name, @Length, @TimeOfDay, @DayOfWeek, @MinMembers, @MaxMembers, @Attendees, @Description);";
+        private string createQuery = "INSERT INTO Team ( Team_Id, MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers,  Description)\r\nVALUES ( @Team_Id, @MemberType, @Name, @Length, @TimeOfDay, @DayOfWeek, @MinMembers, @MaxMembers,  @Description);";
 
-        private string searchNrQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Attendees,Description FROM Team WHERE Team_Id = @Team_Id";
-        private string searchNameQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Attendees,Description FROM Team WHERE Name = @Name";
-        private string searchMembershipTypeQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Attendees,Description FROM Team WHERE MemberType = @MemberType";
+        private string searchNrQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Description FROM Team WHERE Team_Id = @Team_Id";
+        private string searchNameQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Description FROM Team WHERE Name = @Name";
+        private string searchMembershipTypeQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Description FROM Team WHERE MemberType = @MemberType";
         public MemberService memberService = new MemberService();
 
         public Member SelectedMember { get; set; }
@@ -39,57 +39,7 @@ namespace GadevangTennisklub2025.Services
             }
             return mem;
         }
-        public List<Member> IdsToMembers(List<int> ids)
-        {
-            List<Member> members = new List<Member>();
-            foreach(int id in ids)
-            {
-                members.Add(MemberById(id));
-            }
-            return members;
-        }
-        public List<int> ListIntFromString(string strings) 
-        {
-            List<int> output=new List<int>();
-            List<string> outStrings=new List<string>(strings.Length);
-            int k=0;
-            if (strings == null || strings.Length == 0 || strings==" ")
-            {
-                return output;
-            }
-            for(int i=0;i<=strings.Length;i++){
-                if(strings[i] == ',')
-                {
-                    k++;
-                }
-                else {
-                    outStrings[k].Append(strings[i]);
-                }
-
-            }
-            foreach(string str in outStrings)
-            {
-                output.Add(int.Parse(str));
-            }
-            return output;
-
-        }
-
-        public string MembersToString(List<Member> members)
-        {
-            string result = "";
-            if (members == null || members.Count==0)
-            {
-                return result;
-            }
-            result += members[0].Member_Id;
-            for(int i = 1; i < members.Count; i++)
-            {
-                result += ","+members[i].Member_Id;
-            }
-            return result;
-        }
-
+        
         public async Task<bool> CreateTeamAsync(Team team)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -109,7 +59,6 @@ namespace GadevangTennisklub2025.Services
                     command.Parameters.AddWithValue("@DayOfWeek", team.DayOfWeek);
                     command.Parameters.AddWithValue("@MinMembers", team.AttendeeRange[0]);
                     command.Parameters.AddWithValue("@MaxMembers", team.AttendeeRange[1]);
-                    command.Parameters.AddWithValue("@Attendees", MembersToString(team.Attendees)); //---
                     command.Parameters.AddWithValue("@Description", team.Description);
 
                     await connection.OpenAsync();
@@ -140,7 +89,8 @@ namespace GadevangTennisklub2025.Services
                     SqlCommand command = new SqlCommand(deleteQuery, connection);
 
                     // Add parameters to prevent SQL injection
-                    command.Parameters.AddWithValue("@Name", GetTeamFromIdAsync(teamNr).Result.Name);
+                    Team te = await GetTeamFromIdAsync(teamNr);
+                    command.Parameters.AddWithValue("@Name", te.Name);
 
 
                     await connection.OpenAsync();
@@ -160,56 +110,59 @@ namespace GadevangTennisklub2025.Services
             return null; // Return false if the Delete fails
         }
 
-        public async Task<List<Team>> GetAllAttendedTeamsAsync(Member member)
+        public async Task<List<Team>> GetAllAttendedTeamsAsync(int memberId)
         {
-            List<Team> teams = new List<Team>();
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
+                List<Team> teams = new List<Team>();
+
+                string query = @"
+        SELECT t.*
+        FROM RelMemberTeam r
+        INNER JOIN Team t ON r.Team_Id = t.Team_Id
+        WHERE r.Member_Id = @MemberId";
+
+                try
                 {
-                    try
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        SqlCommand command = new SqlCommand(queryString, connection);
-                        await command.Connection.OpenAsync();
-                        SqlDataReader reader = await command.ExecuteReaderAsync();
-                        Thread.Sleep(50);
-                        while (await reader.ReadAsync())
+                        command.Parameters.AddWithValue("@MemberId", memberId);
+                        await connection.OpenAsync();
+
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
                         {
-                            int teamID = reader.GetInt32("Team_Id");
-                            string teamNavn = reader.GetString("Name");
-                            int dayOfWeek = reader.GetInt32("DayOfWeek");
-                            string startTime = reader.GetString("TimeOfDay"); //ex. 14:30
-                            double length = double.Parse(reader.GetString("Length"), CultureInfo.InvariantCulture);
-                            int[] attendeeRange = { reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers") };
-                            string attendeesID = reader.GetString("Attendees");//"memberID,memberID,memberID..."
-                            string description = reader.GetString("Description");
-                            string membershipType = reader.GetString("MemberType");
-
-                            List<Member> Attendees = IdsToMembers(ListIntFromString(attendeesID));
-
-                            Team team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
-                            if (Attendees.Contains(member))
+                            while (await reader.ReadAsync())
                             {
+                                int[] attendeeRange = new int[]
+                                {
+                        reader.GetInt32(reader.GetOrdinal("MinMembers")),
+                        reader.GetInt32(reader.GetOrdinal("MaxMembers"))
+                                };
+
+                                Team team = new Team
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("Team_Id")),
+                                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                                    DayOfWeek = reader.GetInt32(reader.GetOrdinal("DayOfWeek")),
+                                    TimeOfDay = TimeOnly.Parse(reader.GetString(reader.GetOrdinal("TimeOfDay"))),
+                                    Length = double.Parse(reader.GetString(reader.GetOrdinal("Length")), CultureInfo.InvariantCulture),
+                                    AttendeeRange = attendeeRange,
+                                    Description = reader.GetString(reader.GetOrdinal("Description")),
+                                    MembershipType = reader.GetString(reader.GetOrdinal("MemberType")),
+                                    Attendees = new List<Member>() // Optional: populate separately if needed
+                                };
+
                                 teams.Add(team);
                             }
                         }
-                        reader.Close();
-                    }
-                    catch (SqlException sqlExp)
-                    {
-                        Console.WriteLine("Database error" + sqlExp.Message);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Generel fejl: " + ex.Message);
-                    }
-                    finally
-                    {
-
                     }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error in GetTeamsForMemberAsync: " + ex.Message);
+                }
+
                 return teams;
-            }
-        }
+            }   
 
         public async Task<List<Team>> GetAllTeamsAsync()
         {
@@ -231,12 +184,12 @@ namespace GadevangTennisklub2025.Services
                             string startTime = reader.GetString("TimeOfDay"); //ex. 14:30
                             double length = double.Parse(reader.GetString("Length"), CultureInfo.InvariantCulture);
                             int[] attendeeRange = { reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers") };
-                            Console.WriteLine("getallTeamsAsync/ length = "+length);
-                            string attendeesID = reader.GetString("Attendees");//"memberID,memberID,memberID..."
+                           
+                            
                             string description = reader.GetString("Description");
                             string membershipType = reader.GetString("MemberType");
 
-                            List<Member> Attendees = IdsToMembers(ListIntFromString(attendeesID));
+                            List<Member> Attendees = await GetAttendeesAsync(teamID);
 
                             Team team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
 
@@ -273,23 +226,26 @@ namespace GadevangTennisklub2025.Services
                         SqlCommand command = new SqlCommand(queryString, connection);
                         await command.Connection.OpenAsync();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        Thread.Sleep(1000);
+                       
                         while (await reader.ReadAsync())
                         {
                             int teamID = reader.GetInt32("Team_Id");
+                            if (searchID == teamID)
+                            {
+                            
+                            
                             string teamNavn = reader.GetString("Name");
                             int dayOfWeek = reader.GetInt32("DayOfWeek");
                             string startTime = reader.GetString("TimeOfDay"); //ex. 14:30
                             double length = double.Parse(reader.GetString("Length"), CultureInfo.InvariantCulture);
                             int[] attendeeRange = { reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers") };
-                            string attendeesID = reader.GetString("Attendees");//"memberID,memberID,memberID..."
+                            
                             string description = reader.GetString("Description");
                             string membershipType = reader.GetString("MemberType");
 
-                            List<Member> Attendees = IdsToMembers(ListIntFromString(attendeesID));
-                            if (searchID == teamID)
-                            {
+                            List<Member> Attendees = await GetAttendeesAsync(teamID);
                                 result_team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
+                                reader.Close();
                             }
                             
 
@@ -336,11 +292,10 @@ namespace GadevangTennisklub2025.Services
                             string startTime = reader.GetString("TimeOfDay"); //ex. 14:30
                             double length = double.Parse(reader.GetString("Length"), CultureInfo.InvariantCulture);
                             int[] attendeeRange = { reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers") };
-                            string attendeesID = reader.GetString("Attendees");//"memberID,memberID,memberID..."
+                            
                             string description = reader.GetString("Description");
                             string membershipType = reader.GetString("MemberType");
-
-                            List<Member> Attendees = IdsToMembers(ListIntFromString(attendeesID));
+                            List<Member> Attendees =await GetAttendeesAsync(teamID);
 
                             if (teamNavn == name)
                             {
@@ -388,7 +343,7 @@ namespace GadevangTennisklub2025.Services
                     command.Parameters.AddWithValue("@DayOfWeek", team.DayOfWeek);
                     command.Parameters.AddWithValue("@MinMembers", team.AttendeeRange[0]);
                     command.Parameters.AddWithValue("@MaxMembers", team.AttendeeRange[1]);
-                    command.Parameters.AddWithValue("@Attendees", team.AttendeesID);
+                    
                     command.Parameters.AddWithValue("@Description", team.Description);
 
                     await connection.OpenAsync();
@@ -406,6 +361,27 @@ namespace GadevangTennisklub2025.Services
                 }
             }
             return false; // Return false if the update fails
+        }
+
+        public async Task AttendTeamAsync(Team team, Member member)
+        {
+            
+            RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
+            await relationshipsServices.TeamMemberRelation(team.Id, member.Member_Id);
+            
+        }
+
+        public async Task LeaveTeamAsync(Team team, Member member)
+        {
+            string succes = "unsuccesfully";
+            List<Member> mem = await GetAttendeesAsync(team.Id);
+            if (mem.Any(m => m.Member_Id == member.Member_Id))
+            {
+                RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
+               await relationshipsServices.RemoveTeamMemberRelation(team.Id, member.Member_Id);
+                succes = "succesfully";
+            }
+            Console.WriteLine("TeamService/LeaveTeamAsync  just ran "+succes);
         }
 
         public async Task<List<Team>> Search(Search SearchI)
@@ -452,7 +428,7 @@ namespace GadevangTennisklub2025.Services
                                 TimeOnly TempTimeOfDay = TimeOnly.Parse(reader.GetString("TimeOfDay")); //ex. 14:30
                                 Double TempLength = Double.Parse(reader.GetString("Length"));
                                 int[] TempAttendeeRange =[reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers")];
-                                List<Member> TempAttendees = IdsToMembers(ListIntFromString(reader.GetString("Attendees")));//"memberID,memberID,memberID..."
+                                List<Member> TempAttendees = await GetAttendeesAsync(TempId);
                                 string TempDescription = reader.GetString("Description");
 
                                 Team tem = new Team(TempId, TempName, TempMembershipType, TempDayOfWeek, TempTimeOfDay, TempLength, TempAttendeeRange, TempAttendees, TempDescription);
@@ -474,7 +450,88 @@ namespace GadevangTennisklub2025.Services
 
             return teams;
         }
-        
+
+        public async Task<List<Member>> GetAttendeesAsync(int teamId)
+        {
+            List<Member> attendees = new List<Member>();
+
+            string query = @"
+SELECT 
+    m.Member_Id,
+    m.Name,
+    m.Address,
+    m.Gender,
+    m.Email,
+    m.PostalCode,
+    m.TLF AS Phone,
+    m.OtherTLF AS OtherPhone,
+    m.City,
+    m.MembershipType,
+    m.birthday,
+    m.NewsSubscriber,
+    m.UserName AS Username,
+    m.Password,
+    m.IsAdmin,
+    m.Municipality,
+    m.PictureConsent,
+    m.ProfileImagePath
+FROM RelMemberTeam r
+INNER JOIN Members m ON r.Member_Id = m.Member_Id
+WHERE r.Team_Id = @TeamId";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@TeamId", teamId);
+                    await connection.OpenAsync();
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            Member member = new Member
+                            {
+                                Member_Id = reader.GetInt32(reader.GetOrdinal("Member_Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                Address = reader.GetString(reader.GetOrdinal("Address")),
+                                Gender = reader.GetString(reader.GetOrdinal("Gender")),
+                                Email = reader.GetString(reader.GetOrdinal("Email")),
+                                PostalCode = reader.GetString(reader.GetOrdinal("PostalCode")),
+                                Phone = reader.GetString(reader.GetOrdinal("Phone")),
+                                OtherPhone = reader.IsDBNull(reader.GetOrdinal("OtherPhone")) ? null : reader.GetString(reader.GetOrdinal("OtherPhone")),
+                                City = reader.GetString(reader.GetOrdinal("City")),
+                                MemberType = reader.GetString(reader.GetOrdinal("MembershipType")),
+                                Birthday = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("birthday"))),
+                                NewsSubscriber = reader.GetBoolean(reader.GetOrdinal("NewsSubscriber")),
+                                Username = reader.GetString(reader.GetOrdinal("Username")),
+                                Password = reader.GetString(reader.GetOrdinal("Password")),
+                                IsAdmin = reader.GetBoolean(reader.GetOrdinal("IsAdmin")),
+                                Municipality = reader.GetString(reader.GetOrdinal("Municipality")),
+                                PictureConsent = reader.GetString(reader.GetOrdinal("PictureConsent")),
+                                ProfileImagePath = reader.IsDBNull(reader.GetOrdinal("ProfileImagePath")) ? null : reader.GetString(reader.GetOrdinal("ProfileImagePath"))
+                            };
+
+                            attendees.Add(member);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in GetAttendeesAsync: " + ex.Message);
+                // Optionally log or rethrow
+            }
+
+            return attendees;
+        }
+
+
+
+
     }
+
 }
+
 

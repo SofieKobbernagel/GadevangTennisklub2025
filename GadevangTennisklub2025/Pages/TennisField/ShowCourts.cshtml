@@ -4,7 +4,10 @@
     ViewData["Title"] = "ShowCourts";
 }
 <h1>Baner:</h1>
-<a asp-page="/TennisField/CreateCourt">Opret Bane</a>
+@if (Model.isAdmin == true)
+{
+    <a asp-page="/TennisField/CreateCourt">Opret Bane</a>
+}
 
 <form method="get">
     <p>
@@ -33,8 +36,11 @@
             <td>Bane ID</td>
             <td>Navn</td>
             <td>Type</td>
-            <td></td>
-            <td></td>
+            @if (Model.isAdmin == true)
+            {
+                <td></td>
+                <td></td>
+            }
         </tr>
     </thead>
     <tbody>
@@ -44,8 +50,11 @@
                 <td>@courts.CourtId</td>
                 <td>@courts.Name</td>
                 <td>@courts.Type</td>
-                <td style ="background-color:lightgray;text-align:center"><a asp-page="EditCourt" asp-route-Id="@courts.CourtId">Rediger</a></td>
-                <td style="background-color:lightgray;text-align:center"><a asp-page="DeleteCourt" asp-route-deleteId="@courts.CourtId">Slet</a></td>
+                @if (Model.isAdmin == true)
+                {
+                    <td style="background-color:lightgray;text-align:center"><a asp-page="EditCourt" asp-route-Id="@courts.CourtId">Rediger</a></td>
+                    <td style="background-color:lightgray;text-align:center"><a asp-page="DeleteCourt" asp-route-deleteId="@courts.CourtId">Slet</a></td>
+                }
             </tr>
         }
     </tbody>

@@ -19,7 +19,7 @@ namespace GadevangTennisklub2025.Pages.Teams
 
         #region Properties
         public bool isAdmin { get; set; } = false;
-        public List<Models.Team> ListOfTeams { get; private set; }
+        public List<Team> ListOfTeams { get; set; } = new(); // prevents null
         private TimeOnly temp = new TimeOnly(23,50);
        
             //Console.WriteLine("endTime: "+(temp));
@@ -32,7 +32,8 @@ namespace GadevangTennisklub2025.Pages.Teams
         public ShowTeamModel(ITeamService teamService)
         {
             _teamService = teamService;
-            Console.WriteLine("TimeSlot: "+temp.AddHours(1.12));
+           
+            ListOfTeams =  _teamService.GetAllTeamsAsync().Result;
         }
         #endregion
 
@@ -54,19 +55,20 @@ namespace GadevangTennisklub2025.Pages.Teams
             Console.WriteLine("ShowTeam/OnPostCreate just ran");
             return RedirectToPage("CreateTeam");
         }
-
+        public IActionResult OnPostAttendedTeam()
+        {
+            Console.WriteLine("ShowTeam/OnPostAttendedTeam just ran");
+            return RedirectToPage("AttendedTeam");
+        }
+        
         public async Task OnGetAsync()
         {
+            ListOfTeams = await _teamService.GetAllTeamsAsync();
             if (HttpContext.Session.GetString("IsAdmin")!=null && bool.Parse(HttpContext.Session.GetString("IsAdmin"))==true) 
             { 
                 isAdmin = true;
             }
-            //Console.WriteLine("Teams/ShowTeam/OnGetAsync  timeslot is: "+(.TimeOfDay.Add(TimeSpan.FromHours(item.Length))));
-            if (ListOfTeams == null)
-            {
-                ListOfTeams = await _teamService.GetAllTeamsAsync();
-                Thread.Sleep(1000);
-            }
+
             Console.WriteLine("Team/ShowTeam/OnGetAsync is done");
         }
         #endregion
