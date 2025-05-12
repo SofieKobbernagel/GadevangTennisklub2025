@@ -365,8 +365,10 @@ namespace GadevangTennisklub2025.Services
 
         public async Task AttendTeamAsync(Team team, Member member)
         {
-           RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
+            
+            RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
             await relationshipsServices.TeamMemberRelation(team.Id, member.Member_Id);
+            
         }
 
         public async Task LeaveTeamAsync(Team team, Member member)

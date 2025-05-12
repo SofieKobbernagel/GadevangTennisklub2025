@@ -86,7 +86,16 @@ namespace GadevangTennisklub2025.Pages.Teams
         {
             var member = await _MemberServ.GetMemberById(memberId);
             var team = await _TeamServ.GetTeamFromIdAsync(id);
-            await _TeamServ.AttendTeamAsync(team, member);
+            List<Models.Member> me = await _TeamServ.GetAttendeesAsync(team.Id);
+            if (me.Count < team.AttendeeRange[1])
+            {
+                await _TeamServ.AttendTeamAsync(team, member);
+                TempData["SuccessMessage"] = $"Du({member.Name}) er nu tilmeldt {team.Name}!";
+            }
+            else 
+            {
+                TempData["SuccessMessage"] = $"Du({member.Name}) kan ikke tilmeldes {team.Name} da det er fyldt (det har {me.Count} tilmeldte og {team.AttendeeRange[1]} pladser)!"; 
+            }
             return RedirectToPage("ShowTeam");
         }
 
