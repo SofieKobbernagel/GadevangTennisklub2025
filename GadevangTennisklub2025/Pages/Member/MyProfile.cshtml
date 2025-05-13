@@ -23,7 +23,15 @@
         }
     </div>
 
+
     <h5>Dine Bookinger:</h5>
+
+    @if (Model.Bookings.Count < 1)
+    {
+        <p>Ingen bookinger fundet</p>
+    }
+    else
+    {
 
     <table class="table table-striped">
         <thead>
@@ -53,7 +61,7 @@
             }
         </tbody>
     </table>
-
+    }
    
     <div class="form-group">
         <label asp-for="@Model.Member.Username"></label>
