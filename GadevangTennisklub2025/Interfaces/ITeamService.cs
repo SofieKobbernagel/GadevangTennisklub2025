@@ -4,6 +4,7 @@ namespace GadevangTennisklub2025.Interfaces
 {
     public interface ITeamService
     {
+        public List<Models.Member> Members();
         public Task<List<Models.Team>> GetAllTeamsAsync();
         public Task<List<Models.Team>> GetAllAttendedTeamsAsync(int memberId);
         public Task<List<Member>> GetAttendeesAsync(int teamId);
