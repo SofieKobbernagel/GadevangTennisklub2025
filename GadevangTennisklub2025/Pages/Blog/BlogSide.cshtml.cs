@@ -8,10 +8,12 @@ namespace GadevangTennisklub2025.Pages.Blog
     public class BlogSideModel : PageModel
     {
         public IBlogPostServicesAsync blogPostServicesAsync;
+        public IMemberService memberService;    
         public List<BlogPost> BlogList { get; set; }
 
-        public BlogSideModel(IBlogPostServicesAsync IBPSA) 
+        public BlogSideModel(IBlogPostServicesAsync IBPSA, IMemberService IMS) 
         {
+            memberService = IMS;
            blogPostServicesAsync = IBPSA; 
             BlogList = new List<BlogPost>();
         }

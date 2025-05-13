@@ -80,15 +80,15 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
                     Message = "Vælg en Modstander";
                     return null;
                 }
-                if (! await relationshipsService.MemberAvailible(int.Parse(me),b.Start,b.End) || bookingService.GetBookingsByUser(int.Parse(me)).Result.Count > 5) 
+                if (! await relationshipsService.MemberAvailible(int.Parse(me),b.Start,b.End) || bookingService.GetBookingsByUser(int.Parse(me)).Result.Count ==4) 
                 {
                    
-                    Message = bookingService.GetBookingsByUser(int.Parse(me)).Result.Count > 5? "Medlem har 4 timer":"Medlem er optager";
+                    Message = bookingService.GetBookingsByUser(int.Parse(me)).Result.Count == 4? "Medlem har 4 timer":"Medlem er optager";
                     return null;
                 }
-                if (!await relationshipsService.MemberAvailible(int.Parse(HttpContext.Session.GetString("Member_Id")), b.Start, b.End) || bookingService.GetBookingsByUser(int.Parse(HttpContext.Session.GetString("Member_Id"))).Result.Count > 5)
+                if (!await relationshipsService.MemberAvailible(int.Parse(HttpContext.Session.GetString("Member_Id")), b.Start, b.End) || bookingService.GetBookingsByUser(int.Parse(HttpContext.Session.GetString("Member_Id"))).Result.Count == 4)
                 {
-                    Message = bookingService.GetBookingsByUser(int.Parse(HttpContext.Session.GetString("Member_Id"))).Result.Count > 5 ? "du har 4 timer" : "du er optager";
+                    Message = bookingService.GetBookingsByUser(int.Parse(HttpContext.Session.GetString("Member_Id"))).Result.Count == 4 ? "du har 4 timer" : "du er optager";
                     return null;
                 }
                 await bookingService.CreateBooking(b);
@@ -129,12 +129,12 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
                     Message = "Vælg en Modstander";
                     return null;
                 }
-                if (!await relationshipsService.MemberAvailible(int.Parse(me), b.Start, b.End))
+                if (!await relationshipsService.MemberAvailible(int.Parse(me), b.Start, b.End) || bookingService.GetBookingsByUser(int.Parse(me)).Result.Count == 4)
                 {
                     Message = "Medlem ikke tilgængelig";
                     return null;
                 }
-                if (!await relationshipsService.MemberAvailible(int.Parse(HttpContext.Session.GetString("Member_Id")), b.Start, b.End))
+                if (!await relationshipsService.MemberAvailible(int.Parse(HttpContext.Session.GetString("Member_Id")), b.Start, b.End) || bookingService.GetBookingsByUser(int.Parse(HttpContext.Session.GetString("Member_Id"))).Result.Count == 4)
                 {
                     Message = "du er ikke tilgængelig";
                     return null;

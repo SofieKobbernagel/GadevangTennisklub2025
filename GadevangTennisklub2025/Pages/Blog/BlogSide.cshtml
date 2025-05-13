@@ -24,9 +24,9 @@
         string Content = "";
         <div class="white-box">
             <a asp-page="BlogPost" asp-route-BlogId="@bp.Id"> <h5>@bp.Title</h5></a>
+            <p>skrevet af <i>@Model.memberService.GetMemberById(bp.MemberId).Result.Name</i></p>
 
-
-            @for (int i = 0; i < 200; i++)
+             @for (int i = 0; i < 200; i++)
                 {
                     if (i == bp.Content.Length) break;
                     Content += bp.Content[i];
@@ -34,13 +34,13 @@
                     {
                         Content += "...";
                     }
-                }
-                <p>@Content</p>
+                } 
+                <p>@(Content)</p>
         </div>
     <br>
    
 
-}
+    }
 
 
     
