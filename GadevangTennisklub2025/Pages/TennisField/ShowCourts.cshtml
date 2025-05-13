@@ -29,6 +29,19 @@
     </p>
 </form>
 
+@functions {
+    string GetRowColor(string type)
+    {
+        return type switch
+        {
+            "Indendørs Paddle" => "#f2dede",         // light red
+            "Indendørs Tennis" => "#dff0d8",         // light green
+            "Udendørs Paddle" => "#d9edf7",    // light blue
+            "Udendørs Tennis" => "#fcf8e3",    // light yellow
+            _ => "white"
+        };
+    }
+}
 <p>Antal oprettede baner: @Model.Courts.Count</p>
 <table style="width:85%" class="table">
     <thead style="background-color:lightskyblue;border-radius:60px">
@@ -46,7 +59,7 @@
     <tbody>
         @foreach (Models.TennisField courts in Model.Courts)
         {
-            <tr>
+            <tr style="background-color:@GetRowColor(courts.Type)">
                 <td>@courts.CourtId</td>
                 <td>@courts.Name</td>
                 <td>@courts.Type</td>
