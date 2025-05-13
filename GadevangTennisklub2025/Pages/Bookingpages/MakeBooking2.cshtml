@@ -5,6 +5,10 @@
     ViewData["Title"] = "MakeBooking2";
 }
 
+<form method="post">
+    <Input type="submit" value="Last Week" class="btn btn-primary" asp-page-handler="Backwards" />
+    <Input type="submit" value="Next Week" class="btn btn-primary" asp-page-handler="Forward" />
+</form>
 
 
 
@@ -33,7 +37,7 @@
                 <p> @((DayOfWeek)(i == 0 ? 1 : (i + 1) == 7 ? 0 : i + 1)) 
                     <br/>
                     @{
-                        DateTime td = DateTime.Now.AddDays(i + 1 - ((int)(DateTime.Now.DayOfWeek) == 0 ? 7 : (int)(DateTime.Now.DayOfWeek)));
+                        DateTime td = DateTime.Now.AddDays(Model.weekFromNow*7+(i + 1 - ((int)(DateTime.Now.DayOfWeek) == 0 ? 7 : (int)(DateTime.Now.DayOfWeek))));
                     }
                     @((td.Day))/@((td.Month))/@((td.Year))</p>
             </foreignObject>

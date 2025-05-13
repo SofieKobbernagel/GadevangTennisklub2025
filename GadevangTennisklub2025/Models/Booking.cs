@@ -19,6 +19,11 @@
         }
 
         public Booking() { }
-        
+
+        public Booking(int id)
+        {
+            Id = id;
+        }
+
     }
 }

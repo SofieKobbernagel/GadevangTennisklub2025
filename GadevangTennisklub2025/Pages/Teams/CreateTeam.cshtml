@@ -47,6 +47,11 @@
         <button type="submit" asp-page-handler="Cancel" class="btn btn-secondary">Cancel</button>
     </div>
 </form>
+@foreach (string s in Model.Messages)
+{
+    <p style="color:red">@s</p>
+
+}
 
 @section Scripts {
     <script>

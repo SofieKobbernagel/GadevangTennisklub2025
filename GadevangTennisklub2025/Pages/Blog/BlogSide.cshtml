@@ -1,0 +1,48 @@
+﻿@page
+@using GadevangTennisklub2025.Models
+@model GadevangTennisklub2025.Pages.Blog.BlogSideModel
+@{
+    ViewData["Title"] = "BlogSide";
+}
+<style>
+    .white-box {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 900px;
+    margin: 0 auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+</style>
+
+
+<a href="MakeBlog">Make Blog<a/>
+
+    @foreach (BlogPost bp in Model.BlogList)
+    {
+        string Content = "";
+        <div class="white-box">
+            <a asp-page="BlogPost" asp-route-BlogId="@bp.Id"> <h5>@bp.Title</h5></a>
+            <p>skrevet af <i>@Model.memberService.GetMemberById(bp.MemberId).Result.Name</i></p>
+
+             @for (int i = 0; i < 200; i++)
+                {
+                    if (i == bp.Content.Length) break;
+                    Content += bp.Content[i];
+                    if (i == 199)
+                    {
+                        Content += "...";
+                    }
+                } 
+                <p>@(Content)</p>
+        </div>
+    <br>
+   
+
+    }
+
+
+    
+
+
