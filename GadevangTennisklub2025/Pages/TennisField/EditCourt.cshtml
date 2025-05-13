@@ -12,6 +12,7 @@
     <div class="form-group">
         <label asp-for="@Model.Court.Name" class="control-label"></label>
         <input asp-for="@Model.Court.Name" class="form-control" />
+        <span asp-validation-for="@Model.Court.Name" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Court.Type" class="control-label"></label>

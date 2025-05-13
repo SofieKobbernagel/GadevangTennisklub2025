@@ -39,6 +39,7 @@ namespace GadevangTennisklub2025.Pages.TennisField
         }
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!ModelState.IsValid) { await LoadList(); return Page(); }
             await _courtService.UpdateCourtAsync(Court);
             return RedirectToPage("ShowCourts");
         }

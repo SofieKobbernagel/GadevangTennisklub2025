@@ -12,6 +12,7 @@ namespace GadevangTennisklub2025.Pages.TennisField
 
         [BindProperty]
         public Models.TennisField Court { get; set; }
+        [BindProperty]
         public List<SelectListItem> SelectListCourts { get; set; }
         public string ErrorMessage { get; set; }
 
@@ -41,7 +42,7 @@ namespace GadevangTennisklub2025.Pages.TennisField
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid) { return Page(); }
+            if (!ModelState.IsValid) { await LoadList(); return Page(); }
             try //try-catch for at fange exceptions.
             {
                 await _courtService.CreateCourtAsync(Court);
