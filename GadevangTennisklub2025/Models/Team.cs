@@ -7,6 +7,7 @@ namespace GadevangTennisklub2025.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string MembershipType { get; set; }
+        public Coach Trainer { get; set; }
         public double Length {  get; set; }
         public TimeOnly TimeOfDay { get; set; }
         public int DayOfWeek { get; set; }  //1=monday  2=tuesday ...
@@ -23,11 +24,12 @@ namespace GadevangTennisklub2025.Models
         {
         }
 
-        public Team(int id, string name, string membershipType , int dayOfWeek,TimeOnly startTime, double length, int[] attendeeRange, List<Member> Attendees, string description)
+        public Team(int id, string name, string membershipType, Coach trainer, int dayOfWeek,TimeOnly startTime, double length, int[] attendeeRange, List<Member> Attendees, string description)
         {
             Id = id;
             MembershipType = membershipType;
             Name = name;
+            Trainer = trainer;
             DayOfWeek = dayOfWeek;
             TimeOfDay = startTime;
             Length = length;
@@ -38,7 +40,7 @@ namespace GadevangTennisklub2025.Models
         }
         public override string ToString()
         {
-            return $"id: {Id} \n MembershipType required: {MembershipType} \n Name: {Name} \n  timeslot   from: TimeSlot[0], to:TimeSlot[1] \n time of day start: {TimeOfDay}, end:  {TimeOfDay.AddHours(Length)}   Repeated every {week[DayOfWeek]} \n  Minimum Number of Attendees: {AttendeeRange[0]} ,  Max Number of Attendees: {AttendeeRange[1]}  \n  description: {Description} ";
+            return $"id: {Id} \n MembershipType required: {MembershipType} \n Name: {Name} \n Trainer: {Trainer} \n timeslot   from: TimeSlot[0], to:TimeSlot[1] \n time of day start: {TimeOfDay}, end:  {TimeOfDay.AddHours(Length)}   Repeated every {week[DayOfWeek]} \n  Minimum Number of Attendees: {AttendeeRange[0]} ,  Max Number of Attendees: {AttendeeRange[1]}  \n  description: {Description} ";
         }
 
        

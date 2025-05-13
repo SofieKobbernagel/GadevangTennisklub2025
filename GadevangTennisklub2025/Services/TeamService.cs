@@ -21,11 +21,17 @@ namespace GadevangTennisklub2025.Services
         private string searchNameQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Description FROM Team WHERE Name = @Name";
         private string searchMembershipTypeQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Description FROM Team WHERE MemberType = @MemberType";
         public MemberService memberService = new MemberService();
+        public CoachService coachService = new CoachService();
 
         public Member SelectedMember { get; set; }
+        public Coach Trainer { get; set; }
         public List<Models.Member> Members()
         {
             return  memberService.GetAllMembersAsync().Result;
+        }
+        public List<Models.Coach> Coaches()
+        {
+            return coachService.GetAllCoachesAsync().Result;
         }
         public Member MemberById(int id)
         {
@@ -148,7 +154,8 @@ namespace GadevangTennisklub2025.Services
                                     AttendeeRange = attendeeRange,
                                     Description = reader.GetString(reader.GetOrdinal("Description")),
                                     MembershipType = reader.GetString(reader.GetOrdinal("MemberType")),
-                                    Attendees = new List<Member>() // Optional: populate separately if needed
+                                    Attendees = new List<Member>(), // Optional: populate separately if needed
+                                    Trainer = await coachService.GetCoachByTeamIdAsync(reader.GetInt32(reader.GetOrdinal("Team_Id")))
                                 };
 
                                 teams.Add(team);
@@ -184,14 +191,14 @@ namespace GadevangTennisklub2025.Services
                             string startTime = reader.GetString("TimeOfDay"); //ex. 14:30
                             double length = double.Parse(reader.GetString("Length"), CultureInfo.InvariantCulture);
                             int[] attendeeRange = { reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers") };
-                           
+
                             
                             string description = reader.GetString("Description");
                             string membershipType = reader.GetString("MemberType");
 
                             List<Member> Attendees = await GetAttendeesAsync(teamID);
-
-                            Team team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
+                            Coach trainer = await coachService.GetCoachByTeamIdAsync(teamID);
+                            Team team = new Team(teamID, teamNavn, membershipType, trainer, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
 
                             teams.Add(team);
                         }
@@ -242,9 +249,10 @@ namespace GadevangTennisklub2025.Services
                             
                             string description = reader.GetString("Description");
                             string membershipType = reader.GetString("MemberType");
+                                Coach trainer = await coachService.GetCoachByTeamIdAsync(teamID);
 
-                            List<Member> Attendees = await GetAttendeesAsync(teamID);
-                                result_team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
+                                List<Member> Attendees = await GetAttendeesAsync(teamID);
+                                result_team = new Team(teamID, teamNavn, membershipType, trainer, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
                                 reader.Close();
                             }
                             
@@ -295,11 +303,12 @@ namespace GadevangTennisklub2025.Services
                             
                             string description = reader.GetString("Description");
                             string membershipType = reader.GetString("MemberType");
+                            Coach trainer = await coachService.GetCoachByTeamIdAsync(teamID);
                             List<Member> Attendees =await GetAttendeesAsync(teamID);
 
                             if (teamNavn == name)
                             {
-                                Team team = new Team(teamID, teamNavn, membershipType, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
+                                Team team = new Team(teamID, teamNavn, membershipType, trainer, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
                                 teams.Add(team);
                             }
 
@@ -429,6 +438,7 @@ namespace GadevangTennisklub2025.Services
                                 int TempId = reader.GetInt32("Team_Id");
                                 string TempName = reader.GetString("Name");
                                 string TempMembershipType = reader.GetString("MemberType");
+                                Coach trainer = await coachService.GetCoachByTeamIdAsync(TempId);
                                 int TempDayOfWeek = reader.GetInt32("DayOfWeek");
                                 TimeOnly TempTimeOfDay = TimeOnly.Parse(reader.GetString("TimeOfDay")); //ex. 14:30
                                 Double TempLength = Double.Parse(reader.GetString("Length"));
@@ -436,7 +446,7 @@ namespace GadevangTennisklub2025.Services
                                 List<Member> TempAttendees = await GetAttendeesAsync(TempId);
                                 string TempDescription = reader.GetString("Description");
 
-                                Team tem = new Team(TempId, TempName, TempMembershipType, TempDayOfWeek, TempTimeOfDay, TempLength, TempAttendeeRange, TempAttendees, TempDescription);
+                                Team tem = new Team(TempId, TempName, TempMembershipType,trainer , TempDayOfWeek, TempTimeOfDay, TempLength, TempAttendeeRange, TempAttendees, TempDescription);
                                 
                                 teams.Add(tem);
                             }

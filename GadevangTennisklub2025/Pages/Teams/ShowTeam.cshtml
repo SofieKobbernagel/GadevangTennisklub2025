@@ -27,6 +27,7 @@
             <th>Titel</th>
             <th>pladser tilbage</th>
             <th>Medlemskabstype</th>
+            <th>Coach</th>            
             <th>Beskrivelse</th>
             <th>Dag</th>
             <th>Tidsrum</th>
@@ -44,6 +45,10 @@
                         <td>@item.Name</td>
                         <td>@(item.AttendeeRange[1] - (item.Attendees==null?0:item.Attendees.Count))</td>
                         <td>@item.MembershipType</td>
+                        @if(item.Trainer!=null)
+                        {
+                        <td>@item.Trainer.Name</td>
+                        }
                         <td>@item.Description</td>
                         <td>@item.week[item.DayOfWeek]</td>
                         <td>@item.TimeOfDay - @(item.TimeOfDay.Add(TimeSpan.FromHours(item.Length)))</td>
