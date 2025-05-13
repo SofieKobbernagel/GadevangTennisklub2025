@@ -25,9 +25,14 @@ namespace GadevangTennisklub2025.Pages.Member
         [BindProperty]
         public List<Booking?> Bookings { get; set; } = new List<Booking?>();
 
+        [BindProperty]
+        public List<Event?> Events { get; set; } = new List<Event?>();
 
         [BindProperty]
         public List<BookingViewModel> BookingsWithCourtsAndPartners { get; set; } = new();
+
+        [BindProperty]
+        public List<EventViewModel> EventWithTitleAndDate { get; set; } = new();
 
         [BindProperty]
         public IFormFile ProfileImage { get; set; }
@@ -39,6 +44,7 @@ namespace GadevangTennisklub2025.Pages.Member
 
             Member = await _memberService.GetMemberById(member_Id);
             Bookings = await _relService.GetBookingsByMemberId(member_Id);
+            Events = await _relService.GetEventsByMemberId(member_Id);
 
             foreach (var booking in Bookings)
             {
@@ -50,6 +56,19 @@ namespace GadevangTennisklub2025.Pages.Member
                     Booking = booking,
                     CourtName = courtName,
                     PartnerName = partnerName
+                });
+            }
+            foreach (var e in Events)
+            {
+                string title = e.Title;
+                DateTime dato = e.Date;
+                int id = e.Id;
+
+                EventWithTitleAndDate.Add(new EventViewModel
+                {
+                    Title = title,
+                    DateAndTime = dato,
+                    EventId = id
                 });
             }
             return Page();

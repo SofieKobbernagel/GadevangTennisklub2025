@@ -62,7 +62,45 @@
         </tbody>
     </table>
     }
-   
+    <h5>Dine Events:</h5>
+
+    @if (Model.Events.Count < 1)
+    {
+        <p>Du er ikke tilmeldt nogen events.</p>
+    }
+    else
+    {
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Dato</th>
+                    <th>Titel</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var eventVM in Model.EventWithTitleAndDate)
+                {
+                    <tr>
+                        <td>@eventVM.DateAndTime.ToString("dd/MM/yyyy")</td>
+
+                        <td>
+                            <a class="" type="button" title="Title"
+                               asp-page="/Events/EventPage" asp-route-EventId="@eventVM.EventId">@eventVM.Title</a>
+                        </td>
+                     
+                        <td>
+                            <form method="post" asp-page-handler="RemoveFromEvent">
+                                <input type="hidden" name="Event_Id" value="@eventVM.EventId" />
+                                <button type="submit" class="btn btn-danger btn-sm">Afmeld fra Event</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
     <div class="form-group">
         <label asp-for="@Model.Member.Username"></label>
         <input asp-for="@Model.Member.Username" class="form-control" readonly />

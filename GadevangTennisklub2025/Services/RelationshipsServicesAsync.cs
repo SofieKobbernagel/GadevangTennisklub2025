@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Reflection.PortableExecutable;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GadevangTennisklub2025.Services
 {
@@ -334,6 +335,75 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
+        public async Task<List<Event?>> GetEventsByMemberId(int memberID)
+        {
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                List<Event?> EventList = new List<Event?>();
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT e.* FROM Event e LEFT JOIN RelMemberEvent r ON e.Event_Id = r.Event_Id WHERE r.Member_Id = @Member_Id;", con);
+                    cmd.Parameters.AddWithValue("@Member_Id", memberID);
+                    await con.OpenAsync();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                    while (await reader.ReadAsync())
+                    {
+                        int eventId = reader.GetInt32("EVENT_Id");
+                        string title = reader.GetString("Title");
+                        DateTime startDate = reader.GetDateTime("Date");
+                        string desc = reader.GetString("DESCRIPTION");
+                        EventList.Add(new Event(eventId, title, startDate, desc));
+                    }
+                    reader.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+                }
+                return EventList;
+            }
+        }
+        
+        public async Task<Event?> GetEventById(int event_Id)
+        {
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                Event foundEvent = null;
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM Event where EVENT_Id = @Event_Id;", con);
+                    cmd.Parameters.AddWithValue("@Event_Id", event_Id);
+                    await con.OpenAsync();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                    while (await reader.ReadAsync())
+                    {
+                        int eventId = reader.GetInt32("EVENT_Id");
+                        string title = reader.GetString("Title");
+                        DateTime startDate = reader.GetDateTime("Date");
+                        string desc = reader.GetString("DESCRIPTION");
+                        foundEvent = (new Event(eventId, title, startDate, desc));
+                    }
+                    reader.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+                }
+                return foundEvent;
+            }
+        }
     }
 }
 
