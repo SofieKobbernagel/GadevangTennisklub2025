@@ -1,0 +1,26 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.Member.MyRegistrationsModel
+@{
+}
+
+<div class="form-group">
+    <label asp-for="@Model.Member.Username"></label>
+    <input asp-for="@Model.Member.Username" class="form-control" readonly />
+</div>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Profil billede</label><br />
+        @if (!string.IsNullOrEmpty(Model.Member.ProfileImagePath))
+        {
+            <img src="@Model.Member.ProfileImagePath" width="150" height="150" />
+        }
+        else
+        {
+            <p>Intet profilbillede.</p>
+        }
+    </div>
+</form>
+
+<h2>Dine Bookinger:</h2>
+@* @foreach(Booking booking in ) *@
