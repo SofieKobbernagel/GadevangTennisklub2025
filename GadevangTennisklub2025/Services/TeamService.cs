@@ -39,49 +39,7 @@ namespace GadevangTennisklub2025.Services
             }
             return mem;
         }
-        /*public List<Member> IdsToMembers(List<int> ids)
-        {
-            List<Member> members = new List<Member>();
-            foreach(int id in ids)
-            {
-                members.Add(MemberById(id));
-            }
-            return members;
-        }*/
-        /*
-        public List<int> ListIntFromString(string strings)
-        {
-            List<int> output = new List<int>();
-            if (string.IsNullOrWhiteSpace(strings))
-                return output;
-
-            var parts = strings.Split(',', StringSplitOptions.RemoveEmptyEntries);
-            foreach (var part in parts)
-            {
-                if (int.TryParse(part.Trim(), out int value))
-                {
-                    output.Add(value);
-                }
-            }
-            return output;
-        }
-        */
-        /*
-        public string MembersToString(List<Member> members)
-        {
-            string result = "";
-            if (members == null || members.Count==0)
-            {
-                return result;
-            }
-            result += members[0].Member_Id;
-            for(int i = 1; i < members.Count; i++)
-            {
-                result += ","+members[i].Member_Id;
-            }
-            return result;
-        }
-        */
+        
         public async Task<bool> CreateTeamAsync(Team team)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -204,9 +162,7 @@ namespace GadevangTennisklub2025.Services
                 }
 
                 return teams;
-            }
-
-        
+            }   
 
         public async Task<List<Team>> GetAllTeamsAsync()
         {
@@ -228,7 +184,7 @@ namespace GadevangTennisklub2025.Services
                             string startTime = reader.GetString("TimeOfDay"); //ex. 14:30
                             double length = double.Parse(reader.GetString("Length"), CultureInfo.InvariantCulture);
                             int[] attendeeRange = { reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers") };
-                            Console.WriteLine("getallTeamsAsync/ length = "+length);
+                           
                             
                             string description = reader.GetString("Description");
                             string membershipType = reader.GetString("MemberType");
@@ -409,10 +365,29 @@ namespace GadevangTennisklub2025.Services
 
         public async Task AttendTeamAsync(Team team, Member member)
         {
-           RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
-            relationshipsServices.TeamMemberRelation(team.Id, member.Member_Id);
+            
+            RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
+            await relationshipsServices.TeamMemberRelation(team.Id, member.Member_Id);
+            
         }
 
+        public async Task LeaveTeamAsync(Team team, Member member)
+        {
+            string succes = "unsuccesfully";
+            List<Member> mem = await GetAttendeesAsync(team.Id);
+            List<int> memint = new List<int>();
+            foreach(Member m in mem)
+            {
+                memint.Add(m.Member_Id);
+            }
+            if (memint.Contains(member.Member_Id))
+            {
+                RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
+               await relationshipsServices.RemoveTeamMemberRelation(team.Id, member.Member_Id);
+                succes = "succesfully";
+            }
+            Console.WriteLine("TeamService/LeaveTeamAsync  just ran "+succes);
+        }
 
         public async Task<List<Team>> Search(Search SearchI)
         {
@@ -486,10 +461,28 @@ namespace GadevangTennisklub2025.Services
             List<Member> attendees = new List<Member>();
 
             string query = @"
-        SELECT m.*
-        FROM RelMemberTeam r
-        INNER JOIN Members m ON r.Member_Id = m.Member_Id
-        WHERE r.Team_Id = @TeamId";
+SELECT 
+    m.Member_Id,
+    m.Name,
+    m.Address,
+    m.Gender,
+    m.Email,
+    m.PostalCode,
+    m.TLF AS Phone,
+    m.OtherTLF AS OtherPhone,
+    m.City,
+    m.MembershipType,
+    m.birthday,
+    m.NewsSubscriber,
+    m.UserName AS Username,
+    m.Password,
+    m.IsAdmin,
+    m.Municipality,
+    m.PictureConsent,
+    m.ProfileImagePath
+FROM RelMemberTeam r
+INNER JOIN Members m ON r.Member_Id = m.Member_Id
+WHERE r.Team_Id = @TeamId";
 
             try
             {
@@ -507,22 +500,21 @@ namespace GadevangTennisklub2025.Services
                             {
                                 Member_Id = reader.GetInt32(reader.GetOrdinal("Member_Id")),
                                 Name = reader.GetString(reader.GetOrdinal("Name")),
-                                Birthday = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Birthday"))),
-                                MemberType = reader.GetString(reader.GetOrdinal("MemberType")),
-                                City = reader.GetString(reader.GetOrdinal("City")),
-                                Phone = reader.GetString(reader.GetOrdinal("Phone")),
-                                PostalCode = reader.GetString(reader.GetOrdinal("PostalCode")),
-                                Gender = reader.GetString(reader.GetOrdinal("Gender")),
                                 Address = reader.GetString(reader.GetOrdinal("Address")),
-                                Municipality = reader.GetString(reader.GetOrdinal("Municipality")),
+                                Gender = reader.GetString(reader.GetOrdinal("Gender")),
                                 Email = reader.GetString(reader.GetOrdinal("Email")),
+                                PostalCode = reader.GetString(reader.GetOrdinal("PostalCode")),
+                                Phone = reader.GetString(reader.GetOrdinal("Phone")),
+                                OtherPhone = reader.IsDBNull(reader.GetOrdinal("OtherPhone")) ? null : reader.GetString(reader.GetOrdinal("OtherPhone")),
+                                City = reader.GetString(reader.GetOrdinal("City")),
+                                MemberType = reader.GetString(reader.GetOrdinal("MembershipType")),
+                                Birthday = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("birthday"))),
+                                NewsSubscriber = reader.GetBoolean(reader.GetOrdinal("NewsSubscriber")),
                                 Username = reader.GetString(reader.GetOrdinal("Username")),
                                 Password = reader.GetString(reader.GetOrdinal("Password")),
-                                PictureConsent = reader.GetString(reader.GetOrdinal("PictureConsent")),
-                                BookingsLeft = reader.GetInt32(reader.GetOrdinal("BookingsLeft")),
                                 IsAdmin = reader.GetBoolean(reader.GetOrdinal("IsAdmin")),
-                                NewsSubscriber = reader.GetBoolean(reader.GetOrdinal("NewsSubscriber")),
-                                OtherPhone = reader.IsDBNull(reader.GetOrdinal("OtherPhone")) ? null : reader.GetString(reader.GetOrdinal("OtherPhone")),
+                                Municipality = reader.GetString(reader.GetOrdinal("Municipality")),
+                                PictureConsent = reader.GetString(reader.GetOrdinal("PictureConsent")),
                                 ProfileImagePath = reader.IsDBNull(reader.GetOrdinal("ProfileImagePath")) ? null : reader.GetString(reader.GetOrdinal("ProfileImagePath"))
                             };
 
@@ -534,10 +526,12 @@ namespace GadevangTennisklub2025.Services
             catch (Exception ex)
             {
                 Console.WriteLine("Error in GetAttendeesAsync: " + ex.Message);
+                // Optionally log or rethrow
             }
 
             return attendees;
         }
+
 
 
 

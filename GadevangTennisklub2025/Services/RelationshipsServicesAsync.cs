@@ -2,6 +2,7 @@
 using GadevangTennisklub2025.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Reflection.PortableExecutable;
 
 namespace GadevangTennisklub2025.Services
 {
@@ -187,6 +188,69 @@ namespace GadevangTennisklub2025.Services
                     //return false;
                 }
 
+            }
+        }
+
+        public async Task RemoveTeamMemberRelation(int TeamId, int MemberId)
+        {
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("DELETE FROM RelMemberTeam WHERE Member_Id = @Member_Id AND Team_Id = @Team_Id;", con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Member_Id", MemberId);
+                    cmd.Parameters.AddWithValue("@Team_Id", TeamId);
+                    await cmd.ExecuteNonQueryAsync();
+                    con.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("General error " + e.Message);
+                    throw;
+                }
+            }
+        }
+
+        public async Task<List<Booking>> GetBookingsByUser(int memberID)
+        {
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                List<Booking> BookingList = new List<Booking>();
+                try
+                {
+
+               
+                   
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM RelMemberBooking WHERE Member_Id = @Member_Id", con);
+                    await con.OpenAsync();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                    while (await reader.ReadAsync())
+                    {
+                        int bookId = reader.GetInt32("Booking_Id");
+                        int memId = reader.GetInt32("Member_Id");
+                        BookingList.Add(new Booking(bookId));
+                    }
+                    reader.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+ 
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+         
+                }
+                return BookingList;
             }
         }
     }

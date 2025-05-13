@@ -1,4 +1,4 @@
-using GadevangTennisklub2025.Interfaces;
+ using GadevangTennisklub2025.Interfaces;
 using GadevangTennisklub2025.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,6 +11,7 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
     {
         public IBookingServiceAsync bookingService { get; set; }
         public Dictionary<int, Dictionary<int,Dictionary<int,int>>> BookingType { get; set; }
+        public  int weekFromNow { get; set; }
 
         public MakeBooking2Model(IBookingServiceAsync IBSA) 
         {
@@ -19,6 +20,7 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
         }
         public async void OnGet()
         {
+            weekFromNow = IndexModel.scuffedWeek;
             for (int z=1;z<8;z++) 
             {
                 BookingType.Add(z, new Dictionary<int, Dictionary<int, int>>());
@@ -27,23 +29,36 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
                     BookingType[z].Add(i, new Dictionary<int, int>());
                     for (int j = 1; j < 15; j++)
                     {
-                        if ((DateTime.Now.Hour >= j + 7 && ((int)DateTime.Now.DayOfWeek==0? 7:(int)DateTime.Now.DayOfWeek)==z) ||  z< ((int)DateTime.Now.DayOfWeek == 0 ? 7 : (int)DateTime.Now.DayOfWeek))
+                        if (weekFromNow == 0)
                         {
-                            BookingType[z][i].Add(j, 4); 
+                            if ((DateTime.Now.Hour >= j + 7 && ((int)DateTime.Now.DayOfWeek == 0 ? 7 : (int)DateTime.Now.DayOfWeek) == z) || z < ((int)DateTime.Now.DayOfWeek == 0 ? 7 : (int)DateTime.Now.DayOfWeek))
+                            {
+                                BookingType[z][i].Add(j, 4);
+                            }
+                            else
+                            {
+                                BookingType[z][i].Add(j, 0);
+                            }
                         }
                         else
                         {
                             BookingType[z][i].Add(j, 0);
+                            if (weekFromNow < 0) BookingType[z][i][j]=4;
                         }
+                            
 
                     }
                 }
             }
             
             List<Booking> temp= bookingService.GetAllBookings().Result;
-            temp.RemoveAll(i=> i.Start<=DateTime.Now);
-            temp.RemoveAll(i => (i.Start - DateTime.Now).TotalDays > (7 - (int)DateTime.Now.DayOfWeek==0? 7: (int)DateTime.Now.DayOfWeek));
-            //temp.RemoveAll(i => (i.Start - DateTime.Now).TotalDays > ( 0-((int)DateTime.Now.DayOfWeek==0? 7: (int)DateTime.Now.DayOfWeek)));
+            foreach (Booking b in temp.FindAll(i => i.Start <= DateTime.Now.AddDays(weekFromNow*7))) 
+            {
+                if(weekFromNow==0) bookingService.DeleteBooking(b);
+                temp.Remove(b);
+            }
+
+            temp.RemoveAll(i=> Math.Floor((i.Start-DateTime.Now.AddDays(IndexModel.scuffedWeek*7)).TotalDays)>(7-((int)DateTime.Now.DayOfWeek==0? 7:(int)DateTime.Now.DayOfWeek)));
            
             
             foreach (Booking booking in temp) 
@@ -55,6 +70,18 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
 
 
             }
+        }
+
+        public async Task<IActionResult> OnPostForward() 
+        {
+            IndexModel.scuffedWeek++;
+            return RedirectToPage("MakeBooking2");
+        }
+
+        public async Task<IActionResult> OnPostBackwards()
+        {
+            IndexModel.scuffedWeek--;
+            return RedirectToPage("MakeBooking2");
         }
     }
 }

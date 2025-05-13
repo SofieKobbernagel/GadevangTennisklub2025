@@ -10,6 +10,7 @@ namespace GadevangTennisklub2025.Pages
         public Calendar Calendar;
         public static int scuffedMonth;
         public static int scuffedYear;
+        public static int scuffedWeek;
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;

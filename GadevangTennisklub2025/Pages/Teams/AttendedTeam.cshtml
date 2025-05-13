@@ -37,6 +37,11 @@
                 {
                     <th>@item.Attendees</th>
                 }
+                <td>
+                    <form style="display: inline;" asp-page-handler="LeaveTeam" asp-route-LEAVEID="@item.Id">
+                        <button type="submit" style="width: 24px; height: 24px;">LeaveTeam</button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>

@@ -1,0 +1,49 @@
+﻿@page
+@using GadevangTennisklub2025.Models
+@model GadevangTennisklub2025.Pages.Teams.UpdateAttendeeListModel
+@{
+    ViewData["Title"] = "se og ændre deltager listen på et hold";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Navn</th>
+            <th>Medlemskabstype</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var attendees = Model.Attendees;
+        }
+        @if (attendees != null)
+        {
+            @foreach (Member item in attendees)
+            {
+                <tr>
+                    <td>@item.Member_Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.MemberType</td>
+                   
+                        <td>
+                        <form method="post" asp-page-handler="Fjern">
+                            <input type="hidden" name="memId" value="@item.Member_Id" />
+                            <input type="hidden" name="teamId" value="@Model.tEAM.Id" />
+                            <button type="submit" class="btn btn-danger">Fjern medlem fra hold</button>
+                        </form>
+
+                        </td>
+                    
+                </tr>
+            }
+        }
+
+        else
+        {
+            <tr><td colspan="6">Ingen tilmeldte</td></tr>
+        }
+
+    </tbody>
+</table>
+

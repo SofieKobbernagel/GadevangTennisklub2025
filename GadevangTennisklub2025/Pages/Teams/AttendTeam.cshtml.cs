@@ -77,7 +77,7 @@ namespace GadevangTennisklub2025.Pages.Teams
             Members = _MemberServ.GetAllMembersAsync().Result;
 
                 SelectedMember = _TeamServ.MemberById(int.Parse(HttpContext.Session.GetString("Member_Id")));
-                Console.WriteLine($"SelectedMember is {SelectedMember}");
+                Console.WriteLine($"SelectedMember is {SelectedMember.Name}");
             return Page();
         }
 
@@ -86,14 +86,23 @@ namespace GadevangTennisklub2025.Pages.Teams
         {
             var member = await _MemberServ.GetMemberById(memberId);
             var team = await _TeamServ.GetTeamFromIdAsync(id);
-            await _TeamServ.AttendTeamAsync(team, member);
-            return RedirectToPage("AttendTeam");
+            List<Models.Member> me = await _TeamServ.GetAttendeesAsync(team.Id);
+            if (me.Count < team.AttendeeRange[1])
+            {
+                await _TeamServ.AttendTeamAsync(team, member);
+                TempData["SuccessMessage"] = $"Du({member.Name}) er nu tilmeldt {team.Name}!";
+            }
+            else 
+            {
+                TempData["SuccessMessage"] = $"Du({member.Name}) kan ikke tilmeldes {team.Name} da det er fyldt (det har {me.Count} tilmeldte og {team.AttendeeRange[1]} pladser)!"; 
+            }
+            return RedirectToPage("ShowTeam");
         }
 
         public IActionResult OnPostSelectMemberButton(int id)
         {
             SelectedMember = (Models.Member)_MemberServ.GetMemberById(id).Result;
-            Console.WriteLine($"Selected Member = {SelectedMember}");
+            //Console.WriteLine($"Selected Member = {SelectedMember.Name}");
             if (SelectedMember == null)
             {
                 Console.WriteLine("SelectedMember is NULL");

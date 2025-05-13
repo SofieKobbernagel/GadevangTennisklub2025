@@ -33,30 +33,23 @@ namespace GadevangTennisklub2025.Pages.Teams
         public AttendedTeamModel(ITeamService teamService)
         {
             _teamService = teamService;
-            Console.WriteLine("TimeSlot: " + temp.AddHours(1.12));
+            //SelectedMember = _teamService.MemberById(int.Parse(HttpContext.Session.GetString("Member_Id")));
         }
         #endregion
 
         #region Methods
-        public IActionResult OnPostEdit(int ID)
+
+        public async Task<IActionResult> OnPostLeaveTeam(int LEAVEID)
         {
-            Console.WriteLine("ShowTeam/OnPostEdit here and id = " + ID);
-            return RedirectToPage("UpdateTeam", new { ID });
+            SelectedMember = _teamService.MemberById(int.Parse(HttpContext.Session.GetString("Member_Id")));
+            Team te = await _teamService.GetTeamFromIdAsync(LEAVEID);
+            await _teamService.LeaveTeamAsync( te, SelectedMember);
+            Console.WriteLine("AttendedTeam/OnPostLeave just ran");
+            TempData["SuccessMessage"] = $"Du({SelectedMember.Name}) er nu afmeldt {te.Name}!";
+            return RedirectToPage("ShowTeam");
         }
 
-        public IActionResult OnPostAttendTeam(int ATTENDID)
-        {
-            Console.WriteLine("ShowTeam/OnPostAttend just ran");
-            return RedirectToPage("AttendTeam", new { ATTENDID });
-        }
-
-        public IActionResult OnPostCreate()
-        {
-            Console.WriteLine("ShowTeam/OnPostCreate just ran");
-            return RedirectToPage("CreateTeam");
-        }
-
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGet()
         {
             SelectedMember = _teamService.MemberById(int.Parse(HttpContext.Session.GetString("Member_Id")));
             if (HttpContext.Session.GetString("IsAdmin") != null && bool.Parse(HttpContext.Session.GetString("IsAdmin")) == true)
@@ -67,9 +60,8 @@ namespace GadevangTennisklub2025.Pages.Teams
             if (ListOfAttendedTeams == null)
             {
                 ListOfAttendedTeams = await _teamService.GetAllAttendedTeamsAsync(SelectedMember.Member_Id);
-                Thread.Sleep(1000);
             }
-            Console.WriteLine("Team/ShowTeam/OnGetAsync is done");
+            Console.WriteLine("AttendedTeam/OnGetAsync is done");
             return Page();
         }
         #endregion
