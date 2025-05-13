@@ -375,7 +375,12 @@ namespace GadevangTennisklub2025.Services
         {
             string succes = "unsuccesfully";
             List<Member> mem = await GetAttendeesAsync(team.Id);
-            if (mem.Any(m => m.Member_Id == member.Member_Id))
+            List<int> memint = new List<int>();
+            foreach(Member m in mem)
+            {
+                memint.Add(m.Member_Id);
+            }
+            if (memint.Contains(member.Member_Id))
             {
                 RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
                await relationshipsServices.RemoveTeamMemberRelation(team.Id, member.Member_Id);

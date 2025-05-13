@@ -61,32 +61,25 @@
                             <label class="form-label">Description</label>
                             <input type="text" class="form-control" asp-for="Description" />
                         </div>
-                    </div>
 
-                    <div class="position-relative" style="height: 60px; margin-top: auto; margin-bottom: 2px;">
-                        <div style="position: absolute; top: 50%; left: 0%; width: 100%; transform: translateY(-120%); display: flex; justify-content: space-between; padding: 0 10%;">
-                            <!-- Update Button -->
-                            <form asp-page-handler="Update" asp-route-updateTeamId="@Model.Id" method="post">
-                                <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Update Team</button>
-                            </form>
-
-                            <!-- Delete Button -->
-                            <form asp-page-handler="Delete" asp-route-deleteTeamId="@Model.Id" method="post">
-                                <button type="submit" class="btn btn-danger" style="white-space: nowrap;">Delete Team</button>
-                            </form>
-                        </div>
-                    </div>
-
-
-
-                </div>
             </form>
-
-
-
-
-
-
+            <form asp-page-handler="UpdateAttendeeList" asp-route-AttendeeListTeamId="@Model.Id" method="post">
+                            <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Update AttendeeList</button>
+                        </form>
         </div>
-    </div>
+
+        <div class="position-relative" style="height: 60px; margin-top: auto; margin-bottom: 2px;">
+            <div style="position: absolute; top: 50%; left: 0%; width: 100%; transform: translateY(-120%); display: flex; justify-content: space-between; padding: 0 10%;">
+                <!-- Update Button -->
+                <form asp-page-handler="Update" asp-route-updateTeamId="@Model.Id" method="post">
+                     <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Update Team</button>
+                </form>
+
+                <!-- Delete Button -->
+                <form asp-page-handler="Delete" asp-route-deleteTeamId="@Model.Id" method="post">
+                     <button type="submit" class="btn btn-danger" style="white-space: nowrap;">Delete Team</button>
+                </form>
+            </div>
+        </div>
+    </div>    
 </div>

@@ -48,7 +48,7 @@ namespace GadevangTennisklub2025.Pages.Teams
                 Teams = sTeams;
             
                 tEAM = await _teamService.GetTeamFromIdAsync(ID);
-            Console.WriteLine("Updater/OnGet/ length is: " + tEAM.Length);
+            
             Id = tEAM.Id;
                 Name = tEAM.Name;
                 MembershipType = tEAM.MembershipType;
@@ -74,7 +74,13 @@ namespace GadevangTennisklub2025.Pages.Teams
 
                 return RedirectToPage("DeleteTeam", new { deleteTeamId });
             }
-        }
+        
+            public IActionResult OnPostUpdateAttendeeList(int AttendeeListTeamId)
+            {
+
+                return RedirectToPage("UpdateAttendeeList", new { AttendeeListTeamId });
+            }
+    }
     }
 
 
