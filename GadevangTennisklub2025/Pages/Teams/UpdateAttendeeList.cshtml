@@ -5,6 +5,25 @@
     ViewData["Title"] = "se og ændre deltager listen på et hold";
 }
 
+<form method="post" asp-page-handler="Tilføj">
+    <div class="dropdown mb-3">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            tilføj medlem
+        </button>
+        <ul class="dropdown-menu">
+            @for (int i = 0; i < Model.ALLAttendees.Count; i++)
+            {
+                <li>
+                    <button type="submit" name="memId" value="@Model.ALLAttendees[i].Member_Id" class="dropdown-item">
+                        @Model.ALLAttendees[i].Name
+                    </button>
+                </li>
+            }
+        </ul>
+    </div>
+    <input type="hidden" name="teamId" value="@Model.tEAM.Id" />
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -33,6 +52,11 @@
                             <button type="submit" class="btn btn-danger">Fjern medlem fra hold</button>
                         </form>
 
+
+
+                        
+
+
                         </td>
                     
                 </tr>
@@ -47,3 +71,13 @@
     </tbody>
 </table>
 
+@section Scripts {
+    <script>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                        alert('@TempData["SuccessMessage"]');
+            </text>
+        }
+    </script>
+}

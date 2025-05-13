@@ -23,7 +23,7 @@ namespace GadevangTennisklub2025.Services
         public MemberService memberService = new MemberService();
 
         public Member SelectedMember { get; set; }
-        public List<Member> Members()
+        public List<Models.Member> Members()
         {
             return  memberService.GetAllMembersAsync().Result;
         }

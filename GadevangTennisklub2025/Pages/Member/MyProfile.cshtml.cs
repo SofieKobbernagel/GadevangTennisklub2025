@@ -2,6 +2,7 @@ using GadevangTennisklub2025.Models;
 using GadevangTennisklub2025.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using GadevangTennisklub2025.Models.ViewModels;
 
 namespace GadevangTennisklub2025.Pages.Member
 {
@@ -9,15 +10,24 @@ namespace GadevangTennisklub2025.Pages.Member
     {
         private readonly IMemberService _memberService;
         private readonly IWebHostEnvironment _environment;
+        private readonly IRelationshipsServicesAsync _relService;
 
-        public MyProfileModel(IMemberService memberService, IWebHostEnvironment environment)
+        public MyProfileModel(IMemberService memberService, IWebHostEnvironment environment, IRelationshipsServicesAsync relService)
         {
             _memberService = memberService;
             _environment = environment;
+            _relService = relService;
         }
 
         [BindProperty]
         public GadevangTennisklub2025.Models.Member Member { get; set; }
+
+        [BindProperty]
+        public List<Booking?> Bookings { get; set; } = new List<Booking?>();
+
+
+        [BindProperty]
+        public List<BookingViewModel> BookingsWithCourtsAndPartners { get; set; } = new();
 
         [BindProperty]
         public IFormFile ProfileImage { get; set; }
@@ -28,6 +38,20 @@ namespace GadevangTennisklub2025.Pages.Member
                 return RedirectToPage("/Login");
 
             Member = await _memberService.GetMemberById(member_Id);
+            Bookings = await _relService.GetBookingsByMemberId(member_Id);
+
+            foreach (var booking in Bookings)
+            {
+                string courtName = (await _relService.GetTennisFieldById(booking.Court_Id)).Name;
+                string partnerName = await _relService.GetBookingPartnerName(member_Id, booking.Id);
+
+                BookingsWithCourtsAndPartners.Add(new BookingViewModel
+                {
+                    Booking = booking,
+                    CourtName = courtName,
+                    PartnerName = partnerName
+                });
+            }
             return Page();
         }
 

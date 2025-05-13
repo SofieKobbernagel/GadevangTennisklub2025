@@ -1,6 +1,8 @@
 ﻿using GadevangTennisklub2025.Interfaces;
 using GadevangTennisklub2025.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Data;
 using System.Reflection.PortableExecutable;
 
@@ -217,24 +219,27 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        public async Task<List<Booking>> GetBookingsByUser(int memberID)
+        public async Task<List<Booking?>> GetBookingsByMemberId(int memberID)
         {
             using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
             {
-                List<Booking> BookingList = new List<Booking>();
+                List<Booking?> BookingList = new List<Booking?>();
                 try
                 {
-
-               
-                   
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM RelMemberBooking WHERE Member_Id = @Member_Id", con);
+                    SqlCommand cmd = new SqlCommand("SELECT b.* FROM Booking b LEFT JOIN RelMemberBooking r ON b.Booking_Id = r.Booking_Id WHERE r.Member_Id = @Member_Id;", con);
+                    cmd.Parameters.AddWithValue("@Member_Id", memberID);
                     await con.OpenAsync();
                     SqlDataReader reader = await cmd.ExecuteReaderAsync();
                     while (await reader.ReadAsync())
                     {
                         int bookId = reader.GetInt32("Booking_Id");
-                        int memId = reader.GetInt32("Member_Id");
-                        BookingList.Add(new Booking(bookId));
+                        DateTime start = reader.GetDateTime("Start");
+                        DateTime end = reader.GetDateTime("End");
+                        int courtId = reader.GetInt32("Court_Id");
+                        int? teamId = null;
+                        int? eventId = null;
+
+                        BookingList.Add(new Booking(bookId, start, end, courtId, teamId, eventId));
                     }
                     reader.Close();
                 }
@@ -242,16 +247,93 @@ namespace GadevangTennisklub2025.Services
                 {
                     Console.WriteLine("Database error " + e.Message);
                     throw e;
- 
+
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("general error " + e.Message);
                     throw e;
-         
+
                 }
                 return BookingList;
             }
         }
+
+        public async Task<TennisField> GetTennisFieldById(int court_Id)
+        {
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+
+
+                TennisField foundCourt = new TennisField();
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM Court WHERE Court_Id = @Court_Id;", con);
+                    cmd.Parameters.AddWithValue("@Court_Id", court_Id);
+                    await con.OpenAsync();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                    while (await reader.ReadAsync())
+                    {
+                        int Id = reader.GetInt32("Court_Id");
+                        string name = reader.GetString("Name");
+                        string type = reader.GetString("Type");
+                        foundCourt.CourtId = Id;
+                        foundCourt.Name = name;
+                        foundCourt.Type = type;
+
+                    }
+                    reader.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+
+                }
+                return foundCourt;
+            }
+        }
+
+        public async Task<string> GetBookingPartnerName(int memberId, int bookingId)
+        {
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                string partnerName = null;
+
+                try
+                {
+                    string query = @" SELECT m.Name FROM RelMemberBooking r JOIN Members m ON r.Member_Id = m.Member_Id WHERE r.Booking_Id = @Booking_Id AND r.Member_Id != @Member_Id;";
+
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@Booking_Id", bookingId);
+                    cmd.Parameters.AddWithValue("@Member_Id", memberId);
+
+                    await con.OpenAsync();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+                    if (await reader.ReadAsync())
+                    {
+                        partnerName = reader.GetString(0);
+                    }
+
+                    reader.Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error: " + e.Message);
+                    throw;
+                }
+
+                return partnerName;
+            }
+        }
+
     }
 }
+
