@@ -289,47 +289,6 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        public async Task<TennisField> GetTennisFieldById(int court_Id)
-        {
-            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
-            {
-
-
-                TennisField foundCourt = new TennisField();
-                try
-                {
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM Court WHERE Court_Id = @Court_Id;", con);
-                    cmd.Parameters.AddWithValue("@Court_Id", court_Id);
-                    await con.OpenAsync();
-                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
-                    while (await reader.ReadAsync())
-                    {
-                        int Id = reader.GetInt32("Court_Id");
-                        string name = reader.GetString("Name");
-                        string type = reader.GetString("Type");
-                        foundCourt.CourtId = Id;
-                        foundCourt.Name = name;
-                        foundCourt.Type = type;
-
-                    }
-                    reader.Close();
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine("Database error " + e.Message);
-                    throw e;
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("general error " + e.Message);
-                    throw e;
-
-                }
-                return foundCourt;
-            }
-        }
-
         public async Task<string> GetBookingPartnerName(int memberId, int bookingId)
         {
             using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
