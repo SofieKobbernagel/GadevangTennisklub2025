@@ -13,12 +13,13 @@ namespace GadevangTennisklub2025.Services
             {
                 try
                 {
-                    SqlCommand cmd = new SqlCommand("INSERT INTO Event VALUES (@Title, @Date,@DESCRIPTION);", con);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO Event VALUES (@Title, @Date,@DESCRIPTION,@Max);", con);
                     con.Open();
                     cmd.Parameters.AddWithValue("@ID", ev.Id);
                     cmd.Parameters.AddWithValue("@Title", ev.Title);
                     cmd.Parameters.AddWithValue("@Date", ev.Date);
                     cmd.Parameters.AddWithValue("@DESCRIPTION", ev.Description);
+                    cmd.Parameters.AddWithValue("@Max", ev.Maximum);
                     await cmd.ExecuteNonQueryAsync();
                     con.Close();
                 }
@@ -58,7 +59,8 @@ namespace GadevangTennisklub2025.Services
                         string Title = reader.GetString("Title");
                         DateTime EventDate = reader.GetDateTime("Date");
                         string desc= reader.GetString("DESCRIPTION");
-                        Event ev = new Event(eventNr, Title, EventDate,desc);
+                        int MaxMember = reader.GetInt32("Maxmimum");
+                        Event ev = new Event(eventNr, Title, EventDate,desc, MaxMember);
                         eventList.Add(ev);
                     }
                     reader.Close();
@@ -121,12 +123,13 @@ namespace GadevangTennisklub2025.Services
 
                 try
                 {
-                    SqlCommand com = new SqlCommand("UPDATE Event set Title= @Title,Date=@Date,DESCRIPTION=@Desc WHERE EVENT_Id=@ID;", con);
+                    SqlCommand com = new SqlCommand("UPDATE Event set Title= @Title,Date=@Date,DESCRIPTION=@Desc, Maxmimum=@Max WHERE EVENT_Id=@ID;", con);
                     await com.Connection.OpenAsync();
                     com.Parameters.AddWithValue("@ID", ev.Id);
                     com.Parameters.AddWithValue("@Title",ev.Title);
                     com.Parameters.AddWithValue("@Date", ev.Date);
                     com.Parameters.AddWithValue("@Desc", ev.Description);
+                    com.Parameters.AddWithValue("@Max", ev.Maximum);
                     await com.ExecuteNonQueryAsync();
 
                 }

@@ -22,8 +22,8 @@ namespace GadevangTennisklub2025.Pages.Member
         public List<Membership> Memberships { get; set; } = new();
         [BindProperty]
         public Models.Member MemberObject { get; set; }
-        [BindProperty]
-        public RegisterMemberViewModel RegisterModel { get; set; }
+        //[BindProperty]
+        //public RegisterMemberViewModel RegisterModel { get; set; }
         [BindProperty]
         public IFormFile? ProfileImage { get; set; }
 

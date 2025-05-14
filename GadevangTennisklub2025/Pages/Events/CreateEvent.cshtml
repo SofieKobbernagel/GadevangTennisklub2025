@@ -15,19 +15,33 @@
     ViewData["ErrorMessage"] = null;
 
 }
+@section Scripts {
+    <script>
+        function confirmAction() {
+            return confirm("Vil du Fortsætte");
+        }
+    </script>
+}
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" onsubmit="return confirmAction()">
     <div class="form-group">
         <label asp-for="@Model.ev.Title" class="control-label"></label>
-        <input asp-for="@Model.ev.Title" class="form-control" required="true" />
+        <input asp-for="@Model.ev.Title" class="form-control"  />
+        <span asp-validation-for="@Model.ev.Title" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="@Model.ev.Date" class="control-label"></label>
-        <input asp-for="@Model.ev.Date" class="form-control" required="true" />
+        <input asp-for="@Model.ev.Date" class="form-control" />
     </div>
     <div class="form-group">
         <label asp-for="@Model.ev.Description" class="control-label"></label>
-        <input asp-for="@Model.ev.Description" class="form-control" required="true" />
+        <input asp-for="@Model.ev.Description" class="form-control" />
+        <span asp-validation-for="@Model.ev.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.ev.Maximum" class="control-label"></label>
+        <input asp-for="@Model.ev.Maximum" class="form-control"  />
+        <span asp-validation-for="@Model.ev.Maximum" class="text-danger"></span>
     </div>
     <div class="formgroup">
         <input type="submit" value="make event" class="btn btn-primary" />

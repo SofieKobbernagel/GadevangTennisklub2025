@@ -3,8 +3,14 @@
 @{
     ViewData["Title"] = "EventPage";
 }
-
-<form method="post" enctype="multipart/form-data">
+@section Scripts {
+    <script>
+        function confirmAction() {
+            return confirm("Vil du Fortsætte");
+        }
+    </script>
+}
+<form method="post" enctype="multipart/form-data" onsubmit="return confirmAction()";>
     <p style="color:red">@Model.Message</p>
     <div class="form-group">
         <div asp-validation-summary="All" class="text-danger"></div>
@@ -14,8 +20,9 @@
     <div class="form-group">
         <label asp-for="@Model.e.Title" class="control-label" hidden="@Model.notadmin"></label>
         <input asp-for="@Model.e.Title" class="form-control" hidden="@Model.notadmin" readonly="@Model.notadmin" />
+        <span asp-validation-for="@Model.e.Title" class="text-danger"></span>
     </div>
-    
+
 
     @if (HttpContext.Session.GetString("IsAdmin")==null || Model.notadmin)
     {
@@ -24,29 +31,49 @@
     <div class="form-group">
         <label asp-for="@Model.e.Date" class="control-label" ></label>
         <input asp-for="@Model.e.Date" class="form-control" readonly="@Model.notadmin" />
+
     </div>
 
     @if (HttpContext.Session.GetString("IsAdmin") == null || Model.notadmin)
     {
         @Model.e.Description
+        <br>
+        <p>maximum antal medlemmer er @Model.e.Maximum</p>
     } 
     <div class="form-group">
         <label asp-for="@Model.e.Description" class="control-label" hidden="@Model.notadmin"></label>
         <input asp-for="@Model.e.Description" class="form-control" hidden="@Model.notadmin" readonly="@Model.notadmin" />
+        <span asp-validation-for="@Model.e.Description" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label asp-for="@Model.e.Maximum" class="control-label" hidden="@Model.notadmin"></label>
+        <input asp-for="@Model.e.Maximum" class="form-control" hidden="@Model.notadmin" readonly="@Model.notadmin" />
+        <span asp-validation-for="@Model.e.Maximum" class="text-danger"></span>
+    </div>
+
     <br>
     @if (HttpContext.Session.GetString("Member_Id") != null)
     {
-        <div class="formgroup">
-            <input type="submit" value="Tilmeld event" class="btn btn-primary" />
-        </div>
+        if (Model.MemberCount < Model.e.Maximum)
+        {
+            <div class="formgroup">
+                <input type="submit" value="Tilmeld event" class="btn btn-primary" />
+            </div>
+        } else
+        {
+            <p style="color:red">Eventet er fuldt</p>
+
+        }
+        
 
     }
     @if (!Model.notadmin)
     {
-            <Input type="submit" value="UpdateEvent" class="btn btn-primary" asp-page-handler="Update" />
-            <Input type="submit" value="DeleteEvent" class="btn btn-primary" asp-page-handler="Delete" />
-
+        <form method="post" onsubmit="return confirmAction();">
+            <Input type="submit" value="UpdateEvent" class="btn btn-primary" asp-page-handler="Update" onsubmit="return confirmAction();" />
+            <Input type="submit" value="DeleteEvent" class="btn btn-primary" asp-page-handler="Delete" onsubmit="return confirmAction();" />
+        </form>
+       
     }
 </form>
 

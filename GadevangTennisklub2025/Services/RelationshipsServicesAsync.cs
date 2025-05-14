@@ -334,6 +334,42 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
+        public async Task<List<Member>> GetEventParticipants(int EventId) 
+        {
+            List<Member> members = new List<Member>();
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM RelMemberEvent where Event_Id=@EventId", con);
+                    cmd.Parameters.AddWithValue("@EventID", EventId);
+                    await con.OpenAsync();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                    while (await reader.ReadAsync())
+                    {
+                        int MemberId = reader.GetInt32("Member_Id");
+                        members.Add(new Member());
+                    }
+                    reader.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+
+                }
+            }
+
+            return members;
+        }
+
     }
 }
 
