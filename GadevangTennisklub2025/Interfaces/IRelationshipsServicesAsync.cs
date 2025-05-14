@@ -17,9 +17,5 @@ namespace GadevangTennisklub2025.Interfaces
         public Task<string> GetBookingPartnerName(int memberId, int bookingId);
         public Task<List<Event?>> GetEventsByMemberId(int memberID);
         public Task<Event?> GetEventById(int event_Id);
-        public Task<bool> MemberAvailible(int memberID,DateTime start, DateTime end);
-        public Task<bool> CourtAvailible(int courtID,DateTime start, DateTime end);
-        public  Task TeamMemberRelation(int TeamId, int MemberId);
-        public Task<List<Booking>> GetBookingsByUser(int memberID);
     }
 }
