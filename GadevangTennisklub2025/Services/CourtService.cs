@@ -11,7 +11,8 @@ namespace GadevangTennisklub2025.Services
 
         private string queryString = "SELECT Court_Id, Name, Type FROM Court";
         private string findCourtByIDSql = "select Court_Id, Name, Type FROM Court WHERE Court_Id = @ID";
-        private string insertSql = "Insert INTO Court Values(@ID, @Name, @Type)";
+        //private string insertSql = "Insert INTO Court Values(@ID, @Name, @Type)"; This is a query string made before automatic ID selection.
+        private string insertSql = "Insert INTO Court Values(@Name, @Type)";
         private string updateSql = "UPDATE Court SET Type = @Type, Name = @Name WHERE Court_Id = @ID";
         private string deleteSql = "DELETE FROM Court WHERE Court_Id = @ID";
 
