@@ -11,12 +11,14 @@ namespace GadevangTennisklub2025.Pages.Member
         private readonly IMemberService _memberService;
         private readonly IWebHostEnvironment _environment;
         private readonly IRelationshipsServicesAsync _relService;
+        private readonly ICourtService _courtService;
 
-        public MyProfileModel(IMemberService memberService, IWebHostEnvironment environment, IRelationshipsServicesAsync relService)
+        public MyProfileModel(IMemberService memberService, IWebHostEnvironment environment, IRelationshipsServicesAsync relService, ICourtService courtService)
         {
             _memberService = memberService;
             _environment = environment;
             _relService = relService;
+            _courtService = courtService;
         }
 
         [BindProperty]
@@ -25,9 +27,14 @@ namespace GadevangTennisklub2025.Pages.Member
         [BindProperty]
         public List<Booking?> Bookings { get; set; } = new List<Booking?>();
 
+        [BindProperty]
+        public List<Event?> Events { get; set; } = new List<Event?>();
 
         [BindProperty]
         public List<BookingViewModel> BookingsWithCourtsAndPartners { get; set; } = new();
+
+        [BindProperty]
+        public List<EventViewModel> EventWithTitleAndDate { get; set; } = new();
 
         [BindProperty]
         public IFormFile ProfileImage { get; set; }
@@ -39,10 +46,11 @@ namespace GadevangTennisklub2025.Pages.Member
 
             Member = await _memberService.GetMemberById(member_Id);
             Bookings = await _relService.GetBookingsByMemberId(member_Id);
+            Events = await _relService.GetEventsByMemberId(member_Id);
 
             foreach (var booking in Bookings)
             {
-                string courtName = (await _relService.GetTennisFieldById(booking.Court_Id)).Name;
+                string courtName = (await _courtService.GetCourtFromIdAsync(booking.Court_Id)).Name;
                 string partnerName = await _relService.GetBookingPartnerName(member_Id, booking.Id);
 
                 BookingsWithCourtsAndPartners.Add(new BookingViewModel
@@ -50,6 +58,19 @@ namespace GadevangTennisklub2025.Pages.Member
                     Booking = booking,
                     CourtName = courtName,
                     PartnerName = partnerName
+                });
+            }
+            foreach (var e in Events)
+            {
+                string title = e.Title;
+                DateTime dato = e.Date;
+                int id = e.Id;
+
+                EventWithTitleAndDate.Add(new EventViewModel
+                {
+                    Title = title,
+                    DateAndTime = dato,
+                    EventId = id
                 });
             }
             return Page();

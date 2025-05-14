@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using GadevangTennisklub2025.Models;
 using GadevangTennisklub2025.Interfaces;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using GadevangTennisklub2025.Services;
+using System.Reflection.PortableExecutable;
 
 namespace GadevangTennisklub2025.Pages.Teams
 {
@@ -9,6 +12,7 @@ namespace GadevangTennisklub2025.Pages.Teams
     {
         private ITeamService _teamService;
         private IBookingServiceAsync _bookingService;
+        private ICoachService _coachService;
         private List<Team> Teams = new List<Team>();
         #region Properties
         [BindProperty] // Two way binding
@@ -38,14 +42,20 @@ namespace GadevangTennisklub2025.Pages.Teams
 
         [BindProperty]
         public List<string> Messages { get; set; }
+
+        [BindProperty]
+        public int TrainerId { get; set; }
+
+        public List<SelectListItem> TrainerOptions { get; set; }
         #endregion
-        
-        
+
+
         #region constructor
-        public CreateTeamModel(ITeamService teamService, IBookingServiceAsync IBSA) // dependency injection
+        public CreateTeamModel(ITeamService teamService, IBookingServiceAsync IBSA, ICoachService coachService) // dependency injection
         {
             _teamService = teamService; // parameter overført 
             _bookingService = IBSA;
+            _coachService = coachService;
             Messages = new List<string>();
             //AttendeeRange[0] = MinMembers;
            // AttendeeRange[1] = MaxMembers;
@@ -53,15 +63,24 @@ namespace GadevangTennisklub2025.Pages.Teams
         #endregion
 
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
+            var coaches = await _coachService.GetAllCoachesAsync();
+
+            TrainerOptions = coaches.Select(c => new SelectListItem
+            {
+                Value = c.Coach_Id.ToString(),
+                Text = c.Name
+            }).ToList();
+
             return Page();
         }
+
         public async Task<IActionResult> OnPost(int id)
         {
             AttendeeRange[0] = MinMembers;
             AttendeeRange[1] = MaxMembers;
-            Team team = new Team(Id, Name, MembershipType, DayOfWeek, TimeOfDay, Length, AttendeeRange,Attendees, Description);
+            Team team = new Team(Id, Name, MembershipType,await _coachService.GetCoachByIdAsync(TrainerId), DayOfWeek, TimeOfDay, Length, AttendeeRange,Attendees, Description);
             await _teamService.CreateTeamAsync(team);
             List<DateTime> Temp = await _bookingService.TeamCreation(team);
             

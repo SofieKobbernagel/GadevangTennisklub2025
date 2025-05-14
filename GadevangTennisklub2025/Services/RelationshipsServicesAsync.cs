@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Reflection.PortableExecutable;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GadevangTennisklub2025.Services
 {
@@ -193,6 +194,35 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
+        public async Task TeamCoachRelation(int TeamId, int CoachId)
+        {
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("INSERT INTO RelMemberTeam VALUES (@Member_Id,@Team_Id);", con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Coach_Id", CoachId);
+                    cmd.Parameters.AddWithValue("@Team_Id", TeamId);
+                    await cmd.ExecuteNonQueryAsync();
+                    con.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+
+            }
+        }
+
         public async Task RemoveTeamMemberRelation(int TeamId, int MemberId)
         {
             using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
@@ -259,47 +289,6 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        public async Task<TennisField> GetTennisFieldById(int court_Id)
-        {
-            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
-            {
-
-
-                TennisField foundCourt = new TennisField();
-                try
-                {
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM Court WHERE Court_Id = @Court_Id;", con);
-                    cmd.Parameters.AddWithValue("@Court_Id", court_Id);
-                    await con.OpenAsync();
-                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
-                    while (await reader.ReadAsync())
-                    {
-                        int Id = reader.GetInt32("Court_Id");
-                        string name = reader.GetString("Name");
-                        string type = reader.GetString("Type");
-                        foundCourt.CourtId = Id;
-                        foundCourt.Name = name;
-                        foundCourt.Type = type;
-
-                    }
-                    reader.Close();
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine("Database error " + e.Message);
-                    throw e;
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("general error " + e.Message);
-                    throw e;
-
-                }
-                return foundCourt;
-            }
-        }
-
         public async Task<string> GetBookingPartnerName(int memberId, int bookingId)
         {
             using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
@@ -334,22 +323,24 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        public async Task<List<Member>> GetEventParticipants(int EventId) 
+        public async Task<List<Event?>> GetEventsByMemberId(int memberID)
         {
-            List<Member> members = new List<Member>();
             using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
             {
-                
+                List<Event?> EventList = new List<Event?>();
                 try
                 {
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM RelMemberEvent where Event_Id=@EventId", con);
-                    cmd.Parameters.AddWithValue("@EventID", EventId);
+                    SqlCommand cmd = new SqlCommand("SELECT e.* FROM Event e LEFT JOIN RelMemberEvent r ON e.Event_Id = r.Event_Id WHERE r.Member_Id = @Member_Id;", con);
+                    cmd.Parameters.AddWithValue("@Member_Id", memberID);
                     await con.OpenAsync();
                     SqlDataReader reader = await cmd.ExecuteReaderAsync();
                     while (await reader.ReadAsync())
                     {
-                        int MemberId = reader.GetInt32("Member_Id");
-                        members.Add(new Member());
+                        int eventId = reader.GetInt32("EVENT_Id");
+                        string title = reader.GetString("Title");
+                        DateTime startDate = reader.GetDateTime("Date");
+                        string desc = reader.GetString("DESCRIPTION");
+                        EventList.Add(new Event(eventId, title, startDate, desc));
                     }
                     reader.Close();
                 }
@@ -357,17 +348,49 @@ namespace GadevangTennisklub2025.Services
                 {
                     Console.WriteLine("Database error " + e.Message);
                     throw e;
-
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("general error " + e.Message);
                     throw e;
-
                 }
+                return EventList;
             }
-
-            return members;
+        }
+        
+        public async Task<Event?> GetEventById(int event_Id)
+        {
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                Event foundEvent = null;
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM Event where EVENT_Id = @Event_Id;", con);
+                    cmd.Parameters.AddWithValue("@Event_Id", event_Id);
+                    await con.OpenAsync();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                    while (await reader.ReadAsync())
+                    {
+                        int eventId = reader.GetInt32("EVENT_Id");
+                        string title = reader.GetString("Title");
+                        DateTime startDate = reader.GetDateTime("Date");
+                        string desc = reader.GetString("DESCRIPTION");
+                        foundEvent = (new Event(eventId, title, startDate, desc));
+                    }
+                    reader.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+                }
+                return foundEvent;
+            }
         }
 
     }

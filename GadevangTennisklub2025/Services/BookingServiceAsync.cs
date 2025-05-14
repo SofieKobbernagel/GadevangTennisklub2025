@@ -180,7 +180,7 @@ namespace GadevangTennisklub2025.Services
                 }
                 catch (SqlException e)
                 {
-                    Console.WriteLine("Databse fail " + e.Message);
+                    Console.WriteLine("Database fail " + e.Message);
                 }
                 catch (Exception e)
                 {
@@ -239,7 +239,7 @@ namespace GadevangTennisklub2025.Services
                 }
                 catch (SqlException e)
                 {
-                    Console.WriteLine("Databse fail " + e.Message);
+                    Console.WriteLine("Database fail " + e.Message);
                 }
                 catch (Exception e)
                 {
