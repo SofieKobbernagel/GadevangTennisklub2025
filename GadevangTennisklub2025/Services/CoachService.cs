@@ -184,11 +184,6 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        public Task<Coach?> GetCoachByTeamIdAsync(int teamId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> UpdateCoachAsync(Coach coach, int coach_Id)
         {
             bool isUpdated = false;
