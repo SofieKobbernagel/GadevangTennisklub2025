@@ -14,10 +14,19 @@ namespace GadevangTennisklub2025.Pages.Member
         [BindProperty]
         public Models.Member Member { get; set; }
 
+        [BindProperty]
+        public Models.Member LoggedInUser { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int member_Id)
         {
             try
             {
+                if (!int.TryParse(HttpContext.Session.GetString("Member_Id"), out int activeUserId))
+                {
+                    return RedirectToPage("Login");
+                }
+
+                LoggedInUser = await _memberService.GetMemberById(activeUserId);
                 Member = await _memberService.GetMemberById(member_Id);
                 if (Member == null)
                     return RedirectToPage("MyProfile");
@@ -47,6 +56,10 @@ namespace GadevangTennisklub2025.Pages.Member
                 else
                 {
                     HttpContext.Session.Clear();
+                }
+                if (LoggedInUser.IsAdmin && Member.Member_Id != LoggedInUser.Member_Id)
+                {
+                    return RedirectToPage("GetAllMembers");
                 }
 
                 return RedirectToPage("/Index");
