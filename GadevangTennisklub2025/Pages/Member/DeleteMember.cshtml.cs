@@ -43,6 +43,12 @@ namespace GadevangTennisklub2025.Pages.Member
         {
             try
             {
+                if (!int.TryParse(HttpContext.Session.GetString("Member_Id"), out int activeUserId))
+                {
+                    return RedirectToPage("Login");
+                }
+
+                LoggedInUser = await _memberService.GetMemberById(activeUserId);
                 if (Member == null || Member.Member_Id == null)
                 {
                     ModelState.AddModelError("", "ID mangler.");
@@ -51,16 +57,18 @@ namespace GadevangTennisklub2025.Pages.Member
 
                 Models.Member deletedMember = await _memberService.DeleteMemberAsync(Member.Member_Id);
                 TempData["SuccessMessage"] = "Din profil er blevet slettet";
+                if (LoggedInUser.IsAdmin && Member.Member_Id != LoggedInUser.Member_Id)
+                {
+                    return RedirectToPage("GetAllMembers");
+                }
+
                 if (deletedMember == null)
                     return RedirectToPage("/Index");
                 else
                 {
                     HttpContext.Session.Clear();
                 }
-                if (LoggedInUser.IsAdmin && Member.Member_Id != LoggedInUser.Member_Id)
-                {
-                    return RedirectToPage("GetAllMembers");
-                }
+   
 
                 return RedirectToPage("/Index");
             }
