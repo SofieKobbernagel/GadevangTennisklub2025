@@ -99,9 +99,10 @@ namespace GadevangTennisklub2025.Pages.Teams
             return RedirectToPage("ShowTeam");
         }
 
-        public IActionResult OnPostUpdateAttendeeList(int AttendeeListTeamId)
+        public IActionResult OnPostUpdateAttendeeListId(int AttendeeListTeamId)
         {
             return RedirectToPage("UpdateAttendeeList", new { AttendeeListTeamId });
         }
+
     }
 }

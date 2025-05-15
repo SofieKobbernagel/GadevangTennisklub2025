@@ -12,29 +12,30 @@
     <a class="nav-link text-dark bg-primary" asp-page="CreateTeam">Opret nyt Hold</a>
 </btn>
 }
+@if (Model.isLoggedIn)
+{
+    <form style="display: inline;" asp-page-handler="AttendTeam" asp-route-ATTENDID="0">
+        <button type="submit" style="width: 24px; height: 24px;">Tilmeld Hold</button>
+    </form>
 
-<form style="display: inline;" asp-page-handler="AttendTeam" asp-route-ATTENDID="0">
-    <button type="submit" style="width: 24px; height: 24px;">Tilmeld Hold</button>
-</form>
-
-<btn>
-    <a class="nav-link text-dark bg-primary" asp-page="AttendedTeam">tildmeldte Hold</a>
-</btn>
-
+    <btn>
+        <a class="nav-link text-dark bg-primary" asp-page="AttendedTeam">tildmeldte Hold</a>
+    </btn>
+}
 <table class="table">
     <thead>
         <tr>
             <th>Titel</th>
             <th>pladser tilbage</th>
             <th>Medlemskabstype</th>
-@if(Model.isAdmin){
             <th>Coach</th>            
-}
             <th>Beskrivelse</th>
             <th>Dag</th>
             <th>Tidsrum</th>
-            <th>knapper</th>
-
+            @if (Model.isAdmin == true)
+            {
+                <th>knapper</th>
+            }
         </tr>
     </thead>
     <tbody>

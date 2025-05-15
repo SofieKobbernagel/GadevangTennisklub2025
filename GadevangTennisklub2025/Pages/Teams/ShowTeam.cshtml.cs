@@ -19,6 +19,7 @@ namespace GadevangTennisklub2025.Pages.Teams
 
         #region Properties
         public bool isAdmin { get; set; } = false;
+        public bool isLoggedIn { get; set; } = false;
         public List<Team> ListOfTeams { get; set; } = new(); // prevents null
 
             
@@ -65,9 +66,11 @@ namespace GadevangTennisklub2025.Pages.Teams
             if (HttpContext.Session.GetString("IsAdmin")!=null && bool.Parse(HttpContext.Session.GetString("IsAdmin"))==true) 
             { 
                 isAdmin = true;
-                
             }
-
+            if (HttpContext.Session.GetString("Member_Id") != null)
+            {
+                isLoggedIn = true;
+            }
             Console.WriteLine("Team/ShowTeam/OnGetAsync is done");
         }
         #endregion

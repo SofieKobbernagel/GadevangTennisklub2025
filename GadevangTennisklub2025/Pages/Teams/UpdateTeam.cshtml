@@ -72,15 +72,18 @@
                 <div class="d-flex justify-content-between mt-4">
                     <button type="submit" class="btn btn-primary" formaction="?handler=Update">Update Team</button>
                     <button type="submit" class="btn btn-danger" formaction="?handler=Delete">Delete Team</button>
+                    <input type="hidden" name="AttendeeListTeamId" value="@Model.Id" />
+                    <button type="submit" class="btn btn-secondary" formaction="?handler=UpdateAttendeeListId">
+                        Se og rediger tilmeldte
+                    </button>
+
                 </div>
             </div>
         </div>
     </form>
 
     <!-- Form for updating attendee list -->
-    <form asp-page-handler="UpdateAttendeeList" method="post" class="mt-3 text-center">
-        <input type="hidden" name="AttendeeListTeamId" value="@Model.Id" />
-        <button type="submit" class="btn btn-secondary">Update Attendee List</button>
-    </form>
+    
+
 
 </div>
