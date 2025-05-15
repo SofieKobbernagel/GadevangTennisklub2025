@@ -22,8 +22,8 @@ namespace GadevangTennisklub2025.Pages.Teams
         [BindProperty] public int MinMember { get; set; }
         [BindProperty] public int MaxMember { get; set; }
         [BindProperty] public string Description { get; set; }
-        [BindProperty] public int TrainerId { get; set; }
-        [BindProperty] public Coach coach { get; set; }
+        [BindProperty] public int? TrainerId { get; set; }
+        [BindProperty] public Coach? Coach { get; set; }
         public List<SelectListItem> TrainerOptions { get; set; }
         public List<SelectListItem> MembershipOptions { get; set; }
 
@@ -47,9 +47,9 @@ namespace GadevangTennisklub2025.Pages.Teams
             MinMember = team.AttendeeRange[0];
             MaxMember = team.AttendeeRange[1];
             Description = team.Description;
-            Coach TempTrainer = await _coachService.GetCoachByTeamIdAsync(Id);
-            TrainerId = TempTrainer.Coach_Id;
-            coach = team.Trainer;
+            Coach? TempTrainer = await _coachService.GetCoachByTeamIdAsync(Id);
+            TrainerId = (TempTrainer==null?null:TempTrainer.Coach_Id);
+            Coach = team.Trainer;
 
             var coaches = await _coachService.GetAllCoachesAsync();
             TrainerOptions = coaches.Select(c => new SelectListItem
@@ -70,11 +70,24 @@ namespace GadevangTennisklub2025.Pages.Teams
 
         public async Task<IActionResult> OnPostUpdateAsync()
         {
+            if (TrainerId == null)
+            {
+                ModelState.AddModelError(string.Empty, "A coach must be selected.");
+                return Page();
+            }
+
+            var selectedCoach = await _coachService.GetCoachByIdAsync(TrainerId.Value);
+            if (selectedCoach == null)
+            {
+                ModelState.AddModelError(string.Empty, "Selected coach was not found.");
+                return Page();
+            }
+
             var attendees = new List<Models.Member>(); // Optional: Fetch if needed
             var attendeeRange = new[] { MinMember, MaxMember };
             
 
-            var updatedTeam = new Team(Id, Name, MembershipType, coach, DayOfWeek, TimeOfDay, Length, attendeeRange, attendees, Description);
+            var updatedTeam = new Team(Id, Name, MembershipType, selectedCoach, DayOfWeek, TimeOfDay, Length, attendeeRange, attendees, Description);
             await _teamService.UpdateTeamAsync(updatedTeam, Id);
 
             return RedirectToPage("ShowTeam");

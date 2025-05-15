@@ -20,9 +20,7 @@ namespace GadevangTennisklub2025.Pages.Teams
         #region Properties
         public bool isAdmin { get; set; } = false;
         public List<Team> ListOfTeams { get; set; } = new(); // prevents null
-        private TimeOnly temp = new TimeOnly(23,50);
-       
-            //Console.WriteLine("endTime: "+(temp));
+
             
 
 
@@ -67,6 +65,7 @@ namespace GadevangTennisklub2025.Pages.Teams
             if (HttpContext.Session.GetString("IsAdmin")!=null && bool.Parse(HttpContext.Session.GetString("IsAdmin"))==true) 
             { 
                 isAdmin = true;
+                
             }
 
             Console.WriteLine("Team/ShowTeam/OnGetAsync is done");

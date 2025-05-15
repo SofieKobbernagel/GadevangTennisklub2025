@@ -231,7 +231,7 @@ namespace GadevangTennisklub2025.Services
         SELECT c.*
         FROM Coach c
         INNER JOIN RelTeamCoach rtc ON c.Coach_Id = rtc.Coach_Id
-        WHERE rtc.Team_Id = @TeamId";
+        WHERE rtc.Team_Id = @Team_Id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -242,7 +242,7 @@ namespace GadevangTennisklub2025.Services
                     try
                     {
                         SqlCommand command = new SqlCommand(query, connection);
-                        command.Parameters.AddWithValue("@TeamId", teamId);
+                        command.Parameters.AddWithValue("@Team_Id", teamId);
                         await command.Connection.OpenAsync();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
                         Thread.Sleep(1000);
