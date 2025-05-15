@@ -13,6 +13,7 @@ builder.Services.AddTransient<IRelationshipsServicesAsync, RelationshipsServices
 builder.Services.AddTransient<IBookingServiceAsync, BookingServiceAsync>();
 builder.Services.AddTransient<ITeamService, TeamService>();
 builder.Services.AddTransient<IBlogPostServicesAsync, BlogPostService>();
+builder.Services.AddTransient<ICommentServiceAsync, CommentServiceAsync>();
 builder.Services.AddSession();    //Nyt
 builder.Services.AddHttpContextAccessor();//Nyt
 builder.Services.AddScoped<IMembershipService, MembershipService>();

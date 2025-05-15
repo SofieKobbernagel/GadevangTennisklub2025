@@ -116,7 +116,7 @@
             {
                 <tr>
                     <td>
-                        <input type="radio" asp-for="RegisterModel.Member.MemberType" value="@membership.MembershipType" />
+                        <input type="radio" asp-for="@Model.MemberObject.MemberType" value="@membership.MembershipType" />
                     </td>
                     <td>@membership.MembershipType</td>
                     <td>Kr. @membership.Price,-</td>

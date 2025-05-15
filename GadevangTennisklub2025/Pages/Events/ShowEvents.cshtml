@@ -5,6 +5,16 @@
 @{
     ViewData["Title"] = "ShowEvents";
 }
+@section Scripts {
+    <script>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                            alert('@TempData["SuccessMessage"]');
+            </text>
+        }
+    </script>
+}
 <h4>List Of Events</h4>
 
 

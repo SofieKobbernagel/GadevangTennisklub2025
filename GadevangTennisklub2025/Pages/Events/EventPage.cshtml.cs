@@ -13,6 +13,7 @@ namespace GadevangTennisklub2025.Pages.Events
         public Event e { get; set; }
 
         public string Message { get; set; }
+        public int MemberCount { get { return relationshipsServicesAsync.GetEventParticipants(e.Id).Result.Count; } }
         
         public bool notadmin { get; set; }
         public EventPageModel(IEventServiceAsync IESA, IRelationshipsServicesAsync IRSA)
@@ -38,12 +39,13 @@ namespace GadevangTennisklub2025.Pages.Events
             try 
             {
                 int t = Convert.ToInt32(HttpContext.Session.GetString("Member_Id"));
-               await  relationshipsServicesAsync.EventMemberRelation(e.Id, int.Parse(HttpContext.Session.GetString("Member_Id")));
+                await  relationshipsServicesAsync.EventMemberRelation(e.Id, int.Parse(HttpContext.Session.GetString("Member_Id")));
+                TempData["SuccessMessage"] = "du er tilmeldt event";
                 return Redirect("ShowEvents");
             }
             catch (Exception ex) 
             {
-                Message = "du er tilmeldt";
+                Message = "fejl Forsøg igen";
                 return null;
             }
            
@@ -54,6 +56,7 @@ namespace GadevangTennisklub2025.Pages.Events
             try
             {
                 await eventServicesAsync.DeleteEventAsync(e);
+                TempData["SuccessMessage"] = "event slettet";
                 return Redirect("ShowEvents");
             }
             catch (Exception ex)
@@ -68,6 +71,7 @@ namespace GadevangTennisklub2025.Pages.Events
             try
             {
                 await eventServicesAsync.UpdateEventAsync(e);
+                TempData["SuccessMessage"] = "Event opdateret";
                 return Redirect("ShowEvents");
             }
             catch (Exception ex)

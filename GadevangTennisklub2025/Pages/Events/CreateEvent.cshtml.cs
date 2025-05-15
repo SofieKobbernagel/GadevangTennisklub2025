@@ -21,12 +21,13 @@ namespace GadevangTennisklub2025.Pages.Events
 
         public async Task<IActionResult> OnPost()
         {
-            try { 
+            try {
 
-
+                if (!ModelState.IsValid) return Page(); ;
                 if (EventServicesAsync.GetEventsAsync().Result.Find(i => i.Date.Date == ev.Date.Date) == null) 
                 {
                     await EventServicesAsync.CreateEventAsync(ev);
+                    TempData["SuccessMessage"] = "du er tilmeldt event";
                     return Redirect("ShowEvents");
                 }
             ViewData["ErrorMessage"] = "Dato optaget";
