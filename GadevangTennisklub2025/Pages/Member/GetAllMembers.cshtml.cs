@@ -8,7 +8,7 @@ namespace GadevangTennisklub2025.Pages.Member
     public class GetAllMembersModel : PageModel
     {
         private IMemberService _memberService;
-        public bool IsAdmin { get; set; } = false;
+        public bool IsAdmin { get; set; }
         [BindProperty(SupportsGet = true)] public string FilterCriteria { get; set; }
         [BindProperty(SupportsGet = true)] public string SortBy { get; set; }
         [BindProperty(SupportsGet = true)] public string SortOrder { get; set; }
@@ -27,7 +27,7 @@ namespace GadevangTennisklub2025.Pages.Member
             {
                 return RedirectToPage("/Index");
             }
-
+            IsAdmin = true;
             try
             {
                 Members = await _memberService.GetAllMembersAsync();
