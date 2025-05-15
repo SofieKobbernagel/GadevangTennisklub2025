@@ -1,92 +1,86 @@
 ﻿@page
 @model GadevangTennisklub2025.Pages.Teams.UpdateTeamModel
 @{
+    ViewData["Title"] = "Update Team";
 }
-<h1>Update Team</h1>
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            
+<h1 class="text-center mt-4">Update Team</h1>
 
-            <form method="post">
-                <div class="card" style="border: 1px solid #ddd; position: relative; display: flex; flex-direction: column; justify-content: space-between;">
-                    <div class="card-body">
-                        <h5 class="card-title">Team Information</h5>
-                        <hr style="border: 1px solid #ddd; margin-top: 5px; margin-bottom: 10px;">
+<div class="container mt-4">
+    <!-- Main form for updating and deleting -->
+    <form method="post">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Team Information</h5>
+                <hr />
 
-                        <div class="mb-3">
-                            <label class="form-label">Team Id</label>
-                            <input type="text" class="form-control" value="@Model.Id" />
-                        </div>
+                <div class="mb-3">
+                    <label asp-for="Id" class="form-label">Team ID</label>
+                    <input asp-for="Id" class="form-control" readonly />
+                </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Team Name</label>
-                            <input type="text" class="form-control" asp-for="Name" />
-                        </div>
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">Team Name</label>
+                    <input asp-for="Name" class="form-control" />
+                </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Team MembershipType</label>
-                            <input type="text" class="form-control" asp-for="MembershipType" />
-                        </div>
+                <div class="mb-3">
+                    <label asp-for="MembershipType" class="form-label">Membership Type</label>
+                    <select asp-for="MembershipType" class="form-control" asp-items="Model.MembershipOptions">
+                        <option value="">-- Select Membership Type --</option>
+                    </select>
+                </div>
 
-                        <div class="form-group">
-                            <label asp-for="TrainerId" class="control-label">Select Trainer</label>
-                            <select asp-for="TrainerId" class="form-control" style="width: 30%;" asp-items="Model.TrainerOptions">
-                                <option value="">-- Select a trainer --</option>
-                            </select>
-                        </div>
+                <div class="mb-3">
+                    <label asp-for="TrainerId" class="form-label">Trainer</label>
+                    <select asp-for="TrainerId" class="form-control" asp-items="Model.TrainerOptions">
+                        <option value="">-- Select a Trainer --</option>
+                    </select>
+                </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Day of week</label>
-                            <input type="text" class="form-control" asp-for="DayOfWeek" />
-                        </div>
+                <div class="mb-3">
+                    <label asp-for="DayOfWeek" class="form-label">Day of Week</label>
+                    <input asp-for="DayOfWeek" class="form-control" />
+                </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Time of Day</label>
-                            <input type="text" class="form-control" asp-for="TimeOfDay" />
-                        </div>
+                <div class="mb-3">
+                    <label asp-for="TimeOfDay" class="form-label">Time of Day</label>
+                    <input asp-for="TimeOfDay" class="form-control" />
+                </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">session length (in hours)</label>
-                            <input type="text" class="form-control" asp-for="Length" />
-                        </div>
+                <div class="mb-3">
+                    <label asp-for="Length" class="form-label">Session Length (Hours)</label>
+                    <input asp-for="Length" class="form-control" />
+                </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Minnimum number of Attendees</label>
-                            <input type="text" class="form-control" asp-for="MinMember" />
-                        </div>
+                <div class="mb-3">
+                    <label asp-for="MinMember" class="form-label">Minimum Attendees</label>
+                    <input asp-for="MinMember" class="form-control" />
+                </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Maximum number of Attendees</label>
-                            <input type="text" class="form-control" asp-for="MaxMember" />
-                        </div>
+                <div class="mb-3">
+                    <label asp-for="MaxMember" class="form-label">Maximum Attendees</label>
+                    <input asp-for="MaxMember" class="form-control" />
+                </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <input type="text" class="form-control" asp-for="Description" />
-                        </div>
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                </div>
 
-            </form>
-            <form asp-page-handler="UpdateAttendeeList" asp-route-AttendeeListTeamId="@Model.Id" method="post">
-                            <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Update AttendeeList</button>
-                        </form>
-        </div>
-
-        <div class="position-relative" style="height: 60px; margin-top: auto; margin-bottom: 2px;">
-            <div style="position: absolute; top: 50%; left: 0%; width: 100%; transform: translateY(-120%); display: flex; justify-content: space-between; padding: 0 10%;">
-                <!-- Update Button -->
-                <form asp-page-handler="Update" asp-route-updateTeamId="@Model.Id" method="post">
-                     <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Update Team</button>
-                </form>
-
-                <!-- Delete Button -->
-                <form asp-page-handler="Delete" asp-route-deleteTeamId="@Model.Id" method="post">
-                     <button type="submit" class="btn btn-danger" style="white-space: nowrap;">Delete Team</button>
-                </form>
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-primary" formaction="?handler=Update">Update Team</button>
+                    <button type="submit" class="btn btn-danger" formaction="?handler=Delete">Delete Team</button>
+                </div>
             </div>
         </div>
-    </div>    
+    </form>
+
+    <!-- Form for updating attendee list -->
+    <form asp-page-handler="UpdateAttendeeList" method="post" class="mt-3 text-center">
+        <input type="hidden" name="AttendeeListTeamId" value="@Model.Id" />
+        <button type="submit" class="btn btn-secondary">Update Attendee List</button>
+    </form>
+
 </div>
