@@ -184,11 +184,6 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        public Task<Coach?> GetCoachByTeamIdAsync(int teamId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> UpdateCoachAsync(Coach coach, int coach_Id)
         {
             bool isUpdated = false;
@@ -229,5 +224,62 @@ namespace GadevangTennisklub2025.Services
             }
             return isUpdated;
         }
+
+        public async Task<Coach?> GetCoachByTeamIdAsync(int teamId)
+        {
+            string query = @"
+        SELECT c.*
+        FROM Coach c
+        INNER JOIN RelTeamCoach rtc ON c.Coach_Id = rtc.Coach_Id
+        WHERE rtc.Team_Id = @Team_Id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                Coach? foundCoach = null;
+                {
+                    
+
+                    try
+                    {
+                        SqlCommand command = new SqlCommand(query, connection);
+                        command.Parameters.AddWithValue("@Team_Id", teamId);
+                        await command.Connection.OpenAsync();
+                        SqlDataReader reader = await command.ExecuteReaderAsync();
+                        //Thread.Sleep(1000);
+                        while (await reader.ReadAsync())
+                        {
+                            string name = reader.GetString(reader.GetOrdinal("Name"));
+                            string city = reader.GetString(reader.GetOrdinal("City"));
+                            string phone = reader.GetString(reader.GetOrdinal("TLF"));
+                            string postalcode = reader.GetString(reader.GetOrdinal("PostalCode"));
+                            decimal salary = reader.GetDecimal(reader.GetOrdinal("Salary"));
+                            string contractFilePath = reader.GetString(reader.GetOrdinal("ContractFilePath"));
+                            string address = reader.GetString(reader.GetOrdinal("Address"));
+                            int id = reader.GetInt32(reader.GetOrdinal("Coach_Id"));
+                            string email = reader.GetString(reader.GetOrdinal("Email"));
+                            string? filepath = reader.IsDBNull(reader.GetOrdinal("ProfileImagePath"))
+                                ? null
+                                : reader.GetString(reader.GetOrdinal("ProfileImagePath"));
+
+                            foundCoach = new Coach(name, phone, email, id, address, filepath, contractFilePath, city, postalcode, salary);
+                        }
+
+                        reader.Close();
+                    }
+                    catch (SqlException sqlExp)
+                    {
+                        Console.WriteLine("Database error: " + sqlExp.Message);
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("General error: " + ex.Message);
+                        return null;
+                    }
+                }
+                return foundCoach;
+            }
+        }
+
     }
 }

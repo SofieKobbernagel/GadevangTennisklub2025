@@ -13,6 +13,7 @@ namespace GadevangTennisklub2025.Pages.Teams
         private ITeamService _teamService;
         private IBookingServiceAsync _bookingService;
         private ICoachService _coachService;
+        private IMembershipService _membershipService;
         private List<Team> Teams = new List<Team>();
         #region Properties
         [BindProperty] // Two way binding
@@ -46,31 +47,54 @@ namespace GadevangTennisklub2025.Pages.Teams
         [BindProperty]
         public int TrainerId { get; set; }
 
+        [BindProperty]
+        public int DayId { get; set; }
         public List<SelectListItem> TrainerOptions { get; set; }
+
+        public List<SelectListItem> MembershipOptions { get; set; }
+        public List<SelectListItem> DayOptions { get; set; }
         #endregion
 
 
         #region constructor
-        public CreateTeamModel(ITeamService teamService, IBookingServiceAsync IBSA, ICoachService coachService) // dependency injection
+        public CreateTeamModel(ITeamService teamService, IBookingServiceAsync IBSA, ICoachService coachService, IMembershipService membershipService) // dependency injection
         {
             _teamService = teamService; // parameter overført 
             _bookingService = IBSA;
             _coachService = coachService;
+            _membershipService = membershipService;
             Messages = new List<string>();
             //AttendeeRange[0] = MinMembers;
            // AttendeeRange[1] = MaxMembers;
         }
         #endregion
+        public void PopulateDayOptions()
+        {
+            var week = new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 
+            DayOptions = Enumerable.Range(0, 7).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),    // Returns 0 for Monday, 1 for Tuesday, etc.
+                Text = week[i]           // Display name
+            }).ToList();
+        }
 
         public async Task<IActionResult> OnGet()
         {
+            PopulateDayOptions();
+            Team team = new Team();
             var coaches = await _coachService.GetAllCoachesAsync();
-
+            var MembershipTypes = await _membershipService.GetAllMembershipsAsync();
+            var days = team.week; 
             TrainerOptions = coaches.Select(c => new SelectListItem
             {
                 Value = c.Coach_Id.ToString(),
                 Text = c.Name
+            }).ToList();
+            MembershipOptions = MembershipTypes.Select(c => new SelectListItem
+            {
+                Value = c.MembershipType.ToString(),
+                Text = c.MembershipType
             }).ToList();
 
             return Page();

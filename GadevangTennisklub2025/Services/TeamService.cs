@@ -13,9 +13,9 @@ namespace GadevangTennisklub2025.Services
     {
         private string connectionString = Secret.ConnectionString;
         private string queryString = "SELECT  Team_Id, MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers, Description FROM Team";
-        private string updateQuery = "UPDATE Team SET Team_Id = @Team_Id, MemberType = @MemberType, Name = @Name, Length = @Length, TimeOfDay = @TimeOfDay, DayOfWeek = @DayOfWeek, MinMembers = @MinMembers, MaxMembers = @MaxMembers, Description = @Description WHERE Team_Id = @Team_Id";
+        private string updateQuery = "UPDATE Team SET  MemberType = @MemberType, Name = @Name, Length = @Length, TimeOfDay = @TimeOfDay, DayOfWeek = @DayOfWeek, MinMembers = @MinMembers, MaxMembers = @MaxMembers, Description = @Description WHERE Team_Id = @Team_Id";
         private string deleteQuery = "DELETE FROM Team WHERE Name=@Name;";
-        private string createQuery = "INSERT INTO Team ( Team_Id, MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers,  Description)\r\nVALUES ( @Team_Id, @MemberType, @Name, @Length, @TimeOfDay, @DayOfWeek, @MinMembers, @MaxMembers,  @Description);";
+        private string createQuery = "INSERT INTO Team (  MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers,  Description)\r\nVALUES (  @MemberType, @Name, @Length, @TimeOfDay, @DayOfWeek, @MinMembers, @MaxMembers,  @Description);";
 
         private string searchNrQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Description FROM Team WHERE Team_Id = @Team_Id";
         private string searchNameQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Description FROM Team WHERE Name = @Name";
@@ -182,7 +182,7 @@ namespace GadevangTennisklub2025.Services
                         SqlCommand command = new SqlCommand(queryString, connection);
                         await command.Connection.OpenAsync();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        Thread.Sleep(50);
+                        //Thread.Sleep(50);
                         while (await reader.ReadAsync())
                         {
                             int teamID = reader.GetInt32("Team_Id");
@@ -290,7 +290,7 @@ namespace GadevangTennisklub2025.Services
                         SqlCommand command = new SqlCommand(queryString, connection);
                         await command.Connection.OpenAsync();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        Thread.Sleep(1000);
+                        //Thread.Sleep(1000);
                         while (await reader.ReadAsync())
                         {
 
@@ -332,9 +332,8 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        public async Task<bool> UpdateTeamAsync(Team team, int teamNum)
+        public async Task<bool> UpdateTeamAsync(Team team)
         {
-            //string updateQuery = "UPDATE Hotel SET HotelName = @HotelName, HotelAddress = @HotelAddress WHERE HotelNr = @HotelNr";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -346,15 +345,16 @@ namespace GadevangTennisklub2025.Services
                     command.Parameters.AddWithValue("@Team_Id", team.Id);
                     command.Parameters.AddWithValue("@MemberType", team.MembershipType);
                     command.Parameters.AddWithValue("@Name", team.Name);
-                    Console.WriteLine("TeamService/UpdateTeamAsync length = "+team.Length);
+                    //Console.WriteLine("TeamService/UpdateTeamAsync length = "+team.Length);
                     command.Parameters.AddWithValue("@Length", team.Length.ToString(CultureInfo.InvariantCulture));
                     command.Parameters.AddWithValue("@TimeOfDay", team.TimeOfDay);
                     command.Parameters.AddWithValue("@DayOfWeek", team.DayOfWeek);
                     command.Parameters.AddWithValue("@MinMembers", team.AttendeeRange[0]);
                     command.Parameters.AddWithValue("@MaxMembers", team.AttendeeRange[1]);
-                    
                     command.Parameters.AddWithValue("@Description", team.Description);
 
+                    RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
+                    await relationshipsServices.UpdateTeamCoachRelation(team.Id, team.Trainer.Coach_Id);
                     await connection.OpenAsync();
                     int rowsAffected = await command.ExecuteNonQueryAsync(); // Correct method for UPDATE
 

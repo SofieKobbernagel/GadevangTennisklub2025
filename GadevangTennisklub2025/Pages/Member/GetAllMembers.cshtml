@@ -2,7 +2,14 @@
 @model GadevangTennisklub2025.Pages.Member.GetAllMembersModel
 @{
 }
+
 <form method="get">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
     <p>
         Search: <input type="text" asp-for="@Model.FilterCriteria" onchange="this.form.submit()" />
         <div class="form-group">
@@ -32,6 +39,10 @@
             <th>Alder</th>
             <th>Email</th>
             <th>Telefon</th>
+            @if (Model.IsAdmin)
+            {
+                <th>Handlinger</th>
+            }
 
         </tr>
     </thead>
@@ -66,6 +77,16 @@
                     <td>
                         @m.Phone
                     </td>
+                    @if (Model.IsAdmin)
+                    {
+                        <td>
+                            <a class="btn btn-primary btn-sm" title="Edit"
+                               asp-page="EditMember" asp-route-member_Id="@m.Member_Id">Rediger Profil</a>
+                            <a class="btn btn-danger btn-sm " type="button" title="Delete"
+                               asp-page="DeleteMember" asp-route-member_Id="@m.Member_Id">Slet profil</a>
+                        </td>
+
+                    }
                 </tr>
             }
         }

@@ -10,7 +10,7 @@ namespace GadevangTennisklub2025.Models
         public Coach Trainer { get; set; }
         public double Length {  get; set; }
         public TimeOnly TimeOfDay { get; set; }
-        public int DayOfWeek { get; set; }  //1=monday  2=tuesday ...
+        public int DayOfWeek { get; set; }  //0=monday  1=tuesday ...
         public int[] AttendeeRange { get; set; }
         //new int[2];
         public List<Member> Attendees { get; set; }

@@ -46,6 +46,13 @@ namespace GadevangTennisklub2025.Pages.Member
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!int.TryParse(HttpContext.Session.GetString("Member_Id"), out int activeUserId))
+            {
+                return RedirectToPage("Login");
+            }
+
+            var activeUser = await _memberService.GetMemberById(activeUserId);
+
             var existingMember = await _memberService.GetMemberById(MemberObject.Member_Id);
 
             if (string.IsNullOrEmpty(MemberObject.Password))
@@ -56,15 +63,6 @@ namespace GadevangTennisklub2025.Pages.Member
             if (!ModelState.IsValid)
             {
                 Memberships = await _membershipService.GetAllMembershipsAsync();
-                // Debugging: Log model state errors
-                foreach (var state in ModelState)
-                {
-                    Console.WriteLine($"Key: {state.Key}");
-                    foreach (var error in state.Value.Errors)
-                    {
-                        Console.WriteLine($"Error: {error.ErrorMessage}");
-                    }
-                }
                 return Page();
             }
 
@@ -82,19 +80,19 @@ namespace GadevangTennisklub2025.Pages.Member
             }
             else
             {
-                // Behold eksisterende billede
+                // Preserve existing image
                 MemberObject.ProfileImagePath = existingMember.ProfileImagePath;
             }
 
-
-
             await _memberService.UpdateMemberAsync(MemberObject, MemberObject.Member_Id);
             TempData["SuccessMessage"] = "Brugeroplysninger er opdateret.";
+
+            if (activeUser.IsAdmin && MemberObject.Member_Id != activeUser.Member_Id)
+            {
+                return RedirectToPage("GetAllMembers");
+            }
+
             return RedirectToPage("MyProfile");
-
-
-
-
         }
     }
 }

@@ -7,6 +7,13 @@
     <h5>Er du sikker på at du gerne vil slette bruger med brugernavn - @Model.Member.Username? Dette kan ikke gøres om.</h5>
     <form method="post">
         <button type="submit" class="btn btn-danger">Ja</button>
-        <a class="btn btn-primary" asp-page="/Member/MyProfile">Nej</a>
+        @if (Model.Member.Member_Id != Model.LoggedInUser.Member_Id && Model.LoggedInUser.IsAdmin)
+        {
+            <a class="btn btn-primary" asp-page="/Member/GetAllMembers">Nej</a>
+        }
+        else
+        {
+            <a class="btn btn-primary" asp-page="/Member/MyProfile">Nej</a>
+        }
     </form>
 </div>
