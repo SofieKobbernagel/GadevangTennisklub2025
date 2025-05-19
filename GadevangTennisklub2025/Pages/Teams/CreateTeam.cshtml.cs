@@ -47,9 +47,12 @@ namespace GadevangTennisklub2025.Pages.Teams
         [BindProperty]
         public int TrainerId { get; set; }
 
+        [BindProperty]
+        public int DayId { get; set; }
         public List<SelectListItem> TrainerOptions { get; set; }
 
         public List<SelectListItem> MembershipOptions { get; set; }
+        public List<SelectListItem> DayOptions { get; set; }
         #endregion
 
 
@@ -65,12 +68,24 @@ namespace GadevangTennisklub2025.Pages.Teams
            // AttendeeRange[1] = MaxMembers;
         }
         #endregion
+        public void PopulateDayOptions()
+        {
+            var week = new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 
+            DayOptions = Enumerable.Range(0, 7).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),    // Returns 0 for Monday, 1 for Tuesday, etc.
+                Text = week[i]           // Display name
+            }).ToList();
+        }
 
         public async Task<IActionResult> OnGet()
         {
+            PopulateDayOptions();
+            Team team = new Team();
             var coaches = await _coachService.GetAllCoachesAsync();
             var MembershipTypes = await _membershipService.GetAllMembershipsAsync();
+            var days = team.week; 
             TrainerOptions = coaches.Select(c => new SelectListItem
             {
                 Value = c.Coach_Id.ToString(),
@@ -81,6 +96,7 @@ namespace GadevangTennisklub2025.Pages.Teams
                 Value = c.MembershipType.ToString(),
                 Text = c.MembershipType
             }).ToList();
+
             return Page();
         }
 
