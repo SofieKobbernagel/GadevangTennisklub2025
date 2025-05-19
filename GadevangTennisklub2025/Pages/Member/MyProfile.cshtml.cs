@@ -103,6 +103,12 @@ namespace GadevangTennisklub2025.Pages.Member
             return RedirectToPage("/Users/MyProfile");
         }
 
+        public async Task<IActionResult> OnPostRemoveFromEvent(int Event_ID) 
+        {
+            _relService.SignOffEvent(Event_ID, int.Parse(HttpContext.Session.GetString("Member_Id")));
+            return RedirectToPage("MyProfile");
+        }
+
     }
 
 }

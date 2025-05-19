@@ -458,8 +458,33 @@ namespace GadevangTennisklub2025.Services
             }
 
             return members;
-        }
+     }
 
+        public async Task SignOffEvent(int EventId, int MemberId)
+        {
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("DELETE FROM RelMemberEvent WHERE Member_Id = @MemberId AND Event_Id = @EventId;", con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@MemberId", MemberId);
+                    cmd.Parameters.AddWithValue("@EventId", EventId);
+                    await cmd.ExecuteNonQueryAsync();
+                    con.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("General error " + e.Message);
+                    throw;
+                }
+            }
+        }
     }
 }
 
