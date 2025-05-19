@@ -4,6 +4,7 @@ using GadevangTennisklub2025.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GadevangTennisklub2025.Pages.Bookingpages
 {
@@ -30,6 +31,8 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
         [BindProperty]
         public string te { get; set; }
 
+   
+
         public BookingSideModel(IBookingServiceAsync IBSA, IMemberService IMS, IRelationshipsServicesAsync IRSA, ITeamService ITS, IEventServiceAsync IESA) 
         {
             ints = new List<SelectListItem>();
@@ -42,13 +45,15 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
             eventService = IESA;
         }
 
-        public async Task OnGet(DateTime date, int hour, int Court)
+        public async Task OnGet(int date, int hour, int Court, int year, int month)
         {
-           
-            DateTime t = new DateTime(date.Year,date.Month,date.Day,hour,0,0);
+
+            DateTime t = new DateTime(year, month, date, hour, 0, 0);
             b = new Booking(1, t, t.AddHours(1), Court, null, null);
             await LoadList();
         }
+ 
+
         async Task LoadList()
         {
             ints.Add(new SelectListItem("vælg spiller","-1"));
