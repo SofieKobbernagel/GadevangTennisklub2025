@@ -56,7 +56,7 @@ namespace GadevangTennisklub2025.Services
 
                     // Add parameters to prevent SQL injection
 
-                    //command.Parameters.AddWithValue("@Team_Id", team.Id);
+                    command.Parameters.AddWithValue("@Team_Id", team.Id);
                     command.Parameters.AddWithValue("@MemberType", team.MembershipType);
                     command.Parameters.AddWithValue("@Name", team.Name);
                     command.Parameters.AddWithValue("@Length", team.Length.ToString(CultureInfo.InvariantCulture));
