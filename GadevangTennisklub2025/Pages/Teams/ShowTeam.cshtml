@@ -5,72 +5,101 @@
     ViewData["Title"] = "Klubbens Hold";
 }
 
-<h3>Klubbens Hold</h3>
+<h3 class="mb-4">Klubbens Hold</h3>
 
-@if(Model.isAdmin==true){
-<btn>
-    <a class="nav-link text-dark bg-primary" asp-page="CreateTeam">Opret nyt Hold</a>
-</btn>
+<!-- Search Form -->
+<form method="get" class="mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-6">
+            <label asp-for="Search" class="form-label">Søg</label>
+            <input asp-for="Search" class="form-control" placeholder="Indtast søgeord..." />
+        </div>
+
+        <div class="col-md-4">
+            <label for="SearchType" class="form-label">Søg efter</label>
+            <select class="form-select" name="SearchType" id="SearchType">
+                <option value="ID" selected="@(Model.SearchType == "ID")">ID</option>
+                <option value="Name" selected="@(Model.SearchType == "Name")">Navn</option>
+                <option value="MemberType" selected="@(Model.SearchType == "MemberType")">Medlemstype</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">🔍 Søg</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.SearchList != null)
+{
+    <p class="text-success">Viser søgeresultater for: <strong>@Model.Search</strong></p>
 }
+
+@if (Model.isAdmin)
+{
+    <a class="btn btn-success mb-3" asp-page="CreateTeam">➕ Opret nyt Hold</a>
+}
+
 @if (Model.isLoggedIn)
 {
-    <form style="display: inline;" asp-page-handler="AttendTeam" asp-route-ATTENDID="0">
-        <button type="submit" style="width: 24px; height: 24px;">Tilmeld Hold</button>
-    </form>
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        <form asp-page-handler="AttendTeam" asp-route-ATTENDID="0" class="d-inline">
+            <button type="submit" class="btn btn-outline-success">Tilmeld Hold</button>
+        </form>
 
-    <btn>
-        <a class="nav-link text-dark bg-primary" asp-page="AttendedTeam">tildmeldte Hold</a>
-    </btn>
+        <a class="btn btn-outline-primary" asp-page="AttendedTeam">Tilmeldte Hold</a>
+    </div>
 }
-<table class="table">
+
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Titel</th>
-            <th>pladser tilbage</th>
-            <th>Medlemskabstype</th>
-            <th>Coach</th>            
+            <th>Pladser tilbage</th>
+            <th>Medlemstype</th>
+            <th>Coach</th>
             <th>Beskrivelse</th>
             <th>Dag</th>
             <th>Tidsrum</th>
-            @if (Model.isAdmin == true)
+            @if (Model.isAdmin)
             {
-                <th>knapper</th>
+                <th>Rediger</th>
             }
         </tr>
     </thead>
     <tbody>
         @{
-            var teams = Model.ListOfTeams;
-        }
-        @if (teams != null)
-        {
-                @foreach (Team item in teams)
-                {
-                    <tr>
-                        <td>@item.Name</td>
-                        <td>@(item.AttendeeRange[1] - (item.Attendees==null?0:item.Attendees.Count))</td>
-                        <td>@item.MembershipType</td>
-                        <td>@(item.Trainer==null?"ingen træner":item.Trainer.Name)</td>
-                        <td>@item.Description</td>
-                        <td>@item.week[item.DayOfWeek]</td>
-                        <td>@item.TimeOfDay - @(item.TimeOfDay.Add(TimeSpan.FromHours(item.Length)))</td>
-                        @if (Model.isAdmin == true)
-                        {
-                            <td>
-                                <form style="display: inline;" asp-page-handler="Edit" asp-route-ID="@item.Id">
-                                    <input type="image" src="@Url.Content("~/Images/buttons/edit-button-icon.png")" style="width: 24px; height: 24px;" />
-                                </form>
-                            </td>
-                        }
-                    </tr>
-                }
-            }
-        
-        else
-        {
-            <tr><td colspan="6">Ingen hold tilgængelige.</td></tr>
+            var sList = Model.SearchList;
+            var teams = sList?.Count > 0 ? sList : Model.ListOfTeams;
         }
 
+        @if (teams != null && teams.Any())
+        {
+            foreach (var item in teams)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@(item.AttendeeRange[1] - (item.Attendees?.Count ?? 0))</td>
+                    <td>@item.MembershipType</td>
+                    <td>@(item.Trainer?.Name ?? "Ingen træner")</td>
+                    <td>@item.Description</td>
+                    <td>@item.week[item.DayOfWeek]</td>
+                    <td>@item.TimeOfDay - @(item.TimeOfDay.Add(TimeSpan.FromHours(item.Length)))</td>
+                    @if (Model.isAdmin)
+                    {
+                        <td>
+                            <form asp-page-handler="Edit" asp-route-ID="@item.Id" class="d-inline">
+                                <input type="image" src="~/Images/buttons/edit-button-icon.png" style="width: 24px; height: 24px;" alt="Edit" />
+                            </form>
+                        </td>
+                    }
+                </tr>
+            }
+        }
+        else
+        {
+            <tr><td colspan="8" class="text-center text-muted">Ingen hold fundet.</td></tr>
+        }
     </tbody>
 </table>
 
@@ -78,9 +107,7 @@
     <script>
         @if (TempData["SuccessMessage"] != null)
         {
-            <text>
-                    alert('@TempData["SuccessMessage"]');
-            </text>
+            <text>alert('@TempData["SuccessMessage"]');</text>
         }
     </script>
 }
