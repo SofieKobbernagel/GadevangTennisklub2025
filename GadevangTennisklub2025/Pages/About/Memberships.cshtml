@@ -1,0 +1,107 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.About.MembershipsModel
+@{
+}
+<style>
+    .background-wrapper {
+        background-image: url('/Images/Baggrund.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        padding: 2rem;
+    }
+
+    .banner-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .white-box {
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 2rem;
+        border-radius: 12px;
+        max-width: 900px;
+        margin: 0 auto;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+<div class="background-wrapper">
+    <img src="/Images/GadevangTennisBanner.png" class="banner-img" alt="Gadevang Tennis Banner" />
+
+    <div class="white-box">
+        <h5>Medlemskontingenter</h5>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Kategori</th>
+                    <th>Kontingent</th>
+                    <th>Rettigheder</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var membership in Model.Memberships)
+                {
+                    <tr>
+                        <td>@membership.MembershipType</td>
+                        <td>Kr. @membership.Price,-</td>
+                        <td>@membership.Rights</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <br />
+        <h5>Sådan løser du dit medlemskab hvis du er medlem:</h5>
+
+        <p>
+            - Har du et gyldigt Dankort sker det helt automatisk den 14. marts. (Mail udsendes 7 dage inden). <br />
+            - Har du fået nyt Dankort skal du logge ind og gå i "Mine Tilmeldinger" og ændre oplysningerne. <br />
+        </p>
+        <h5>Sådan løser du dit medlemskab hvis du er nyt medlem:</h5>
+        <p>
+            Opret din profil ved at <a asp-page="/Member/CreateMember" target="_blank">klikke her</a>. <br />
+            <a asp-page="/Member/Login" target="_blank">Log ind.</a> <br />
+            Gå til Kontingent/Banebooking og klik på "Betal her" og vælg det medlemskab du ønsker at løse. <br />
+            Løs dit medlemskab via Internet og Dankort.  <br />
+            Herefter har du nu adgang til banebookingen og er medlem af klubben.  <br />
+            Du kan booke baner. <br />
+        </p>
+        <h5>Sådan løser du dit medlemskab hvis du ikke har en PC </h5>
+        <p>
+            Klubben opretter din profil i fællesskab med dig og dit password <br />
+            Du kan betale via bankoverførsel  eller kontant. <br />
+            <br />
+            Betaling via bankoverførsel:  <br />
+            Lokalbanken, reg. nr.: 6300 - konto nr.: 1522339  <br />
+            VIGTIGT: Noter navn + adresse i beskedfeltet ved indbetaling  <br />
+            og send en mail til mailto:info@gadevangtennisklub.dk at du har overført penge til dækning af medlemskab.  <br />
+            <br />
+            <br />
+            Klubben aktiverer dit medlemsskab.  <br />
+            Du har nu adgang til banebookingen og er medlem af klubben.  <br />
+        </p>
+        <h5>Evt.</h5>
+        <p>
+            Når du har oprettet din profil skal du ikke ændre den med mindre du har rettelser til den.<br />
+            Du har dit eget personlige password hvilket er lettere at huske når du skal booke bane. <br />
+            Ved at klikke på "Mine tilmeldinger" under login boksen i venstre menu, kan du altid se alle dine bookinger, Hold- og Eventtilmeldinger. <br />
+            Hvis du har glemt dit password sendes den automatisk til din mailboks hvis du beder om den. KLIK PÅ ”glemt password” under login boksen i venstre menu. <br />
+            <br />
+            Opstår der problemer eller spørgsmål, så skriv en mail til mailto:info@gadevangtennisklub.dk <br />
+
+            <br />
+            <br />
+            <br />
+
+            De allerbedste tennishilsner, <br />
+            <br />
+
+
+            Bestyrelsen
+        </p>
+
+    </div>

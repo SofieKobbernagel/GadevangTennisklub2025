@@ -2,7 +2,14 @@
 @model GadevangTennisklub2025.Pages.Member.GetAllMembersModel
 @{
 }
+
 <form method="get">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
     <p>
         Search: <input type="text" asp-for="@Model.FilterCriteria" onchange="this.form.submit()" />
         <div class="form-group">
