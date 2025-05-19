@@ -15,23 +15,90 @@
     }
 
 </style>
+@{
+    Model.test="";
+}
 @if (HttpContext.Session.GetString("Member_Id") != null && (int.Parse(HttpContext.Session.GetString("Member_Id")) == Model.Post.MemberId || bool.Parse(HttpContext.Session.GetString("IsAdmin"))))
 {
-        <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="@Model.test" class="control-label" hidden></label>
+            <input asp-for="@Model.test" class="form-control" hidden />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="@Model.Post.Title" class="control-label"></label>
+            <input asp-for="@Model.Post.Title" class="form-control" />
+            <span asp-validation-for="Post.Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Post.Content" class="control-label"></label>
+            <input asp-for="@Model.Post.Content" class="form-control" />
+            <span asp-validation-for="@Model.Post.Content" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="slet Post" class="btn btn-primary" asp-page-handler="Delete"/>
+            <input type="submit" value="opdater Post" class="btn btn-primary" asp-page-handler="Update"/>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Post.Id" class="control-label" hidden></label>
+            <input asp-for="@Model.Post.Id" class="form-control" hidden/>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Post.MemberId" class="control-label" hidden></label>
+            <input asp-for="@Model.Post.MemberId" class="form-control" hidden/>
+        </div>
+
+    </form>
+
+}
+else
+{
+    <h1>@Model.Post.Title</h1>
+    <h2> indlæg af @Model.memberService.GetMemberById(Model.Post.MemberId).Result.Name</h2>
+    <p>@Model.Post.Content</p>
+    <div class="form-group">
+        <label asp-for="@Model.Post.Id" class="control-label" hidden></label>
+        <input asp-for="@Model.Post.Id" class="form-control" hidden />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Post.MemberId" class="control-label" hidden></label>
+        <input asp-for="@Model.Post.MemberId" class="form-control" hidden />
+    </div>
+
+}
+@if (HttpContext.Session.GetString("Member_Id") != null)
+{
+    <div class="white-box">
+        <form method="post">
+            <div class="form-group">
+                 @{
+                     Model.test = "virk for pokker";
+                }
+                 <label asp-for="@Model.test" class="control-label" hidden></label>
+                <input asp-for="@Model.test" class="form-control" hidden/>  
+            </div>
 
             <div class="form-group">
-                <label asp-for="@Model.Post.Title" class="control-label"></label>
-                <input asp-for="@Model.Post.Title" class="form-control" />
-                <span asp-validation-for="Post.Title" class="text-danger"></span>
+                <label asp-for="@Model.MakeComment.CommentContent" class="control-label" ></label>
+                <input asp-for="@Model.MakeComment.CommentContent" class="form-control"  />
+                <span asp-validation-for="@Model.MakeComment.CommentContent" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.Post.Content" class="control-label"></label>
-                <input asp-for="@Model.Post.Content" class="form-control" />
-                <span asp-validation-for="@Model.Post.Content" class="text-danger"></span>
+                <input type="submit" value="lav Kommentar" class="btn btn-primary" asp-page-handler="Comment"/>
+            </div>
+
+
+
+            <div class="form-group">
+                <label asp-for="@Model.Post.Title" class="control-label" hidden></label>
+                <input asp-for="@Model.Post.Title" class="form-control" hidden/>
+                <span asp-validation-for="Post.Title" class="text-danger" hidden></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="slet Post" class="btn btn-primary" asp-page-handler="Delete"/>
-                <input type="submit" value="opdater Post" class="btn btn-primary" asp-page-handler="Update"/>
+                <label asp-for="@Model.Post.Content" class="control-label" hidden></label>
+                <input asp-for="@Model.Post.Content" class="form-control" hidden/>
+                <span asp-validation-for="@Model.Post.Content" class="text-danger" hidden></span>
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Post.Id" class="control-label" hidden></label>
@@ -41,70 +108,44 @@
                 <label asp-for="@Model.Post.MemberId" class="control-label" hidden></label>
                 <input asp-for="@Model.Post.MemberId" class="form-control" hidden/>
             </div>
+
         </form>
 
+    </div>
+
 }
-else
+@foreach (Comment comment in Model.PostComments)
 {
-        <h1>@Model.Post.Title</h1>
-    <h2> indlæg af @Model.memberService.GetMemberById(Model.Post.MemberId).Result.Name</h2>
-        <p>@Model.Post.Content</p>
-        <div class="form-group">
-            <label asp-for="@Model.Post.Id" class="control-label" hidden></label>
-            <input asp-for="@Model.Post.Id" class="form-control" hidden />
-        </div>
-        <div class="form-group">
-            <label asp-for="@Model.Post.MemberId" class="control-label" hidden></label>
-            <input asp-for="@Model.Post.MemberId" class="form-control" hidden />
+    if (HttpContext.Session.GetString("Member_Id") != null && (int.Parse(HttpContext.Session.GetString("Member_Id")) == comment.MemberId || bool.Parse(HttpContext.Session.GetString("IsAdmin"))))
+    {
+        Model.test=comment.CommentContent;
+        <form method="post" asp-route-id="@comment.Id">
+            <div class="white-box">
+                <div class="form-group">
+                    <h2> Kommentar fra @Model.memberService.GetMemberById(comment.MemberId).Result.Name</h2>
+                    <label asp-for="@comment.CommentContent" class="control-label" ></label>
+                    <input asp-for="@Model.test" class="form-control"  />
+                    <span asp-validation-for="@comment.CommentContent" class="text-danger"></span> 
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="slet Kommentar" class="btn btn-primary" asp-page-handler="DeleteComment" asp-route-id="@comment.Id" />
+                    <input type="submit" value="opdater Kommentar" class="btn btn-primary" asp-page-handler="UpdateComment" asp-route-id="@comment.Id" asp-route-text="@Model.test"/>
+                </div>
+            </div>
+        </form>
+      
+    }
+    else
+    {
+        <div class="white-box">
+            <h2> Kommentar fra @Model.memberService.GetMemberById(comment.MemberId).Result.Name</h2>
+            <p>@(comment.CommentContent)</p>
         </div>
     
-}
-@if (HttpContext.Session.GetString("Member_Id") != null)
-{
-                    <div class="white-box">
-                        <form method="post">
-                            <div class="form-group">
-                                <label asp-for="@Model.MakeComment.CommentContent" class="control-label" ></label>
-                                <input asp-for="@Model.MakeComment.CommentContent" class="form-control"  />
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" value="lav Kommentar" class="btn btn-primary" asp-page-handler="Comment"/>
-                            </div>
-                                 
+    }
 
-                <div class="form-group">
-                    <label asp-for="@Model.Post.Title" class="control-label" hidden></label>
-                        <input asp-for="@Model.Post.Title" class="form-control" hidden/>
-                    <span asp-validation-for="Post.Title" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="@Model.Post.Content" class="control-label" hidden></label>
-                        <input asp-for="@Model.Post.Content" class="form-control" hidden/>
-                    <span asp-validation-for="@Model.Post.Content" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="@Model.Post.Id" class="control-label" hidden></label>
-                    <input asp-for="@Model.Post.Id" class="form-control" hidden/>
-                </div>
-                <div class="form-group">
-                    <label asp-for="@Model.Post.MemberId" class="control-label" hidden></label>
-                    <input asp-for="@Model.Post.MemberId" class="form-control" hidden/>
-                </div>
-           
-                        </form>
-
-                    </div>
-
-}
-    @foreach (Comment comment in Model.commentService.GetCommentsForPost(Model.Post.Id).Result)
-    {
-                        <div class="white-box">
-                             <h2> Kommentar fra @Model.memberService.GetMemberById(comment.MemberId).Result.Name</h2>
-                             <p>@(comment.CommentContent)</p>
-
-                        </div>
-
-    } 
+  
+} 
 
 
 
