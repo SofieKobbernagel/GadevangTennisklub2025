@@ -88,7 +88,7 @@ namespace GadevangTennisklub2025.Pages.Teams
             
 
             var updatedTeam = new Team(Id, Name, MembershipType, selectedCoach, DayOfWeek, TimeOfDay, Length, attendeeRange, attendees, Description);
-            await _teamService.UpdateTeamAsync(updatedTeam, Id);
+            await _teamService.UpdateTeamAsync(updatedTeam);
 
             return RedirectToPage("ShowTeam");
         }

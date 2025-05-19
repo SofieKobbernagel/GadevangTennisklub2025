@@ -332,7 +332,7 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        public async Task<bool> UpdateTeamAsync(Team team, int teamNum)
+        public async Task<bool> UpdateTeamAsync(Team team)
         {
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -354,7 +354,7 @@ namespace GadevangTennisklub2025.Services
                     command.Parameters.AddWithValue("@Description", team.Description);
 
                     RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
-                    await relationshipsServices.TeamCoachRelation(team.Id, team.Trainer.Coach_Id);
+                    await relationshipsServices.UpdateTeamCoachRelation(team.Id, team.Trainer.Coach_Id);
                     await connection.OpenAsync();
                     int rowsAffected = await command.ExecuteNonQueryAsync(); // Correct method for UPDATE
 

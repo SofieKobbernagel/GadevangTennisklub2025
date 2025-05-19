@@ -222,7 +222,34 @@ namespace GadevangTennisklub2025.Services
 
             }
         }
+        public async Task UpdateTeamCoachRelation(int TeamId, int CoachId)
+        {
+            using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("UPDATE RelTeamCoach SET Coach_Id = @Coach_Id WHERE Team_Id = @Team_Id;", con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Coach_Id", CoachId);
+                    cmd.Parameters.AddWithValue("@Team_Id", TeamId);
+                    await cmd.ExecuteNonQueryAsync();
+                    con.Close();
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine("Database error " + e.Message);
+                    throw e;
+                    //return false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("general error " + e.Message);
+                    throw e;
+                    //return false;
+                }
 
+            }
+        }
         public async Task RemoveTeamMemberRelation(int TeamId, int MemberId)
         {
             using (SqlConnection con = new SqlConnection(Secret.ConnectionString))
