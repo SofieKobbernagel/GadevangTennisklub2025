@@ -182,7 +182,7 @@ namespace GadevangTennisklub2025.Services
                         SqlCommand command = new SqlCommand(queryString, connection);
                         await command.Connection.OpenAsync();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        Thread.Sleep(50);
+                        //Thread.Sleep(50);
                         while (await reader.ReadAsync())
                         {
                             int teamID = reader.GetInt32("Team_Id");
@@ -290,7 +290,7 @@ namespace GadevangTennisklub2025.Services
                         SqlCommand command = new SqlCommand(queryString, connection);
                         await command.Connection.OpenAsync();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        Thread.Sleep(1000);
+                        //Thread.Sleep(1000);
                         while (await reader.ReadAsync())
                         {
 
