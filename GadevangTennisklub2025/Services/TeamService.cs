@@ -334,7 +334,6 @@ namespace GadevangTennisklub2025.Services
 
         public async Task<bool> UpdateTeamAsync(Team team, int teamNum)
         {
-            //string updateQuery = "UPDATE Hotel SET HotelName = @HotelName, HotelAddress = @HotelAddress WHERE HotelNr = @HotelNr";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -352,9 +351,10 @@ namespace GadevangTennisklub2025.Services
                     command.Parameters.AddWithValue("@DayOfWeek", team.DayOfWeek);
                     command.Parameters.AddWithValue("@MinMembers", team.AttendeeRange[0]);
                     command.Parameters.AddWithValue("@MaxMembers", team.AttendeeRange[1]);
-                    
                     command.Parameters.AddWithValue("@Description", team.Description);
 
+                    RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
+                    await relationshipsServices.TeamCoachRelation(team.Id, team.Trainer.Coach_Id);
                     await connection.OpenAsync();
                     int rowsAffected = await command.ExecuteNonQueryAsync(); // Correct method for UPDATE
 

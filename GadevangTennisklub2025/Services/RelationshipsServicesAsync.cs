@@ -200,7 +200,7 @@ namespace GadevangTennisklub2025.Services
             {
                 try
                 {
-                    SqlCommand cmd = new SqlCommand("INSERT INTO RelMemberTeam VALUES (@Member_Id,@Team_Id);", con);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO RelTeamCoach VALUES (@Team_Id, @Coach_Id);", con);
                     con.Open();
                     cmd.Parameters.AddWithValue("@Coach_Id", CoachId);
                     cmd.Parameters.AddWithValue("@Team_Id", TeamId);
