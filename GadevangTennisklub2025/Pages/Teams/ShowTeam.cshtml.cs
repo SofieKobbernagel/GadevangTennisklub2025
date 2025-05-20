@@ -43,6 +43,7 @@ namespace GadevangTennisklub2025.Pages.Teams
             {
                 Console.WriteLine($"Search triggered: Type={SearchType}, Value={Search}");
                 SearchList = await _teamService.Search(SearchType, Search);
+                
                 Console.WriteLine($"Search returned {SearchList?.Count ?? 0} results.");
             }
 
