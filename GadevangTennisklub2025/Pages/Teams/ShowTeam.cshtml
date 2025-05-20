@@ -10,25 +10,45 @@
 <!-- Search Form -->
 <form method="get" class="mb-4">
     <div class="row g-2 align-items-end">
+        <!-- Conditionally show input or dropdown -->
         <div class="col-md-6">
             <label asp-for="Search" class="form-label">Søg</label>
-            <input asp-for="Search" class="form-control" placeholder="Indtast søgeord..." />
+
+            @if (Model.SearchType == "MembershipType")
+            {
+                <select asp-for="Search" class="form-select">
+                    <option value="">-- Vælg medlemstype --</option>
+                    @foreach (var type in Model.MembershipTypes)
+                    {
+                        <option value="@type" selected="@(Model.Search == type)">
+                            @type
+                        </option>
+                    }
+                </select>
+            }
+            else
+            {
+                <input asp-for="Search" class="form-control" placeholder="Indtast søgeord..." />
+            }
         </div>
 
+        <!-- Search type dropdown -->
         <div class="col-md-4">
             <label for="SearchType" class="form-label">Søg efter</label>
-            <select class="form-select" name="SearchType" id="SearchType">
-                <option value="ID" selected="@(Model.SearchType == "ID")">ID</option>
+            <select class="form-select" name="SearchType" id="SearchType" onchange="this.form.submit()">
+                <option value="Id" selected="@(Model.SearchType == "Id")">ID</option>
                 <option value="Name" selected="@(Model.SearchType == "Name")">Navn</option>
-                <option value="MemberType" selected="@(Model.SearchType == "MemberType")">Medlemstype</option>
+                <option value="MembershipType" selected="@(Model.SearchType == "MembershipType")">Medlemstype</option>
             </select>
         </div>
 
+        <!-- Search button -->
         <div class="col-md-2">
             <button type="submit" class="btn btn-primary w-100">🔍 Søg</button>
         </div>
     </div>
 </form>
+
 
 @if (Model.SearchList != null)
 {
