@@ -404,75 +404,91 @@ namespace GadevangTennisklub2025.Services
         {
             var teams = new List<Team>();
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            if (SearchType == "name" || SearchType == "MembershipType")
             {
-                try
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    await connection.OpenAsync();
-
-                    string query = SearchType.ToLower() switch
+                    try
                     {
-                        "id" => "SELECT TOP 5 * FROM Team WHERE Team_Id LIKE @Search",
-                        "name" => "SELECT TOP 5 * FROM Team WHERE Name LIKE @Search",
-                        "membershiptype" => "SELECT TOP 5 * FROM Team WHERE MembershipType LIKE @Search",
-                        _ => throw new ArgumentException("Invalid search type")
-                    };
+                        await connection.OpenAsync();
 
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Search", $"%{Search}%");
-
-                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        string query = SearchType.ToLower() switch
                         {
-                            while (await reader.ReadAsync())
+                            "id" => "SELECT TOP 5 * FROM Team WHERE Team_Id LIKE @Search",
+                            "name" => "SELECT TOP 5 * FROM Team WHERE Name LIKE @Search",
+                            "membershiptype" => "SELECT TOP 5 * FROM Team WHERE MemberType LIKE @Search",
+                            _ => throw new ArgumentException("Invalid search type")
+                        };
+
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@Search", $"%{Search}%");
+
+                            using (SqlDataReader reader = await command.ExecuteReaderAsync())
                             {
-                                int tempId = Convert.ToInt32(reader["Team_Id"]);
-                                string tempName = Convert.ToString(reader["Name"]);
-                                string tempMembershipType = Convert.ToString(reader["MemberType"]);
-                                int tempDayOfWeek = Convert.ToInt32(reader["DayOfWeek"]);
-                                string timeStr = Convert.ToString(reader["TimeOfDay"]);
-                                TimeOnly tempTimeOfDay = TimeOnly.Parse(timeStr);
-                                double tempLength = Convert.ToDouble(reader["Length"]);
-                                int[] tempAttendeeRange =
-                                [
-                                    Convert.ToInt32(reader["MinMembers"]),
+                                while (await reader.ReadAsync())
+                                {
+                                    int tempId = Convert.ToInt32(reader["Team_Id"]);
+                                    string tempName = Convert.ToString(reader["Name"]);
+                                    string tempMembershipType = Convert.ToString(reader["MemberType"]);
+                                    int tempDayOfWeek = Convert.ToInt32(reader["DayOfWeek"]);
+                                    string timeStr = Convert.ToString(reader["TimeOfDay"]);
+                                    TimeOnly tempTimeOfDay = TimeOnly.Parse(timeStr);
+                                    double tempLength = Convert.ToDouble(reader["Length"]);
+                                    int[] tempAttendeeRange =
+                                    [
+                                        Convert.ToInt32(reader["MinMembers"]),
                             Convert.ToInt32(reader["MaxMembers"])
-                                ];
-                                string tempDescription = Convert.ToString(reader["Description"]);
+                                    ];
+                                    string tempDescription = Convert.ToString(reader["Description"]);
 
-                                // Load external data
-                                Coach trainer = await coachService.GetCoachByTeamIdAsync(tempId);
-                               // trainer= await coachService.getCoa
-                                List<Member> tempAttendees = await GetAttendeesAsync(tempId);
+                                    // Load external data
+                                    Coach trainer = await coachService.GetCoachByTeamIdAsync(tempId);
+                                    // trainer= await coachService.getCoa
+                                    List<Member> tempAttendees = await GetAttendeesAsync(tempId);
 
-                                var team = new Team(
-                                    tempId,
-                                    tempName,
-                                    tempMembershipType,
-                                    trainer,
-                                    tempDayOfWeek,
-                                    tempTimeOfDay,
-                                    tempLength,
-                                    tempAttendeeRange,
-                                    tempAttendees,
-                                    tempDescription
-                                );
+                                    var team = new Team(
+                                        tempId,
+                                        tempName,
+                                        tempMembershipType,
+                                        trainer,
+                                        tempDayOfWeek,
+                                        tempTimeOfDay,
+                                        tempLength,
+                                        tempAttendeeRange,
+                                        tempAttendees,
+                                        tempDescription
+                                    );
 
-                                teams.Add(team);
+                                    teams.Add(team);
+                                }
                             }
+
                         }
                     }
+                    catch (SqlException sqlEx)
+                    {
+                        Console.WriteLine("Database error: " + sqlEx.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("General error: " + ex.Message);
+                    }
                 }
-                catch (SqlException sqlEx)
-                {
-                    Console.WriteLine("Database error: " + sqlEx.Message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("General error: " + ex.Message);
+            }else if (SearchType == "Coach")
+            {
+                List<Team> t = await GetAllTeamsAsync();
+                
+                foreach (Team team in t) {
+                    Coach coach = await coachService.GetCoachByTeamIdAsync(team.Id);
+                    if (coach!=null && coach.Name == Search)
+                    {
+                        teams.Add(team);
+                    }
                 }
             }
-
+            
             return teams;
         }
 

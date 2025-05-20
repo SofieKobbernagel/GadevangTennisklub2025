@@ -1,52 +1,68 @@
 ﻿@page
+@using Models
 @model GadevangTennisklub2025.Pages.Teams.ShowTeamModel
 @{
-    ViewData["Title"] = "ShowTeam";
+    ViewData["Title"] = "Klubbens Hold";
 }
+
 <h3 class="mb-4">Klubbens Hold</h3>
 
 <!-- Search Form -->
 <form method="get" class="mb-4">
     <div class="row g-2 align-items-end">
-        <!-- Conditionally show input or dropdown -->
+
+        <!-- Dynamic Search Field -->
         <div class="col-md-6">
             <label asp-for="Search" class="form-label">Søg</label>
 
-            @if (Model.SearchType == "MembershipType")
+            @switch (Model.SearchType)
             {
-                <select asp-for="Search" class="form-select">
-                    <option value="">-- Vælg medlemstype --</option>
-                    @foreach (var type in Model.MembershipTypes)
-                    {
-                        <option value="@type" selected="@(Model.Search == type)">
-                            @type
-                        </option>
-                    }
-                </select>
-            }
-            else
-            {
-                <input asp-for="Search" class="form-control" placeholder="Indtast søgeord..." />
+                case "MembershipType":
+                    <select asp-for="Search" class="form-select">
+                        <option value="">-- Vælg medlemstype --</option>
+                        @foreach (var type in Model.MembershipTypes)
+                        {
+                            <option value="@type" selected="@(Model.Search == type)">
+                                @type
+                            </option>
+                        }
+                    </select>
+                    break;
+
+                case "Coach":
+                    <select asp-for="Search" class="form-select">
+                        <option value="">-- Vælg træner --</option>
+                        @foreach (var coach in Model.Coaches)
+                        {
+                            <option value="@coach" selected="@(Model.Search == coach)">
+                                @coach
+                            </option>
+                        }
+                    </select>
+                    break;
+
+                default:
+                    <input asp-for="Search" class="form-control" placeholder="Indtast søgeord…" />
+                    break;
             }
         </div>
 
-        <!-- Search type dropdown -->
+        <!-- SearchType Selector -->
         <div class="col-md-4">
             <label for="SearchType" class="form-label">Søg efter</label>
             <select class="form-select" name="SearchType" id="SearchType" onchange="this.form.submit()">
-                <option value="Id" selected="@(Model.SearchType == "Id")">ID</option>
                 <option value="Name" selected="@(Model.SearchType == "Name")">Navn</option>
+                <option value="Coach" selected="@(Model.SearchType == "Coach")">Træner</option>
                 <option value="MembershipType" selected="@(Model.SearchType == "MembershipType")">Medlemstype</option>
             </select>
         </div>
 
-        <!-- Search button -->
+        <!-- Submit -->
         <div class="col-md-2">
             <button type="submit" class="btn btn-primary w-100">🔍 Søg</button>
         </div>
     </div>
 </form>
-
 
 @if (Model.SearchList != null)
 {
@@ -64,7 +80,6 @@
         <form asp-page-handler="AttendTeam" asp-route-ATTENDID="0" class="d-inline">
             <button type="submit" class="btn btn-outline-success">Tilmeld Hold</button>
         </form>
-
         <a class="btn btn-primary" asp-page="AttendedTeam">Tilmeldte Hold</a>
     </div>
 }
@@ -87,8 +102,9 @@
     </thead>
     <tbody>
         @{
-            var sList = Model.SearchList;
-            var teams = sList?.Count > 0 ? sList : Model.ListOfTeams;
+            var teams = Model.SearchList?.Count > 0
+            ? Model.SearchList
+            : Model.ListOfTeams;
         }
 
         @if (teams != null && teams.Any())
@@ -107,7 +123,8 @@
                     {
                         <td>
                             <form asp-page-handler="Edit" asp-route-ID="@item.Id" class="d-inline">
-                                <input type="image" src="~/Images/buttons/edit-button-icon.png" style="width: 24px; height: 24px;" alt="Edit" />
+                                <input type="image" src="~/Images/buttons/edit-button-icon.png"
+                                       style="width:24px;height:24px;" alt="Rediger" />
                             </form>
                         </td>
                     }
@@ -116,7 +133,9 @@
         }
         else
         {
-            <tr><td colspan="8" class="text-center text-muted">Ingen hold fundet.</td></tr>
+            <tr>
+                <td colspan="8" class="text-center text-muted">Ingen hold fundet.</td>
+            </tr>
         }
     </tbody>
 </table>
