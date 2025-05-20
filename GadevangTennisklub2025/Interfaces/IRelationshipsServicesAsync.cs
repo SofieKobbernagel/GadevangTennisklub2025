@@ -19,6 +19,8 @@ namespace GadevangTennisklub2025.Interfaces
         public Task<Event?> GetEventById(int event_Id);
         public Task<List<Member>> GetEventParticipants(int EventId);
         public Task SignOffEvent(int EventId, int MemberId);
+        public Task<string[]> GetBookingMembers(int EventId);
+        
         }
     }
 

@@ -1,0 +1,46 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.Gallery.ShowGalleryModel
+@{
+}
+<h1>Photo Gallery</h1>
+
+@if (Model.isAdmin == true)
+{
+    <a asp-page="/Gallery/UploadGallery">Upload Billede</a>
+}
+
+<div class="gallery">
+    @if(Model.Photos == null)
+    {
+        Page();
+    }
+    else
+    {
+        @foreach (var photo in Model.Photos)
+        {
+            <div class="photo">
+                <img src="@photo.FilePath" alt="@photo.UploadDate" />
+                <small>@photo.UploadDate.ToShortDateString()</small>
+                <p>@photo.Description</p>
+            </div>
+        }
+    }
+</div>
+
+<style>
+    .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .photo {
+        width: 200px;
+    }
+
+    .photo img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+</style>

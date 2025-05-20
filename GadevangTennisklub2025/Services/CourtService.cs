@@ -24,7 +24,7 @@ namespace GadevangTennisklub2025.Services
 
                 try
                 {
-                    command.Parameters.AddWithValue("@ID", tennisField.CourtId);
+                    //command.Parameters.AddWithValue("@ID", tennisField.CourtId);
                     command.Parameters.AddWithValue("@Name", tennisField.Name);
                     command.Parameters.AddWithValue("@Type", tennisField.Type);
 
