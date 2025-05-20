@@ -5,6 +5,7 @@ using GadevangTennisklub2025.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GadevangTennisklub2025.Services;
+
 namespace GadevangTennisklub2025.Pages.Teams
 {
     public class ShowTeamModel : PageModel
@@ -13,6 +14,7 @@ namespace GadevangTennisklub2025.Pages.Teams
 
         public bool isAdmin { get; set; } = false;
         public bool isLoggedIn { get; set; } = false;
+        public List<string> MembershipTypes { get; set; } = new();
 
         public List<Team> ListOfTeams { get; set; } = new();
 
@@ -29,28 +31,34 @@ namespace GadevangTennisklub2025.Pages.Teams
             _teamService = teamService;
         }
 
+
         public async Task<IActionResult> OnGetAsync()
         {
-            // Check session info
+            // Get user info
             if (HttpContext.Session.GetString("IsAdmin") is string admin && bool.TryParse(admin, out var isAdminParsed))
                 isAdmin = isAdminParsed;
 
             if (HttpContext.Session.GetString("Member_Id") != null)
                 isLoggedIn = true;
 
-            // Perform search if something is typed
+            // Get search results if any
             if (!string.IsNullOrWhiteSpace(Search))
             {
-                Console.WriteLine($"Search triggered: Type={SearchType}, Value={Search}");
-                SearchList = await _teamService.Search(SearchType, Search);
-                
-                Console.WriteLine($"Search returned {SearchList?.Count ?? 0} results.");
+                TeamService teamService = new TeamService(); // ideally inject this
+                SearchList = await teamService.Search(SearchType, Search);
             }
 
-            // Always load all teams as fallback
+            // Always get team list and membership types
             ListOfTeams = await _teamService.GetAllTeamsAsync();
+            MembershipTypes = ListOfTeams
+                .Select(t => t.MembershipType)
+                .Where(t => !string.IsNullOrWhiteSpace(t))
+                .Distinct()
+                .ToList();
             return Page();
         }
+
+
 
         public IActionResult OnPostEdit(int ID)
         {
