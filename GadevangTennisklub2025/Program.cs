@@ -18,6 +18,7 @@ builder.Services.AddSession();    //Nyt
 builder.Services.AddHttpContextAccessor();//Nyt
 builder.Services.AddScoped<IMembershipService, MembershipService>();
 builder.Services.AddScoped<ICoachService, CoachService>();
+builder.Services.AddScoped<IGalleryService, GalleryService>();
 //builder.Services.AddScoped<ITeamService, TeamService>();
 
 

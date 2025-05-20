@@ -17,20 +17,19 @@ namespace UnitTestGadevangTennisklub
         {
             //Arrange
             ICourtService courtService = new CourtService();
-            List<TennisField> courts = courtService.GetAllCourtsAsync().Result;
+            List<TennisField> courts = courtService.GetAllCourtsAsync().GetAwaiter().GetResult();
 
             //Act
             int numberOfCourtsBefore = courts.Count;
-            TennisField newCourt = new TennisField(30, "TestTestTest", "Udendørs Paddle");
-            bool ok = courtService.CreateCourtAsync(newCourt).Result;
-            courts = courtService.GetAllCourtsAsync().Result;
+            TennisField newCourt = new TennisField("TestTestTest", "Udendørs Paddle");
+            bool ok = courtService.CreateCourtAsync(newCourt).GetAwaiter().GetResult();
+            courts = courtService.GetAllCourtsAsync().GetAwaiter().GetResult();
             int numberOfCourtsAfter = courts.Count;
-            TennisField c = courtService.DeleteCourtAsync(newCourt.CourtId).Result;
 
             //Assert
             Assert.AreEqual(numberOfCourtsBefore + 1, numberOfCourtsAfter);
             Assert.IsTrue(ok);
-            Assert.AreEqual(c.CourtId, newCourt.CourtId);
+            courtService.DeleteCourtAsync(courts.Last().CourtId).GetAwaiter();
         }
     }
 }

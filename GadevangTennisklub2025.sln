@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GadevangTennisklub2025", "G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestGadevangTennisklub", "UnitTestGadevangTennisklub\UnitTestGadevangTennisklub.csproj", "{2AAEF751-C717-4A28-A866-2B6B0C6ABF03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventUnitTest", "EventUnitTest\EventUnitTest.csproj", "{0339B20A-0BD4-4010-8963-65921DF0DC51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventUnitTest", "EventUnitTest\EventUnitTest.csproj", "{0339B20A-0BD4-4010-8963-65921DF0DC51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
