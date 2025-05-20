@@ -442,6 +442,7 @@ namespace GadevangTennisklub2025.Services
 
                                 // Load external data
                                 Coach trainer = await coachService.GetCoachByTeamIdAsync(tempId);
+                               // trainer= await coachService.getCoa
                                 List<Member> tempAttendees = await GetAttendeesAsync(tempId);
 
                                 var team = new Team(
@@ -552,9 +553,7 @@ WHERE r.Team_Id = @TeamId";
             return attendees;
         }
 
-
-
-
+        
     }
 
 }
