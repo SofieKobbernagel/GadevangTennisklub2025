@@ -1,0 +1,21 @@
+﻿@page
+@model GadevangTennisklub2025.Pages.Gallery.UploadGalleryModel
+@{
+    ViewData["Title"] = "Upload Photo";
+}
+
+<h2>Upload et Photo</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div>
+        <label>Select Photo:</label>
+        <input type="file" asp-for="PhotoFile" />
+    </div>
+    <div>
+        <label>Description:</label>
+        <input type="text" asp-for="Description" />
+    </div>
+    <button type="submit">Upload</button>
+</form>
+
+<p>@Model.Message</p>

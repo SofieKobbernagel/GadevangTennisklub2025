@@ -1,0 +1,5 @@
+Import/Export som CSV
+
+Træner kobles på hold
+
+Man skal kunne se hvem der er booket.

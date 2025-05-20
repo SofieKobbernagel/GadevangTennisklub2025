@@ -9,6 +9,12 @@
         {
             
         }
+        public TennisField(string name, string type)
+        {
+            Name = name;
+            Type = type;
+        }
+
         public TennisField(int courtId, string type)
         {
             CourtId = courtId;

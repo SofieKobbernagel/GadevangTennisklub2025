@@ -40,7 +40,7 @@ namespace GadevangTennisklub2025.Models
         }
         public override string ToString()
         {
-            return $"id: {Id} \n MembershipType required: {MembershipType} \n Name: {Name} \n Trainer: {Trainer} \n timeslot   from: TimeSlot[0], to:TimeSlot[1] \n time of day start: {TimeOfDay}, end:  {TimeOfDay.AddHours(Length)}   Repeated every {week[DayOfWeek]} \n  Minimum Number of Attendees: {AttendeeRange[0]} ,  Max Number of Attendees: {AttendeeRange[1]}  \n  description: {Description} ";
+            return $"id: {Id} \n MembershipType required: {MembershipType} \n Name: {Name} \n Trainer: {Trainer.Name} \n timeslot   from: TimeSlot[0], to:TimeSlot[1] \n time of day start: {TimeOfDay}, end:  {TimeOfDay.AddHours(Length)}   Repeated every {week[DayOfWeek]} \n  Minimum Number of Attendees: {AttendeeRange[0]} ,  Max Number of Attendees: {AttendeeRange[1]}  \n  description: {Description} ";
         }
 
        
