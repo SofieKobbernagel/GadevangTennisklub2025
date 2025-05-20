@@ -42,18 +42,18 @@ namespace UnitTestGadevangTennisklub
                 "Seniorer", "Valby", "30303020", "2500", "Andet", "Slotsvej 4",
                 "hank.green.the3rd@gmail.com", "123", "København", "Ja");
 
-            updated.Member_Id = original.Member_Id;
+            updated.Member_Id = Mem.GetAllMembersAsync().Result.Last().Member_Id;
 
             // Act
-            Mem.UpdateMemberAsync(updated, original.Member_Id).GetAwaiter().GetResult();
+            Mem.UpdateMemberAsync(updated, updated.Member_Id).GetAwaiter().GetResult();
 
-            Member result = Mem.GetMemberById(original.Member_Id).GetAwaiter().GetResult();
+            Member result = Mem.GetMemberById(updated.Member_Id).GetAwaiter().GetResult();
 
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual("Andet", result.Gender);
 
-            Mem.DeleteMemberAsync(original.Member_Id).GetAwaiter();
+            Mem.DeleteMemberAsync(updated.Member_Id).GetAwaiter();
         }
 
 
@@ -64,7 +64,7 @@ namespace UnitTestGadevangTennisklub
             Mem.CreateMemberAsync(mem).GetAwaiter().GetResult();
             Member validMember = Mem.VerifyMember("Hank Green","123");
             Assert.IsNotNull(validMember);
-            Mem.DeleteMemberAsync(mem.Member_Id).GetAwaiter();
+            Mem.DeleteMemberAsync(Mem.GetAllMembersAsync().Result.Last().Member_Id).GetAwaiter();
         }
 
         [TestMethod]
@@ -90,13 +90,12 @@ namespace UnitTestGadevangTennisklub
                                  "123", "København", "Ja");
 
             Mem.CreateMemberAsync(mem).GetAwaiter().GetResult();
+            mem.Member_Id = Mem.GetAllMembersAsync().Result.Last().Member_Id;
 
-            var created = Mem.VerifyMember("Hank Green", "123"); 
-
-            Member validMember = Mem.GetMemberById(created.Member_Id).GetAwaiter().GetResult();
+            Member validMember = Mem.GetMemberById(mem.Member_Id).GetAwaiter().GetResult();
 
             Assert.IsNotNull(validMember);
-            Mem.DeleteMemberAsync(created.Member_Id).GetAwaiter();
+            Mem.DeleteMemberAsync(Mem.GetAllMembersAsync().Result.Last().Member_Id).GetAwaiter();
         }
 
 
@@ -107,6 +106,7 @@ namespace UnitTestGadevangTennisklub
             var mem = new Member("Hank Green", "Hank Green The Third", new DateOnly(1993, 06, 12), "Senior", "Valby", "30303020", "2500", "Mand", "Slotsvej 4", "hank.green.the3rd@gmail.com", "123", "København", "Ja");
        
             Mem.CreateMemberAsync(mem).GetAwaiter().GetResult();
+            mem.Member_Id = Mem.GetAllMembersAsync().Result.Last().Member_Id;
 
             Mem.DeleteMemberAsync(mem.Member_Id).GetAwaiter().GetResult();
 
@@ -128,7 +128,7 @@ namespace UnitTestGadevangTennisklub
             Mem.CreateMemberAsync(mem);
             bool isUniqe = Mem.IsUsernameUnique("Hank Green").Result;
             Assert.IsTrue(isUniqe);
-            Mem.DeleteMemberAsync(mem.Member_Id).GetAwaiter();
+            Mem.DeleteMemberAsync(Mem.GetAllMembersAsync().Result.Last().Member_Id).GetAwaiter();
         }
 
         [TestMethod]
@@ -146,7 +146,7 @@ namespace UnitTestGadevangTennisklub
 
             Assert.IsNotNull(match, "Member with ID 100 was not found after creation.");
             Assert.AreEqual("Hank Green", match.Username);
-            Mem.DeleteMemberAsync(mem.Member_Id).GetAwaiter();
+            Mem.DeleteMemberAsync(Mem.GetAllMembersAsync().Result.Last().Member_Id).GetAwaiter();
         }
 
 
