@@ -61,7 +61,7 @@
                     }
                     if (jj != 0)
                     {
-                        @switch (Model.BookingType[i+1][jj][z])
+                        @switch (Model.BookingType[i + 1][jj] [z])
                         {
                             case 0:
                                 <foreignObject x="@((i*Width+jj*Width/4).ToString(CultureInfo.InvariantCulture))%" y="@((z*Height+Height/4).ToString(CultureInfo.InvariantCulture))%" width="@(Width.ToString(CultureInfo.InvariantCulture))%" height="@(Height.ToString(CultureInfo.InvariantCulture))%">
@@ -73,7 +73,7 @@
                                 break;
                             case 1:
                                 <foreignObject x="@((i*Width+jj*Width/4).ToString(CultureInfo.InvariantCulture))%" y="@((z*Height+Height/4).ToString(CultureInfo.InvariantCulture))%" width="@((Width/7).ToString(CultureInfo.InvariantCulture))%" height="@(Height.ToString(CultureInfo.InvariantCulture))%">
-                                    <img src="https://gadevangtennisklub.dk/cms/images/user_delete.png" title="Bane Optaget" />
+                                    <img src="https://gadevangtennisklub.dk/cms/images/user_delete.png" title="Bane Optaget af @(Model.Players[i+1][jj][z][0]) og @(Model.Players[i+1][jj][z][1])" />
                                 </foreignObject>
                                 break;
                             case 2:
