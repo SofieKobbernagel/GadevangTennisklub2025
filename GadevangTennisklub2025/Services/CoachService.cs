@@ -245,7 +245,7 @@ namespace GadevangTennisklub2025.Services
                         command.Parameters.AddWithValue("@Team_Id", teamId);
                         await command.Connection.OpenAsync();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        Thread.Sleep(1000);
+                        //Thread.Sleep(1000);
                         while (await reader.ReadAsync())
                         {
                             string name = reader.GetString(reader.GetOrdinal("Name"));

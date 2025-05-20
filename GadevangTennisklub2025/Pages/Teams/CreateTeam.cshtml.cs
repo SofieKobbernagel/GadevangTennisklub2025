@@ -106,6 +106,7 @@ namespace GadevangTennisklub2025.Pages.Teams
             AttendeeRange[1] = MaxMembers;
             Team team = new Team(Id, Name, MembershipType,await _coachService.GetCoachByIdAsync(TrainerId), DayOfWeek, TimeOfDay, Length, AttendeeRange,Attendees, Description);
             await _teamService.CreateTeamAsync(team);
+            team=  _teamService.GetAllTeamsAsync().Result.Last();
             List<DateTime> Temp = await _bookingService.TeamCreation(team);
             
             if (Temp.Count!=0)

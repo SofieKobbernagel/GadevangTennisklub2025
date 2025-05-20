@@ -48,13 +48,13 @@ namespace GadevangTennisklub2025.Services
             {
                 try
                 {
-                    SqlCommand cmd = new SqlCommand("INSERT INTO Booking VALUES ( @Start, @End, @CourtId, @TeamId ,NULL );", con);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO Booking VALUES ( @Start, @End, @CourtId, @Team_Id ,NULL );", con);
                     con.Open();
                     cmd.Parameters.AddWithValue("@ID", b.Id);
                     cmd.Parameters.AddWithValue("@Start", b.Start);
                     cmd.Parameters.AddWithValue("@End", b.End);
                     cmd.Parameters.AddWithValue("@CourtId", b.Court_Id);
-                    cmd.Parameters.AddWithValue("@TeamId", TeamId);
+                    cmd.Parameters.AddWithValue("@Team_Id", TeamId);
                     //cmd.Parameters.AddWithValue("@EventId", null);
                     await cmd.ExecuteNonQueryAsync();
                     con.Close();

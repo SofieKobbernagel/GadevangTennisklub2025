@@ -65,7 +65,7 @@
                         {
                             case 0:
                                 <foreignObject x="@((i*Width+jj*Width/4).ToString(CultureInfo.InvariantCulture))%" y="@((z*Height+Height/4).ToString(CultureInfo.InvariantCulture))%" width="@(Width.ToString(CultureInfo.InvariantCulture))%" height="@(Height.ToString(CultureInfo.InvariantCulture))%">
-                                    <a asp-page="BookingSide" asp-route-date="@(td)" asp-route-hour="@(z+7)" asp-route-Court="@jj">
+                                    <a asp-page="BookingSide" asp-route-date="@(td.Day)" asp-route-year="@(td.Year)" asp-route-month="@(td.Month)" asp-route-hour="@(z+7)" asp-route-Court="@jj">
                                         <img src="https://gadevangtennisklub.dk/cms/images/user_add.png" title="Book Bane" />
                                     </a>
 

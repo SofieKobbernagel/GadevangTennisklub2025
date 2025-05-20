@@ -76,7 +76,7 @@ namespace GadevangTennisklub2025.Services
                     while (await reader.ReadAsync())
                     {
                         int CommentId = reader.GetInt32("CommentId");
-                        string Content = reader.GetString("Content");
+                        string Content = reader.GetString("CommentContent");
                         int MemberId = reader.GetInt32("MemberId");
                         int BlogId = reader.GetInt32("BlogId");
 
@@ -157,9 +157,10 @@ namespace GadevangTennisklub2025.Services
 
                 try
                 {
-                    SqlCommand com = new SqlCommand("UPDATE Comment set CommentContent= @Content WHERE BlogId=@ID;", con);
+                    SqlCommand com = new SqlCommand("UPDATE Comment set CommentContent= @Content WHERE CommentId=@ID;", con);
                     await com.Connection.OpenAsync();
                     com.Parameters.AddWithValue("@Content", Co.CommentContent);
+                    com.Parameters.AddWithValue("@ID", Co.Id);
                     await com.ExecuteNonQueryAsync();
 
                 }

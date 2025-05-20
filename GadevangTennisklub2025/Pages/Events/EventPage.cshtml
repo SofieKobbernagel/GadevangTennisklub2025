@@ -54,14 +54,14 @@
     <br>
     @if (HttpContext.Session.GetString("Member_Id") != null)
     {
-        if (Model.MemberCount < Model.e.Maximum)
+        if (Model.MemberCount < Model.e.Maximum && Model.e.Date>DateTime.Now)
         {
             <div class="formgroup">
                 <input type="submit" value="Tilmeld event" class="btn btn-primary" />
             </div>
         } else
         {
-            <p style="color:red">Eventet er fuldt</p>
+            <p style="color:red">Eventet er ikke tilgængeligt</p>
 
         }
         

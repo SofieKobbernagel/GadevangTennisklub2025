@@ -10,7 +10,7 @@ namespace UnitTestGadevangTennisklub
     [TestClass]
     public sealed class EventTestClass
     {
-        Event ev = new Event(10,"tennis",new DateTime(2025,5,12,14,0,0),"spil for pokker", 10);
+        Event ev = new Event(10,"tennis",new DateTime(2025,5,12,14,0,0),"spil for pokker",10);
         [TestMethod]
         public void MakeEmptyEventDates() 
         {

@@ -17,7 +17,10 @@ namespace GadevangTennisklub2025.Pages.Blog
         public string Member;
         [BindProperty]
         public Comment MakeComment { get; set; }
+        [BindProperty]
         public List<Comment> PostComments { get; set; }
+        [BindProperty]
+        public string test { get; set; }
         public BlogPostModel(IBlogPostServicesAsync IBPSA, IMemberService IMS, ICommentServiceAsync ICSA) 
         {
             blogPostServicesAsync = IBPSA;
@@ -27,28 +30,48 @@ namespace GadevangTennisklub2025.Pages.Blog
         }
         public async Task OnGet(int BlogId)
         {
-            Post = await blogPostServicesAsync.GetBlogPost(BlogId);
-            Member= memberService.GetMemberById(Post.MemberId).Result.Name;
-            PostComments = await commentService.GetCommentsForPost(BlogId);
+           
+            Post =  blogPostServicesAsync.GetBlogPost(BlogId).Result;
+            Models.Member t=  memberService.GetMemberById(Post.MemberId).Result;
+            Member = t.Name;
+            PostComments =  commentService.GetCommentsForPost(BlogId).Result;
 
         }
 
         public async Task<IActionResult> OnPostDelete() 
         {
-            blogPostServicesAsync.DeleteBlogPost(Post);
+            await  blogPostServicesAsync.DeleteBlogPost(Post);
             return RedirectToPage("BlogSide");
         }
         public async Task<IActionResult> OnpostUpdate() 
         {
-            blogPostServicesAsync.UpdateBlogPost(Post);
+            await blogPostServicesAsync.UpdateBlogPost(Post);
             return RedirectToPage("BlogSide");
         }
 
         public async Task<IActionResult> OnPostComment() 
         {
+            test = "";
+            if (!ModelState.IsValid) 
+            {
+                OnGet(Post.Id);
+                return Page();
+            }
             await commentService.CreateComment(new Comment(0,Post.Id,int.Parse(HttpContext.Session.GetString("Member_Id")),MakeComment.CommentContent));
-            OnGet(Post.Id);
-            return Page();
+            //OnGet(Post.Id);
+            return RedirectToPage("BlogSide");
+        }
+        public async Task<IActionResult> OnPostDeleteComment(int id)
+        {
+            await commentService.DeleteComment(await commentService.GetComment(id));
+            return RedirectToPage("BlogSide");
+        }
+        public async Task<IActionResult> OnpostUpdateComment(int id, string text)
+        {
+           
+            await commentService.UpdateComment(PostComments.Find(i=> i.Id==id));
+            return RedirectToPage("BlogSide");
         }
     }
+
 }

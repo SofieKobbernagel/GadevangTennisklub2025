@@ -15,7 +15,7 @@ namespace GadevangTennisklub2025.Services
         private string queryString = "SELECT  Team_Id, MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers, Description FROM Team";
         private string updateQuery = "UPDATE Team SET  MemberType = @MemberType, Name = @Name, Length = @Length, TimeOfDay = @TimeOfDay, DayOfWeek = @DayOfWeek, MinMembers = @MinMembers, MaxMembers = @MaxMembers, Description = @Description WHERE Team_Id = @Team_Id";
         private string deleteQuery = "DELETE FROM Team WHERE Name=@Name;";
-        private string createQuery = "INSERT INTO Team (  MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers,  Description)\r\nVALUES (  @MemberType, @Name, @Length, @TimeOfDay, @DayOfWeek, @MinMembers, @MaxMembers,  @Description);";
+        private string createQuery = "INSERT INTO Team ( MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers,  Description)\r\nVALUES (  @MemberType, @Name, @Length, @TimeOfDay, @DayOfWeek, @MinMembers, @MaxMembers,  @Description);";
 
         private string searchNrQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Description FROM Team WHERE Team_Id = @Team_Id";
         private string searchNameQuery = "SELECT  Team_Id,MemberType,Name,Length,TimeOfDay,DayOfWeek,MinMembers,MaxMembers,Description FROM Team WHERE Name = @Name";
@@ -56,8 +56,8 @@ namespace GadevangTennisklub2025.Services
 
                     // Add parameters to prevent SQL injection
 
-                    //command.Parameters.AddWithValue("@Team_Id", team.Id);
-                    command.Parameters.AddWithValue("@MemberType", team.MembershipType);
+                    command.Parameters.AddWithValue("@Team_Id", team.Id);
+                    command.Parameters.AddWithValue("@MemberType", team.MembershipType);                  
                     command.Parameters.AddWithValue("@Name", team.Name);
                     command.Parameters.AddWithValue("@Length", team.Length.ToString(CultureInfo.InvariantCulture));
                     Console.WriteLine("TeamService/CreateTeam/ double length = " + team.Length + " , ,  string length = " + team.Length.ToString(CultureInfo.InvariantCulture));
@@ -67,6 +67,8 @@ namespace GadevangTennisklub2025.Services
                     command.Parameters.AddWithValue("@MaxMembers", team.AttendeeRange[1]);
                     command.Parameters.AddWithValue("@Description", team.Description);
 
+                    RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
+                    await relationshipsServices.TeamCoachRelation(team.Id, team.Trainer.Coach_Id);
                     await connection.OpenAsync();
                     int rowsAffected = await command.ExecuteNonQueryAsync(); // Correct method for UPDATE
 
@@ -182,7 +184,7 @@ namespace GadevangTennisklub2025.Services
                         SqlCommand command = new SqlCommand(queryString, connection);
                         await command.Connection.OpenAsync();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        Thread.Sleep(50);
+                        //Thread.Sleep(50);
                         while (await reader.ReadAsync())
                         {
                             int teamID = reader.GetInt32("Team_Id");
@@ -290,7 +292,7 @@ namespace GadevangTennisklub2025.Services
                         SqlCommand command = new SqlCommand(queryString, connection);
                         await command.Connection.OpenAsync();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        Thread.Sleep(1000);
+                        //Thread.Sleep(1000);
                         while (await reader.ReadAsync())
                         {
 
@@ -332,7 +334,7 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        public async Task<bool> UpdateTeamAsync(Team team, int teamNum)
+        public async Task<bool> UpdateTeamAsync(Team team)
         {
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -354,7 +356,7 @@ namespace GadevangTennisklub2025.Services
                     command.Parameters.AddWithValue("@Description", team.Description);
 
                     RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
-                    await relationshipsServices.TeamCoachRelation(team.Id, team.Trainer.Coach_Id);
+                    await relationshipsServices.UpdateTeamCoachRelation(team.Id, team.Trainer.Coach_Id);
                     await connection.OpenAsync();
                     int rowsAffected = await command.ExecuteNonQueryAsync(); // Correct method for UPDATE
 
@@ -398,10 +400,8 @@ namespace GadevangTennisklub2025.Services
             Console.WriteLine("TeamService/LeaveTeamAsync  just ran "+succes);
         }
 
-        public async Task<List<Team>> Search(Search SearchI)
+        public async Task<List<Team>> Search(string SearchType, string Search)
         {
-            string search = SearchI.SearchText;
-            string se_type = SearchI.SearchType;
             var teams = new List<Team>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -410,45 +410,54 @@ namespace GadevangTennisklub2025.Services
                 {
                     await connection.OpenAsync();
 
-                    string query;
-
-                    switch (se_type.ToLower())
+                    string query = SearchType.ToLower() switch
                     {
-                        case "number":
-                            query = "SELECT TOP 5 * FROM Team WHERE Team_Id LIKE @Search";
-                            break;
-                        case "name":
-                            query = "SELECT TOP 5 * FROM Team WHERE Name LIKE @Search";
-                            break;
-                        case "memberType":
-                            query = "SELECT TOP 5 * FROM Team WHERE MemberType LIKE @Search";
-                            break;
-                        default:
-                            throw new ArgumentException("Invalid search type");
-                    }
+                        "id" => "SELECT TOP 5 * FROM Team WHERE Team_Id LIKE @Search",
+                        "name" => "SELECT TOP 5 * FROM Team WHERE Name LIKE @Search",
+                        "membershiptype" => "SELECT TOP 5 * FROM Team WHERE MembershipType LIKE @Search",
+                        _ => throw new ArgumentException("Invalid search type")
+                    };
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@Search", $"%{search}%");
+                        command.Parameters.AddWithValue("@Search", $"%{Search}%");
 
                         using (SqlDataReader reader = await command.ExecuteReaderAsync())
                         {
                             while (await reader.ReadAsync())
                             {
-                                int TempId = reader.GetInt32("Team_Id");
-                                string TempName = reader.GetString("Name");
-                                string TempMembershipType = reader.GetString("MemberType");
-                                Coach trainer = await coachService.GetCoachByTeamIdAsync(TempId);
-                                int TempDayOfWeek = reader.GetInt32("DayOfWeek");
-                                TimeOnly TempTimeOfDay = TimeOnly.Parse(reader.GetString("TimeOfDay")); //ex. 14:30
-                                Double TempLength = Double.Parse(reader.GetString("Length"));
-                                int[] TempAttendeeRange =[reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers")];
-                                List<Member> TempAttendees = await GetAttendeesAsync(TempId);
-                                string TempDescription = reader.GetString("Description");
+                                int tempId = Convert.ToInt32(reader["Team_Id"]);
+                                string tempName = Convert.ToString(reader["Name"]);
+                                string tempMembershipType = Convert.ToString(reader["MemberType"]);
+                                int tempDayOfWeek = Convert.ToInt32(reader["DayOfWeek"]);
+                                string timeStr = Convert.ToString(reader["TimeOfDay"]);
+                                TimeOnly tempTimeOfDay = TimeOnly.Parse(timeStr);
+                                double tempLength = Convert.ToDouble(reader["Length"]);
+                                int[] tempAttendeeRange =
+                                [
+                                    Convert.ToInt32(reader["MinMembers"]),
+                            Convert.ToInt32(reader["MaxMembers"])
+                                ];
+                                string tempDescription = Convert.ToString(reader["Description"]);
 
-                                Team tem = new Team(TempId, TempName, TempMembershipType,trainer , TempDayOfWeek, TempTimeOfDay, TempLength, TempAttendeeRange, TempAttendees, TempDescription);
-                                
-                                teams.Add(tem);
+                                // Load external data
+                                Coach trainer = await coachService.GetCoachByTeamIdAsync(tempId);
+                                List<Member> tempAttendees = await GetAttendeesAsync(tempId);
+
+                                var team = new Team(
+                                    tempId,
+                                    tempName,
+                                    tempMembershipType,
+                                    trainer,
+                                    tempDayOfWeek,
+                                    tempTimeOfDay,
+                                    tempLength,
+                                    tempAttendeeRange,
+                                    tempAttendees,
+                                    tempDescription
+                                );
+
+                                teams.Add(team);
                             }
                         }
                     }
@@ -465,6 +474,7 @@ namespace GadevangTennisklub2025.Services
 
             return teams;
         }
+
 
         public async Task<List<Member>> GetAttendeesAsync(int teamId)
         {
