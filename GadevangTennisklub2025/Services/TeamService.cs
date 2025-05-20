@@ -405,7 +405,7 @@ namespace GadevangTennisklub2025.Services
             var teams = new List<Team>();
 
 
-            if (SearchType == "name" || SearchType == "MembershipType")
+            if (SearchType.ToLower() == "name" || SearchType.ToLower() == "membershiptype")
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -415,7 +415,7 @@ namespace GadevangTennisklub2025.Services
 
                         string query = SearchType.ToLower() switch
                         {
-                            "id" => "SELECT TOP 5 * FROM Team WHERE Team_Id LIKE @Search",
+                            
                             "name" => "SELECT TOP 5 * FROM Team WHERE Name LIKE @Search",
                             "membershiptype" => "SELECT TOP 5 * FROM Team WHERE MemberType LIKE @Search",
                             _ => throw new ArgumentException("Invalid search type")
