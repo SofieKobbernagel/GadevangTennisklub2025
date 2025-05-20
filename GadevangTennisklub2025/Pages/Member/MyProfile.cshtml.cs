@@ -103,10 +103,22 @@ namespace GadevangTennisklub2025.Pages.Member
             return RedirectToPage("/Users/MyProfile");
         }
 
-        public async Task<IActionResult> OnPostRemoveFromEvent(int Event_ID) 
+        public async Task<IActionResult> OnPostDeleteBookingAsync()
         {
-            _relService.SignOffEvent(Event_ID, int.Parse(HttpContext.Session.GetString("Member_Id")));
-            return RedirectToPage("MyProfile");
+            return Page();
+        }
+
+        //public async Task<IActionResult> OnPostRemoveFromEvent() 
+        //{
+        //    //_relService.SignOffEvent(eventId, int.Parse(HttpContext.Session.GetString("Member_Id")));
+        //    return RedirectToPage("MyProfile");
+        //}
+        public async Task<IActionResult> OnPostRemoveFromEventAsync(int eventId)
+        {
+            int memberId = int.Parse(HttpContext.Session.GetString("Member_Id"));
+            await _relService.SignOffEvent(eventId, memberId);
+            TempData["SuccessMessage"] = "Du er nu afmeldt eventet.";
+            return RedirectToPage();
         }
 
     }

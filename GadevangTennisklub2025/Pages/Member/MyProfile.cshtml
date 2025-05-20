@@ -10,19 +10,7 @@
         @TempData["SuccessMessage"]
     </div>
 }
-<form method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label>Profil billede</label><br />
-        @if (!string.IsNullOrEmpty(Model.Member.ProfileImagePath))
-        {
-            <img src="@Model.Member.ProfileImagePath" width="150" height="150" />
-        }
-        else
-        {
-            <p>Intet profilbillede.</p>
-        }
-    </div>
-    <br />
+
 
     <h5>Dine Bookinger:</h5>
 
@@ -92,10 +80,15 @@
                         </td>
                      
                         <td>
-                            <form method="post" asp-page-handler="RemoveFromEvent" asp-route-Event_ID="@eventVM.EventId">
+                            <form method="post" >
                                 <input type="hidden" name="Event_Id" value="@eventVM.EventId" />
-                                <button type="submit" class="btn btn-danger btn-sm">Afmeld fra Event</button>
+                                <button type="submit" asp-page-handler="RemoveFromEvent" asp-route-eventId="@eventVM.EventId" class="btn btn-danger btn-sm">Afmeld fra Event</button>
                             </form>
+                            @* <form method="post" asp-page-handler="RemoveFromEvent">
+                                <input type="hidden" name="eventId" value="@eventVM.EventId" />
+                                <button type="submit" class="btn btn-danger btn-sm">Afmeld fra Event</button>
+                            </form> *@
+
                         </td>
                     </tr>
                 }
@@ -107,6 +100,18 @@
     <h5>Dine hold:</h5>
     <a class="btn btn-primary btn-sm" title="MyTeams"
        asp-page="/Teams/AttendedTeam" >Se de hold du er tilmeldt</a>
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Profil billede</label><br />
+        @if (!string.IsNullOrEmpty(Model.Member.ProfileImagePath))
+        {
+            <img src="@Model.Member.ProfileImagePath" width="150" height="150" />
+        }
+        else
+        {
+            <p>Intet profilbillede.</p>
+        }
+    </div>
 
     <br />
     <h5>Dine Brugeroplysninger:</h5>
