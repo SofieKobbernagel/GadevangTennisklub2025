@@ -12,13 +12,15 @@ namespace GadevangTennisklub2025.Pages.Member
         private readonly IWebHostEnvironment _environment;
         private readonly IRelationshipsServicesAsync _relService;
         private readonly ICourtService _courtService;
+        private readonly IBookingServiceAsync _bookingService;
 
-        public MyProfileModel(IMemberService memberService, IWebHostEnvironment environment, IRelationshipsServicesAsync relService, ICourtService courtService)
+        public MyProfileModel(IMemberService memberService, IWebHostEnvironment environment, IRelationshipsServicesAsync relService, ICourtService courtService, IBookingServiceAsync bookingService)
         {
             _memberService = memberService;
             _environment = environment;
             _relService = relService;
             _courtService = courtService;
+            _bookingService = bookingService;
         }
 
         [BindProperty]
@@ -103,16 +105,15 @@ namespace GadevangTennisklub2025.Pages.Member
             return RedirectToPage("/Users/MyProfile");
         }
 
-        public async Task<IActionResult> OnPostDeleteBookingAsync()
+        public async Task<IActionResult> OnPostDeleteBookingAsync(int booking_Id)
         {
-            return Page();
+            int memberId = int.Parse(HttpContext.Session.GetString("Member_Id"));
+            List<Booking> list = await _bookingService.GetBookingsByUser(memberId);
+            Booking bookingToDelete = list.Find(i=>i.Id == booking_Id);
+            await _bookingService.DeleteBooking(bookingToDelete);
+            return RedirectToPage();
         }
 
-        //public async Task<IActionResult> OnPostRemoveFromEvent() 
-        //{
-        //    //_relService.SignOffEvent(eventId, int.Parse(HttpContext.Session.GetString("Member_Id")));
-        //    return RedirectToPage("MyProfile");
-        //}
         public async Task<IActionResult> OnPostRemoveFromEventAsync(int eventId)
         {
             int memberId = int.Parse(HttpContext.Session.GetString("Member_Id"));
