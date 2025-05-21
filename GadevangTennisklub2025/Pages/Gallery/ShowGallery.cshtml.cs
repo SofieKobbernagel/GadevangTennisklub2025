@@ -40,5 +40,26 @@ namespace GadevangTennisklub2025.Pages.Gallery
             await _galleryService.DeletePhotoAsync(photoId, _env);
             return RedirectToPage(); // Refresh the gallery
         }
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> OnPostEditAsync(int photoId, string newDescription)
+        {
+            if (HttpContext.Session.GetString("IsAdmin") != "true")
+            {
+                return Unauthorized();
+            }
+
+            var success = await _galleryService.UpdatePhotoDescriptionAsync(photoId, newDescription);
+            if (success)
+            {
+                return RedirectToPage(); // Refresh the gallery after update
+            }
+            else
+            {
+                ModelState.AddModelError("", "An error occurred while updating the description.");
+                Photos = await _galleryService.GetAllPhotos(); // Reload photos
+                return Page();
+            }
+        }
     }
 }
