@@ -1,10 +1,16 @@
-﻿namespace GadevangTennisklub2025.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace GadevangTennisklub2025.Models
 {
     public class TennisField : IComparable<TennisField>
     {
         public int CourtId { get; set; }
+
+        [Display(Name = "Navn")]
         public string Name { get; set; }
+
         public string Type { get; set; }
+
         public TennisField()
         {
             

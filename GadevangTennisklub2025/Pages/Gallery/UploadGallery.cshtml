@@ -8,7 +8,7 @@
 
 <form method="post" enctype="multipart/form-data">
     <div>
-        <label>Select Photo:</label>
+        <label>Vælg Photo:</label>
         <input type="file" asp-for="PhotoFile" />
     </div>
     <div>
@@ -17,5 +17,5 @@
     </div>
     <button type="submit">Upload</button>
 </form>
-
+<a asp-page="/Gallery/ShowGallery">Tilbage til Galleri</a>
 <p>@Model.Message</p>

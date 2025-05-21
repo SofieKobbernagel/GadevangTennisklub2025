@@ -2,7 +2,7 @@
 @model GadevangTennisklub2025.Pages.Gallery.ShowGalleryModel
 @{
 }
-<h1>Photo Gallery</h1>
+<h1>Photo Galleri</h1>
 
 @if (Model.isAdmin == true)
 {
@@ -12,7 +12,7 @@
 <div class="gallery">
     @if (Model.Photos == null || !Model.Photos.Any())
     {
-        <p>There are no photos in the gallery yet.</p>
+        <p>Der er ingen billeder i galleriet endnu.</p>
     }
     else
     {
@@ -24,10 +24,18 @@
                 <p>@photo.Description</p>
                 @if (Model.isAdmin)
                 {
-                    <form asp-page-handler="Delete" method="post">
+                    <form asp-page-handler="Delete" method="post" onsubmit="return confirmAction()">
                         <input type="hidden" name="photoId" value="@photo.Id" />
-                        <button type="submit">Delete</button>
+                        <button type="submit">Slet</button>
                     </form>
+                    <button type="button" onclick="toggleDescriptionForm(@photo.Id)">Edit Description</button>
+                    <div id="descriptionForm-@photo.Id" style="display:none;">
+                        <form asp-page-handler="Edit" method="post">
+                            <input type="hidden" name="photoId" value="@photo.Id" />
+                            <textarea name="newDescription" rows="3">@photo.Description</textarea>
+                            <button type="submit">Opdater Beskrivelse</button>
+                        </form>
+                    </div>
                 }
             </div>
         }
@@ -89,6 +97,19 @@
 </style>
 
 <script>
+    function toggleDescriptionForm(photoId) {
+        var form = document.getElementById("descriptionForm-" + photoId);
+        if (form.style.display === "none" || form.style.display === "") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+
+    function confirmAction() {
+        return confirm("Vil du Fortsætte");
+        }
+
     function openLightbox(img) {
         var modal = document.getElementById("lightbox-modal");
         var modalImg = document.getElementById("lightbox-img");

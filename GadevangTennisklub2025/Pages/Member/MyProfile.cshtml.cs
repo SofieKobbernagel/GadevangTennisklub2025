@@ -12,13 +12,15 @@ namespace GadevangTennisklub2025.Pages.Member
         private readonly IWebHostEnvironment _environment;
         private readonly IRelationshipsServicesAsync _relService;
         private readonly ICourtService _courtService;
+        private readonly IBookingServiceAsync _bookingService;
 
-        public MyProfileModel(IMemberService memberService, IWebHostEnvironment environment, IRelationshipsServicesAsync relService, ICourtService courtService)
+        public MyProfileModel(IMemberService memberService, IWebHostEnvironment environment, IRelationshipsServicesAsync relService, ICourtService courtService, IBookingServiceAsync bookingService)
         {
             _memberService = memberService;
             _environment = environment;
             _relService = relService;
             _courtService = courtService;
+            _bookingService = bookingService;
         }
 
         [BindProperty]
@@ -103,10 +105,21 @@ namespace GadevangTennisklub2025.Pages.Member
             return RedirectToPage("/Users/MyProfile");
         }
 
-        public async Task<IActionResult> OnPostRemoveFromEvent(int Event_ID) 
+        public async Task<IActionResult> OnPostDeleteBookingAsync(int booking_Id)
         {
-            _relService.SignOffEvent(Event_ID, int.Parse(HttpContext.Session.GetString("Member_Id")));
-            return RedirectToPage("MyProfile");
+            int memberId = int.Parse(HttpContext.Session.GetString("Member_Id"));
+            List<Booking> list = await _bookingService.GetBookingsByUser(memberId);
+            Booking bookingToDelete = list.Find(i=>i.Id == booking_Id);
+            await _bookingService.DeleteBooking(bookingToDelete);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostRemoveFromEventAsync(int eventId)
+        {
+            int memberId = int.Parse(HttpContext.Session.GetString("Member_Id"));
+            await _relService.SignOffEvent(eventId, memberId);
+            TempData["SuccessMessage"] = "Du er nu afmeldt eventet.";
+            return RedirectToPage();
         }
 
     }

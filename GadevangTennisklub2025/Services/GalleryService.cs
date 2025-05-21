@@ -12,6 +12,7 @@ namespace GadevangTennisklub2025.Services
         private string insertSql = "INSERT INTO Photo (FilePath, UploadDate, Description) VALUES (@FilePath, @UploadDate, @Description)";
         private string deleteSql = "DELETE FROM Photo WHERE Id = @Id";
         private string getFilePathSql = "SELECT FilePath FROM Photo WHERE Id = @Id";
+        private string updateSql = "UPDATE Photo SET Description = @Description WHERE Id = @Id";
 
 
 
@@ -119,6 +120,21 @@ namespace GadevangTennisklub2025.Services
             }
 
             return true;
+        }
+
+        public async Task<bool> UpdatePhotoDescriptionAsync(int photoId, string newDescription)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(updateSql, conn);
+                cmd.Parameters.AddWithValue("@Description", newDescription);
+                cmd.Parameters.AddWithValue("@Id", photoId);
+
+                await conn.OpenAsync();
+                int rowsAffected = await cmd.ExecuteNonQueryAsync();
+
+                return rowsAffected > 0; // Returns true if the update was successful
+            }
         }
 
 

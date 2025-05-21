@@ -53,6 +53,7 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
                         else
                         {
                             BookingType[z][i].Add(j, 0);
+                            Players[z][i].Add(j, new string[2]);
                             if (weekFromNow < 0) BookingType[z][i][j]=4;
                         }
                             
@@ -69,8 +70,8 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
             }
 
 
-            temp.RemoveAll(i=> Math.Round((i.Start-DateTime.Now.AddDays(IndexModel.scuffedWeek*7)).TotalDays)>(7-((int)DateTime.Now.DayOfWeek==0? 7:(int)DateTime.Now.DayOfWeek)));
-            temp.RemoveAll(i => Math.Round((i.Start - DateTime.Now.AddDays(IndexModel.scuffedWeek * 7)).TotalDays) < (-7 + ((int)DateTime.Now.DayOfWeek == 0 ? 7 : (int)DateTime.Now.DayOfWeek)));
+            temp.RemoveAll(i => Math.Round((i.Start - DateTime.Now.AddDays(weekFromNow * 7)).TotalDays) >= (7 - ((int)DateTime.Now.DayOfWeek == 0 ? 7 : (int)DateTime.Now.DayOfWeek)));
+            temp.RemoveAll(i => Math.Round((i.Start - DateTime.Now.AddDays(weekFromNow * 7)).TotalDays) <= (-6 + ((int)DateTime.Now.DayOfWeek == 0 ? 7 : (int)DateTime.Now.DayOfWeek)));
             
             foreach (Booking booking in temp) 
             {

@@ -1,4 +1,5 @@
 ﻿@page
+@using GadevangTennisklub2025.Models
 @model GadevangTennisklub2025.Pages.Member.MyProfileModel
 @{
 }
@@ -23,6 +24,7 @@
         }
     </div>
     <br />
+
 
     <h5>Dine Bookinger:</h5>
 
@@ -52,9 +54,9 @@
                     
                     <td>@bookingVM.CourtName</td>
                     <td>
-                        <form method="post" asp-page-handler="DeleteBooking">
-                            <input type="hidden" name="bookingId" value="@bookingVM.Booking.Id" />
-                            <button type="submit" class="btn btn-danger btn-sm">Slet</button>
+                        <form method="post">
+                            <input type="hidden" name="booking_Id" value="@bookingVM.Booking.Id" />
+                            <button type="submit" asp-page-handler="DeleteBooking" asp-route-eventId="@bookingVM.Booking.Id" class="btn btn-danger btn-sm">Slet booking</button>
                         </form>
                     </td>
                 </tr>
@@ -81,21 +83,22 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var eventVM in Model.EventWithTitleAndDate)
+                @foreach (Event eventVM in Model.Events)
                 {
                     <tr>
-                        <td>@eventVM.DateAndTime.ToString("dd/MM/yyyy")</td>
+                        <td>@eventVM.Date</td>
 
                         <td>
                             <a class="" type="button" title="Title"
-                               asp-page="/Events/EventPage" asp-route-EventId="@eventVM.EventId">@eventVM.Title</a>
+                               asp-page="/Events/EventPage" asp-route-EventId="@eventVM.Id">@eventVM.Title</a>
                         </td>
                      
                         <td>
                             <form method="post" asp-page-handler="RemoveFromEvent" asp-route-Event_ID="@eventVM.EventId">
                                 <input type="hidden" name="Event_Id" value="@eventVM.EventId" />
                                 <button type="submit" class="btn btn-danger btn-sm">Afmeld fra Event</button>
-                            </form>
+                            </form> *@
+
                         </td>
                     </tr>
                 }
@@ -107,6 +110,18 @@
     <h5>Dine hold:</h5>
     <a class="btn btn-primary btn-sm" title="MyTeams"
        asp-page="/Teams/AttendedTeam" >Se de hold du er tilmeldt</a>
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Profil billede</label><br />
+        @if (!string.IsNullOrEmpty(Model.Member.ProfileImagePath))
+        {
+            <img src="@Model.Member.ProfileImagePath" width="150" height="150" />
+        }
+        else
+        {
+            <p>Intet profilbillede.</p>
+        }
+    </div>
 
     <br />
     <h5>Dine Brugeroplysninger:</h5>

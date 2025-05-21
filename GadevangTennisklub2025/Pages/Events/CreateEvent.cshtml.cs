@@ -27,7 +27,7 @@ namespace GadevangTennisklub2025.Pages.Events
                 if (EventServicesAsync.GetEventsAsync().Result.Find(i => i.Date.Date == ev.Date.Date) == null) 
                 {
                     await EventServicesAsync.CreateEventAsync(ev);
-                    TempData["SuccessMessage"] = "du er tilmeldt event";
+                    TempData["SuccessMessage"] = "event oprettet";
                     return Redirect("ShowEvents");
                 }
             ViewData["ErrorMessage"] = "Dato optaget";
