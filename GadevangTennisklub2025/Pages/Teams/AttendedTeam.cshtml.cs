@@ -23,6 +23,7 @@ namespace GadevangTennisklub2025.Pages.Teams
         private TimeOnly temp = new TimeOnly(23, 50);
 
         public Models.Member SelectedMember { get; set; }
+
         //Console.WriteLine("endTime: "+(temp));
 
 
@@ -38,6 +39,10 @@ namespace GadevangTennisklub2025.Pages.Teams
         #endregion
 
         #region Methods
+        public async Task<List<Models.Member>> getAttendees(int id)
+        {
+            return await _teamService.GetAttendeesAsync(id);
+        }
 
         public async Task<IActionResult> OnPostLeaveTeam(int LEAVEID)
         {
