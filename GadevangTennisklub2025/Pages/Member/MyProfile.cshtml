@@ -40,9 +40,9 @@
                     
                     <td>@bookingVM.CourtName</td>
                     <td>
-                        <form method="post" asp-page-handler="DeleteBooking">
-                            <input type="hidden" name="bookingId" value="@bookingVM.Booking.Id" />
-                            <button type="submit" class="btn btn-danger btn-sm">Slet</button>
+                        <form method="post">
+                            <input type="hidden" name="booking_Id" value="@bookingVM.Booking.Id" />
+                            <button type="submit" asp-page-handler="DeleteBooking" asp-route-eventId="@bookingVM.Booking.Id" class="btn btn-danger btn-sm">Slet booking</button>
                         </form>
                     </td>
                 </tr>
