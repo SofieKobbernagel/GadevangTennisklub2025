@@ -4,17 +4,17 @@
 @{
     ViewData["Title"] = "MakeBooking2";
 }
-
+<h4>Vejrudsigt for nuværende uge:</h4>
+<a class="weatherwidget-io" href="https://forecast7.com/da/55d9712d29/gadevang/" data-label_1="GADEVANG" data-label_2="VEJRUDSIGT" data-theme="original">GADEVANG VEJRUDSIGT</a>
+<script>
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+</script>
+<br />
 <form method="post">
     <Input type="submit" value="Last Week" class="btn btn-primary" asp-page-handler="Backwards" />
     <Input type="submit" value="Next Week" class="btn btn-primary" asp-page-handler="Forward" />
 </form>
 
-<br />
-<a class="weatherwidget-io" href="https://forecast7.com/da/55d9712d29/gadevang/" data-label_1="GADEVANG" data-label_2="VEJRUDSIGT" data-theme="original">GADEVANG VEJRUDSIGT</a>
-<script>
-    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-</script>
 <br />
 <svg width="100%" height="700" >
     @{
