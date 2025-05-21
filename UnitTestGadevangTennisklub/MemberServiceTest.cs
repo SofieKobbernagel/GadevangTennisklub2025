@@ -47,7 +47,7 @@ namespace UnitTestGadevangTennisklub
             // Act
             Mem.UpdateMemberAsync(updated, updated.Member_Id).GetAwaiter().GetResult();
 
-            Member result = Mem.GetMemberById(updated.Member_Id).GetAwaiter().GetResult();
+            Member result = Mem.GetMemberById(updated.Member_Id).Result;
 
             // Assert
             Assert.IsNotNull(result);
@@ -92,7 +92,7 @@ namespace UnitTestGadevangTennisklub
             Mem.CreateMemberAsync(mem).GetAwaiter().GetResult();
             mem.Member_Id = Mem.GetAllMembersAsync().Result.Last().Member_Id;
 
-            Member validMember = Mem.GetMemberById(mem.Member_Id).GetAwaiter().GetResult();
+            Member validMember = Mem.GetMemberById(mem.Member_Id).Result;
 
             Assert.IsNotNull(validMember);
             Mem.DeleteMemberAsync(Mem.GetAllMembersAsync().Result.Last().Member_Id).GetAwaiter();
