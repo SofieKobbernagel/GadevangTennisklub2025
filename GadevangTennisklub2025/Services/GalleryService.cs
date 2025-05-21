@@ -10,6 +10,11 @@ namespace GadevangTennisklub2025.Services
 
         private string GetPhotoSql = "SELECT Id, FilePath, UploadDate, Description FROM Photo ORDER BY UploadDate DESC";
         private string insertSql = "INSERT INTO Photo (FilePath, UploadDate, Description) VALUES (@FilePath, @UploadDate, @Description)";
+        private string deleteSql = "DELETE FROM Photo WHERE Id = @Id";
+        private string getFilePathSql = "SELECT FilePath FROM Photo WHERE Id = @Id";
+        private string updateSql = "UPDATE Photo SET Description = @Description WHERE Id = @Id";
+
+
 
         public async Task<List<Gallery>> GetAllPhotos()
         {
@@ -69,5 +74,69 @@ namespace GadevangTennisklub2025.Services
                 return rows > 0;
             }
         }
+        public async Task<bool> DeletePhotoAsync(int id, IWebHostEnvironment env)
+        {
+            string filePath = null;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                // First find the file path for particular image
+                using (SqlCommand getCmd = new SqlCommand(getFilePathSql, conn))
+                {
+                    getCmd.Parameters.AddWithValue("@Id", id);
+                    var result = await getCmd.ExecuteScalarAsync();
+                    if (result != null)
+                    {
+                        filePath = result.ToString();
+                    }
+                    else
+                    {
+                        return false; // Photo not found
+                    }
+                }
+
+                // This is for deleting the image from the database
+                using (SqlCommand delCmd = new SqlCommand(deleteSql, conn))
+                {
+                    delCmd.Parameters.AddWithValue("@Id", id);
+                    int rowsAffected = await delCmd.ExecuteNonQueryAsync();
+                    if (rowsAffected == 0)
+                    {
+                        return false; // No row deleted
+                    }
+                }
+            }
+
+            // This will delete the image from the computer. This is so that the image won't stay and clog the folder when there's no database entry for it anymore.
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                string physicalPath = Path.Combine(env.WebRootPath, filePath.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
+                if (File.Exists(physicalPath))
+                {
+                    File.Delete(physicalPath);
+                }
+            }
+
+            return true;
+        }
+
+        public async Task<bool> UpdatePhotoDescriptionAsync(int photoId, string newDescription)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(updateSql, conn);
+                cmd.Parameters.AddWithValue("@Description", newDescription);
+                cmd.Parameters.AddWithValue("@Id", photoId);
+
+                await conn.OpenAsync();
+                int rowsAffected = await cmd.ExecuteNonQueryAsync();
+
+                return rowsAffected > 0; // Returns true if the update was successful
+            }
+        }
+
+
     }
 }
