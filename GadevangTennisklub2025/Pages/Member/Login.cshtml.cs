@@ -19,7 +19,15 @@ namespace GadevangTennisklub2025.Pages.Member
             _memberService = memberService;
         }
 
-      
+        public void OnGet(string? returnUrl)
+        {
+            if (!string.IsNullOrEmpty(returnUrl) &&
+                !returnUrl.Contains("/Member/Login", StringComparison.OrdinalIgnoreCase))
+            {
+                HttpContext.Session.SetString("ReturnUrl", returnUrl);
+            }
+        }
+
         public IActionResult OnGetLogout()
         {
             HttpContext.Session.Clear();
@@ -47,6 +55,14 @@ namespace GadevangTennisklub2025.Pages.Member
                 HttpContext.Session.SetString("Member_Id", loginUser.Member_Id.ToString());
                 HttpContext.Session.SetString("Email", loginUser.Email);
                 HttpContext.Session.SetString("IsAdmin", loginUser.IsAdmin ? "true" : "false");
+
+                string returnUrl = HttpContext.Session.GetString("ReturnUrl");
+                HttpContext.Session.Remove("ReturnUrl"); //Fjerner "ReturnUrl" til at rense Cache.
+
+                if (!string.IsNullOrEmpty(returnUrl) && !returnUrl.Contains("/Member/Login", StringComparison.OrdinalIgnoreCase))
+                {
+                    return Redirect(returnUrl);
+                }
 
                 return RedirectToPage("/Index");
             }
