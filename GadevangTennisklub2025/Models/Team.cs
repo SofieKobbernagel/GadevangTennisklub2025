@@ -18,7 +18,7 @@ namespace GadevangTennisklub2025.Models
         public string Description { get; set; }
 
 
-        public string[] week = { "Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday","Sunday" };
+        public string[] week = { "Mandag", "Tirsdag", "Onsdag","Torsdag","Fredag","Lørdag","Søndag" };
 
         public Team()
         {

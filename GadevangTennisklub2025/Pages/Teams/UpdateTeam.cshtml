@@ -16,62 +16,62 @@
                 <hr />
 
                 <div class="mb-3">
-                    <label asp-for="Id" class="form-label">Team ID</label>
+                    <label asp-for="Id" class="form-label">Hold ID</label>
                     <input asp-for="Id" class="form-control" readonly />
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Name" class="form-label">Team Name</label>
+                    <label asp-for="Name" class="form-label">Hold Navn</label>
                     <input asp-for="Name" class="form-control" />
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="MembershipType" class="form-label">Membership Type</label>
+                    <label asp-for="MembershipType" class="form-label">Medlemskabstype</label>
                     <select asp-for="MembershipType" class="form-control" asp-items="Model.MembershipOptions">
-                        <option value="">-- Select Membership Type --</option>
+                        <option value="">-- vælg et Medlemskabstype  --</option>
                     </select>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="TrainerId" class="form-label">Trainer</label>
+                    <label asp-for="TrainerId" class="form-label">Træner</label>
                     <select asp-for="TrainerId" class="form-control" asp-items="Model.TrainerOptions">
-                        <option value="">-- Select a Trainer --</option>
+                        <option value="">-- vælg en Træner --</option>
                     </select>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="DayOfWeek" class="form-label">Day of Week</label>
+                    <label asp-for="DayOfWeek" class="form-label">Dag På ugen</label>
                     <input asp-for="DayOfWeek" class="form-control" />
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="TimeOfDay" class="form-label">Time of Day</label>
+                    <label asp-for="TimeOfDay" class="form-label">Tid På Dagen</label>
                     <input asp-for="TimeOfDay" class="form-control" />
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Length" class="form-label">Session Length (Hours)</label>
+                    <label asp-for="Length" class="form-label">Længde I Antal Timer</label>
                     <input asp-for="Length" class="form-control" />
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="MinMember" class="form-label">Minimum Attendees</label>
+                    <label asp-for="MinMember" class="form-label">Mindste Antal Medlemmer</label>
                     <input asp-for="MinMember" class="form-control" />
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="MaxMember" class="form-label">Maximum Attendees</label>
+                    <label asp-for="MaxMember" class="form-label">Højeste Antal Medlemmer</label>
                     <input asp-for="MaxMember" class="form-control" />
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Description" class="form-label">Description</label>
+                    <label asp-for="Description" class="form-label">Beskrivelse</label>
                     <textarea asp-for="Description" class="form-control"></textarea>
                 </div>
 
                 <div class="d-flex justify-content-between mt-4">
-                    <button type="submit" class="btn btn-primary" formaction="?handler=Update">Update Team</button>
-                    <button type="submit" class="btn btn-danger" formaction="?handler=Delete">Delete Team</button>
+                    <button type="submit" class="btn btn-primary" formaction="?handler=Update">Updater Hold</button>
+                    <button type="submit" class="btn btn-danger" formaction="?handler=Delete">Fjern Hold</button>
                     <input type="hidden" name="AttendeeListTeamId" value="@Model.Id" />
                     <button type="submit" class="btn btn-secondary" formaction="?handler=UpdateAttendeeListId">
                         Se og rediger tilmeldte
