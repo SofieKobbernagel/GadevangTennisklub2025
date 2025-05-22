@@ -1,18 +1,18 @@
 ﻿@page
 @model GadevangTennisklub2025.Pages.Gallery.UploadGalleryModel
 @{
-    ViewData["Title"] = "Upload Photo";
+    ViewData["Title"] = "Upload Billede";
 }
 
-<h2>Upload et Photo</h2>
+<h2>Upload et Billede</h2>
 
 <form method="post" enctype="multipart/form-data">
     <div>
-        <label>Vælg Photo:</label>
+        <label>Vælg Billede:</label>
         <input type="file" asp-for="PhotoFile" />
     </div>
     <div>
-        <label>Description:</label>
+        <label>Beskrivelse:</label>
         <input type="text" asp-for="Description" />
     </div>
     <button type="submit">Upload</button>

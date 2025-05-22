@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GadevangTennisklub2025.styles.css" asp-append-version="true" />
 </head>
+@{
+    var currentUrl = Context.Request.Path + Context.Request.QueryString;
+}
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -76,7 +79,7 @@
                         else
                         {
                             <a asp-page="/Member/CreateMember" class="btn btn-outline-primary btn-sm">Opret bruger</a>
-                            <a asp-page="/Member/Login" class="btn btn-outline-primary btn-sm">Login</a>
+                            <a asp-page="/Member/Login" asp-route-returnUrl="@currentUrl" class="btn btn-outline-primary btn-sm">Login</a>
                         }
                     </div>
                 </div>
