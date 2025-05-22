@@ -1,0 +1,39 @@
+Lav literaturliste
+
+
+Show the solution - Vi bruger ikke Entity Framework. Vi bruger ADO.NET.
+
+
+Vi bruger microsoftSQL
+
+
+Lav RazorArchitecture uden Kestrel IIS.Server blok. Browser -----internet----- Razorpage  
+
+
+Konklusion må gerne indeholde discussion og reflektion. De kommer dog ofte før konklusion.
+
+
+Virksomhedsanalysen har brug for en indledning
+
+
+Skriv om problemer med Sprints 
+
+
+Skriv at vi var ikke klar til at møde Bo og at vi fik ikke alt ud af det som vi ville have.
+
+
+Hav reflektion og diskussions afsnit (Reflektion er diskussion)
+
+
+Find Domainmodel kilde.
+
+
+Forklar hvorfor at tabel for medlemmer ikke er i 3. normalform. (Postnummer udpeger municipality)
+
+
+Skriv i indledning at der er en video.
+
+
+Links til Github.
+
+
