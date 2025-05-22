@@ -15,23 +15,61 @@
         }
     </script>
 }
-<h4>List Of Events</h4>
+<h4>Kalender over events</h4>
 
 
-<h5>Number Of Events Is: @Model.EventList.Count;</h5>
+<h5>Der er ligenu: @Model.EventList.Count;</h5>
 @if (HttpContext.Session.GetString("IsAdmin") != null && bool.Parse(HttpContext.Session.GetString("IsAdmin")))
 {
-    <a asp-page="CreateEvent">make an Event</a>
+    <a asp-page="CreateEvent">Opret et event</a>
 }
 
+@switch (Model.month)
+{
+    case 1:
+        <p> Events i Januar måned</p>
+        break;
+    case 2:
+        <p> Events i Februar måned</p>
+        break;
+    case 3:
+        <p> Events i Marts måned</p>
+        break;
+    case 4:
+        <p> Events i April måned</p>
+        break;
+    case 5:
+        <p> Events i Maj måned</p>
+        break;
+    case 6:
+        <p> Events i Juni måned</p>
+        break;
+    case 7:
+        <p> Events i Juli måned</p>
+        break;
+    case 8:
+        <p> Events i August måned</p>
+        break;
+    case 9:
+        <p> Events i September måned</p>
+        break;
+    case 10:
+        <p> Events i Oktober måned</p>
+        break;
+    case 11:
+        <p> Events i November måned</p>
+        break;
+    case 12:
+        <p> Events i December måned</p>
+        break;
+}
 
-<p> Events i @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Model.month) måned</p>
 
 
 
 <form method="post">
-    <Input type="submit" value="Last Month" class="btn btn-primary" asp-page-handler="Backwards" />
-    <Input type="submit" value="Next Month" class="btn btn-primary" asp-page-handler="Forward" />
+    <Input type="submit" value="Sidste Måned" class="btn btn-primary" asp-page-handler="Backwards" />
+    <Input type="submit" value="næste måned" class="btn btn-primary" asp-page-handler="Forward" />
 </form>
 
 <svg width="100.ToString(CultureInfo.InvariantCulture)%" height="500">
@@ -55,25 +93,25 @@
                             switch (j)
                             {
                                 case 0:
-                                    <p>@DayOfWeek.Monday</p>
+                                    <p>Mandag</p>
                                     break;
                                 case 1:
-                                    <p>@DayOfWeek.Tuesday</p>
+                                    <p>Tirsdag</p>
                                     break;
                                 case 2:
-                                    <p>@DayOfWeek.Wednesday</p>
+                                    <p>Onsdag</p>
                                     break;
                                 case 3:
-                                    <p>@DayOfWeek.Thursday</p>
+                                    <p>Torsdag</p>
                                     break;
                                 case 4:
-                                    <p>@DayOfWeek.Friday</p>
+                                    <p>Fredag</p>
                                     break;
                                 case 5:
-                                    <p>@DayOfWeek.Saturday</p>
+                                    <p>Lørdag</p>
                                     break;
                                 case 6:
-                                    <p>@DayOfWeek.Sunday</p>
+                                    <p>Søndag</p>
                                     break;
                             }
                         }
