@@ -1,66 +1,92 @@
 ﻿@page
 @model GadevangTennisklub2025.Pages.Teams.CreateTeamModel
 @{
+    ViewData["Title"] = "Create Team";
 }
-<h1>Create Team</h1>
 
-<form method="post" onsubmit="return confirmAction();">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
-    <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" style="width: 30%;" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="MembershipType" class="control-label">vælg medlemstype</label>
-        <select asp-for="MembershipType" class="form-control" style="width: 30%;" asp-items="Model.MembershipOptions">
-            <option value="">-- vælg medlemstype   --</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label asp-for="TrainerId" class="control-label">Select Trainer</label>
-        <select asp-for="TrainerId" class="form-control" style="width: 30%;" asp-items="Model.TrainerOptions">
-            <option value="">-- Select a trainer --</option>
-        </select>
+<div class="d-flex flex-column justify-content-center align-items-center min-vh-100 p-3 bg-light">
+
+    <h1 class="mb-4 text-center">Create Team</h1>
+
+    <div class="w-100" style="max-width: 500px;">
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <form method="post" onsubmit="return confirmAction();">
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MembershipType" class="form-label">Vælg medlemstype</label>
+                        <select asp-for="MembershipType" class="form-select" asp-items="Model.MembershipOptions">
+                            <option value="">-- vælg medlemstype --</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TrainerId" class="form-label">Select Trainer</label>
+                        <select asp-for="TrainerId" class="form-select" asp-items="Model.TrainerOptions">
+                            <option value="">-- Select a trainer --</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DayOfWeek" class="form-label">Day of Week</label>
+                        <select asp-for="DayOfWeek" class="form-select" asp-items="Model.DayOptions">
+                            <option value="">-- Select a Day --</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TimeOfDay" class="form-label"></label>
+                        <input asp-for="TimeOfDay" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Length" class="form-label"></label>
+                        <input asp-for="Length" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MinMembers" class="form-label"></label>
+                        <input asp-for="MinMembers" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MaxMembers" class="form-label"></label>
+                        <input asp-for="MaxMembers" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    </div>
+
+                    <div class="d-grid" style="grid-template-columns: 2fr 1fr 2fr; display: grid; gap: 1rem; margin-top: 1.5rem;">
+                        <button type="submit" asp-page-handler="Create" class="btn btn-primary">Create Team</button>
+                        <div></div> <!-- spacer -->
+                        <button type="submit" asp-page-handler="Cancel" class="btn btn-secondary">Cancel</button>
+                    </div>
+
+                </form>
+
+                @foreach (string s in Model.Messages)
+                {
+                    <p class="text-danger mt-3">@s</p>
+                }
+
+            </div>
+        </div>
+        <!-- Extra bottom padding -->
+        <div style="height: 80px;"></div>
     </div>
 
-
-    <div class="form-group">        
-            <label asp-for="DayOfWeek" class="form-label">Day of Week</label>
-        <select asp-for="DayOfWeek" class="form-control" style="width: 30%;" asp-items="Model.DayOptions">
-                <option value="">-- Select a Day --</option>
-            </select>        
-    </div>
-    <div class="form-group">
-        <label asp-for="TimeOfDay" class="control-label"></label>
-        <input asp-for="TimeOfDay" style="width: 30%;" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Length" class="control-label"></label>
-        <input asp-for="Length" style="width: 30%;" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="MinMembers" class="control-label"></label>
-        <input asp-for="MinMembers" style="width: 30%;" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="MaxMembers" class="control-label"></label>
-        <input asp-for="MaxMembers" style="width: 30%;" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Description" class="control-label"></label>
-        <input asp-for="Description" style="width: 30%;" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <button type="submit" asp-page-handler="Create" class="btn btn-primary">Create Team</button>
-        <button type="submit" asp-page-handler="Cancel" class="btn btn-secondary">Cancel</button>
-    </div>
-</form>
-@foreach (string s in Model.Messages)
-{
-    <p style="color:red">@s</p>
-
-}
+</div>
 
 @section Scripts {
     <script>
