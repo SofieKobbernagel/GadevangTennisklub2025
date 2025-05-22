@@ -38,7 +38,7 @@
     {
         @Model.e.Description
         <br>
-        <p>maximum antal medlemmer er @Model.e.Maximum</p>
+        <p>Maximum antal medlemmer er @Model.e.Maximum</p>
     } 
     <div class="form-group">
         <label asp-for="@Model.e.Description" class="control-label" hidden="@Model.notadmin"></label>
@@ -70,8 +70,8 @@
     @if (!Model.notadmin)
     {
         <form method="post" onsubmit="return confirmAction();">
-            <Input type="submit" value="UpdateEvent" class="btn btn-primary" asp-page-handler="Update" onsubmit="return confirmAction();" />
-            <Input type="submit" value="DeleteEvent" class="btn btn-primary" asp-page-handler="Delete" onsubmit="return confirmAction();" />
+            <Input type="submit" value="Opdater event" class="btn btn-primary" asp-page-handler="Update" onsubmit="return confirmAction();" />
+            <Input type="submit" value="Slet Event" class="btn btn-primary" asp-page-handler="Delete" onsubmit="return confirmAction();" />
         </form>
        
     }
