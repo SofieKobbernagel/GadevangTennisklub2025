@@ -2,7 +2,7 @@
 @model GadevangTennisklub2025.Pages.Gallery.ShowGalleryModel
 @{
 }
-<h1>Photo Galleri</h1>
+<h1>Billede Galleri</h1>
 
 @if (Model.isAdmin == true)
 {
@@ -28,7 +28,7 @@
                         <input type="hidden" name="photoId" value="@photo.Id" />
                         <button type="submit">Slet</button>
                     </form>
-                    <button type="button" onclick="toggleDescriptionForm(@photo.Id)">Edit Description</button>
+                    <button type="button" onclick="toggleDescriptionForm(@photo.Id)">Opdater Beskrivelse</button>
                     <div id="descriptionForm-@photo.Id" style="display:none;">
                         <form asp-page-handler="Edit" method="post">
                             <input type="hidden" name="photoId" value="@photo.Id" />

@@ -11,9 +11,9 @@
         </div>
     }
     <p>
-        Search: <input type="text" asp-for="@Model.FilterCriteria" onchange="this.form.submit()" />
+        Søg: <input type="text" asp-for="@Model.FilterCriteria" onchange="this.form.submit()" />
         <div class="form-group">
-            <label class="custom-control-label">Sort By</label>
+            <label class="custom-control-label">Sorterer Efter</label>
             <input type="radio" asp-for="@Model.SortBy" value="Name" onclick="this.form.submit()">Navn</input>
             <input type="radio" asp-for="@Model.SortBy" value="Email" onclick="this.form.submit()">Email</input>
             <input type="radio" asp-for="@Model.SortBy" value="Phone" onclick="this.form.submit()">Telefon</input>
@@ -21,7 +21,7 @@
         </div>
 
         <div class="form-group">
-            <label class="custom-control-label">Sort Order</label>
+            <label class="custom-control-label">Sorterings Rækkefølge</label>
             <select asp-for="@Model.SortOrder" onchange="this.form.submit()">
                 <option value="Ascending">Ascending</option>
                 <option value="Descending">Descending</option>
