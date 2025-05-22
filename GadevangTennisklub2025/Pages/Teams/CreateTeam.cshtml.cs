@@ -70,7 +70,7 @@ namespace GadevangTennisklub2025.Pages.Teams
         #endregion
         public void PopulateDayOptions()
         {
-            var week = new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+            var week = new[] { "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag" };
 
             DayOptions = Enumerable.Range(0, 7).Select(i => new SelectListItem
             {

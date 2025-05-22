@@ -15,33 +15,34 @@
     }
 
 </style>
+@if (HttpContext.Session.GetString("Member_Id") != null)
+{
+   <a href="MakeBlog"> Opret blog Indslag</a>
+}
 
 
-<a href="MakeBlog">Make Blog<a/>
-
-    @foreach (BlogPost bp in Model.BlogList)
-    {
-        string Content = "";
-        <div class="white-box">
-            <a asp-page="BlogPost" asp-route-BlogId="@bp.Id"> <h5>@bp.Title</h5></a>
-            <p>skrevet af <i>@Model.memberService.GetMemberById(bp.MemberId).Result.Name</i></p>
-
-             @for (int i = 0; i < 200; i++)
-                {
-                    if (i == bp.Content.Length) break;
-                    Content += bp.Content[i];
-                    if (i == 199)
-                    {
-                        Content += "...";
-                    }
-                } 
-                <p>@(Content)</p>
+  @foreach (BlogPost bp in Model.BlogList)
+  {
+    string Content = "";
+    <div class="white-box">
+    <a asp-page="BlogPost" asp-route-BlogId="@bp.Id"> <h5>@bp.Title</h5></a>
+    <p>skrevet af <i>@Model.memberService.GetMemberById(bp.MemberId).Result.Name</i></p>
+        @for (int i = 0; i < 200; i++)
+        {
+            if (i == bp.Content.Length) break;
+            Content += bp.Content[i];
+            if (i == 199)
+            {
+                Content += "...";
+            }
+        } 
+        <p>@(Content)</p>
         </div>
     <br>
    
 
-    }
-
+  }
+}
 
     
 

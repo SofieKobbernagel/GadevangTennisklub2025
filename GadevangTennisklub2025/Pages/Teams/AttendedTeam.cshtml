@@ -1,5 +1,6 @@
 ﻿@page
 @using Models;
+@using Services;
 @model GadevangTennisklub2025.Pages.Teams.AttendedTeamModel
 @{
     ViewData["Title"] = "Klubbens Hold";
@@ -14,7 +15,7 @@
             <th>Titel</th>
             <th>pladser tilbage</th>
             <th>Medlemskabstype</th>
-            <th>Coach</th>
+            <th>Træner</th>
             <th>Beskrivelse</th>
             <th>Dag</th>
             <th>Tidsrum</th>
@@ -25,23 +26,30 @@
         </tr>
     </thead>
     <tbody>
+       
         @foreach (Team item in Model.ListOfAttendedTeams)
         {
             <tr>
+                 
                 <td>@item.Name</td>
-                <td>@(item.AttendeeRange[1] - item.Attendees.Count)</td>
+                <td>@(item.AttendeeRange[1] - Model.getAttendees(item.Id).Result.Count))</td>
                 <td>@item.MembershipType</td>
-                <td>@item.Trainer</td>
+                <td>@item.Trainer.Name</td>
                 <td>@item.Description</td>
                 <td>@item.week[item.DayOfWeek]</td>
                 <td>@item.TimeOfDay - @(item.TimeOfDay.Add(TimeSpan.FromHours(item.Length)))</td>
                 @if (Model.isAdmin)
                 {
-                    <th>@item.Attendees</th>
+                    <th>
+                        @(Model.getAttendees(item.Id).Result != null && Model.getAttendees(item.Id).Result.Count != 0
+                            ? string.Join(", ", Model.getAttendees(item.Id).Result.Select(a => a.Name))
+                            : "ingen tilmeldte endnu")
+                    </th>
+
                 }
                 <td>
                     <form style="display: inline;" asp-page-handler="LeaveTeam" asp-route-LEAVEID="@item.Id">
-                        <button type="submit" style="width: 24px; height: 24px;">LeaveTeam</button>
+                        <button type="submit" style="width: 24px; height: 24px;">Forlad Hold</button>
                     </form>
                 </td>
             </tr>

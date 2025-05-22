@@ -4,38 +4,59 @@
 @{
     ViewData["Title"] = "Tilmeld dig Til Et Hold";
 }
-<h1>Tildmeld dig et Hold</h1>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
-<h4>medlem = @(Model.SelectedMember!=null ? Model.SelectedMember.Name : "not logged in")</h4>
+<div class="container py-5">
+    <h1 class="text-center mb-4">Tilmeld dig et hold</h1>
 
-@{
-    List<Team> nonEnteredTeams = Model.NonEnteredTeamsByMember((Models.Member)Model.SelectedMember).Result;
-}
+    <div class="alert alert-info text-center">
+        Medlem: <strong>@(Model.SelectedMember != null ? Model.SelectedMember.Name : "Ikke logget ind")</strong>
+    </div>
 
-@if (nonEnteredTeams.Count == 0)
-{
-    <p>No teams available, this may happen if you are written up to all teams.</p>
-}
-else
-{
-    @foreach (Team team in nonEnteredTeams)
-    {
-        <p>Name/Title: @team.Name</p>
-        <p>Day of the Week: @team.DayOfWeek</p>
-        <p>Coach   :  @team.Trainer</p>    
-        <p>Session Length (hours): @team.Length</p>
-        <p>Min Number of Attendees: @team.AttendeeRange[0]</p>
-        <p>Max Number of Attendees: @team.AttendeeRange[1]</p>
-        <p>Number of Spots Left: @(team.AttendeeRange[1] - (team.Attendees==null?0:team.Attendees.Count))</p>
-        <p>Description: @team.Description</p>
-        @if ((team.Attendees == null ? 0 : team.Attendees.Count) < team.AttendeeRange[1])
-        {
-            <div class="form-group">
-                <form style="display: inline;" asp-page-handler="AttendTeam" asp-route-Id="@team.Id" asp-route-memberId="@Model.SelectedMember.Member_Id">
-                   <input type="submit" value="Attend This Course" class="btn btn-primary" />
-                </form>
-            </div>
-        }
-
+    @{
+        List<Team> nonEnteredTeams = Model.NonEnteredTeamsByMember((Models.Member)Model.SelectedMember).Result;
     }
-}
+
+    @if (nonEnteredTeams.Count == 0)
+    {
+        <div class="alert alert-warning text-center">
+            Ingen ledige hold. Dette kan ske, hvis du allerede er tilmeldt alle hold.
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            @foreach (Team team in nonEnteredTeams)
+            {
+                <div class="col">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">@team.Name</h5>
+                            <p class="card-text"><strong>Dag:</strong> @(team.week[team.DayOfWeek])</p>
+                            <p class="card-text"><strong>Træner:</strong> @((team.Trainer!=null)?(team.Trainer.Name):("ingen træner på holdet"))</p>
+                            <p class="card-text"><strong>Varighed:</strong> @team.Length timer</p>
+                            <p class="card-text"><strong>Medlemskabstype:</strong> @team.MembershipType</p>
+                            <p class="card-text"><strong>Minimum deltagere:</strong> @team.AttendeeRange[0]</p>
+                            <p class="card-text"><strong>Maksimum deltagere:</strong> @team.AttendeeRange[1]</p>
+                            <p class="card-text"><strong>Pladser tilbage:</strong> @(team.AttendeeRange[1] - (team.Attendees?.Count ?? 0))</p>
+                            <p class="card-text"><strong>Beskrivelse:</strong><br /> @team.Description</p>
+
+                            @if ((team.Attendees?.Count ?? 0) < team.AttendeeRange[1])
+                            {
+                                <form asp-page-handler="AttendTeam" asp-route-Id="@team.Id" asp-route-memberId="@Model.SelectedMember.Member_Id">
+                                    <button type="submit" class="btn btn-primary mt-2 w-100">Tilmeld dette hold</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <div class="alert alert-secondary mt-2 text-center">
+                                    Holdet er fuldt booket
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -45,34 +45,40 @@ namespace GadevangTennisklub2025.Services
             }
             return mem;
         }
-        
+
         public async Task<bool> CreateTeamAsync(Team team)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
                 {
-                    SqlCommand command = new SqlCommand(createQuery, connection);
+                    await connection.OpenAsync();
 
-                    // Add parameters to prevent SQL injection
+                    string insertTeamQuery = @"
+                INSERT INTO Team (MemberType, Name, Length, TimeOfDay, DayOfWeek, MinMembers, MaxMembers, Description)
+                VALUES (@MemberType, @Name, @Length, @TimeOfDay, @DayOfWeek, @MinMembers, @MaxMembers, @Description);
+                SELECT CAST(scope_identity() AS int);
+            ";
 
-                    command.Parameters.AddWithValue("@Team_Id", team.Id);
-                    command.Parameters.AddWithValue("@MemberType", team.MembershipType);                  
+                    SqlCommand command = new SqlCommand(insertTeamQuery, connection);
+                    command.Parameters.AddWithValue("@MemberType", team.MembershipType);
                     command.Parameters.AddWithValue("@Name", team.Name);
                     command.Parameters.AddWithValue("@Length", team.Length.ToString(CultureInfo.InvariantCulture));
-                    Console.WriteLine("TeamService/CreateTeam/ double length = " + team.Length + " , ,  string length = " + team.Length.ToString(CultureInfo.InvariantCulture));
                     command.Parameters.AddWithValue("@TimeOfDay", team.TimeOfDay);
                     command.Parameters.AddWithValue("@DayOfWeek", team.DayOfWeek);
                     command.Parameters.AddWithValue("@MinMembers", team.AttendeeRange[0]);
                     command.Parameters.AddWithValue("@MaxMembers", team.AttendeeRange[1]);
                     command.Parameters.AddWithValue("@Description", team.Description);
 
-                    RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
-                    await relationshipsServices.TeamCoachRelation(team.Id, team.Trainer.Coach_Id);
-                    await connection.OpenAsync();
-                    int rowsAffected = await command.ExecuteNonQueryAsync(); // Correct method for UPDATE
+                    // Insert team and get new ID
+                    int newTeamId = (int)await command.ExecuteScalarAsync();
+                    team.Id = newTeamId;
 
-                    return true; // Return true if at least one row was Insert
+                    // Now insert relation
+                    RelationshipsServicesAsync relationshipsServices = new RelationshipsServicesAsync();
+                    await relationshipsServices.TeamCoachRelation(newTeamId, team.Trainer.Coach_Id);
+
+                    return true;
                 }
                 catch (SqlException sqlExp)
                 {
@@ -83,28 +89,38 @@ namespace GadevangTennisklub2025.Services
                     Console.WriteLine("General error: " + ex.Message);
                 }
             }
-            return false; // Return false if the Insert fails
+            return false;
         }
+
 
         public async Task<Team> DeleteTeamAsync(int teamNr)
         {
-            Team team = await GetTeamFromIdAsync(teamNr);
-            //string updateQuery = "UPDATE Hotel SET HotelName = @HotelName, HotelAddress = @HotelAddress WHERE HotelNr = @HotelNr";              using (SqlConnection connection = new SqlConnection(connectionString))
+            Team team = null;
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
                 {
-                    SqlCommand command = new SqlCommand(deleteQuery, connection);
-
-                    // Add parameters to prevent SQL injection
-                    Team te = await GetTeamFromIdAsync(teamNr);
-                    command.Parameters.AddWithValue("@Name", te.Name);
-
-
                     await connection.OpenAsync();
-                    int rowsAffected = await command.ExecuteNonQueryAsync(); // Correct method for UPDATE
 
-                    return team; // Return true if at least one row was Deleted
+                    // Get the team before deleting it
+                    team = await GetTeamFromIdAsync(teamNr);
+
+                    if (team == null)
+                    {
+                        Console.WriteLine("Team not found.");
+                        return null;
+                    }
+
+                    // It's better to delete using the Team_Id instead of Name
+                    string deleteQuery = "DELETE FROM Team WHERE Team_Id = @TeamId";
+                    SqlCommand command = new SqlCommand(deleteQuery, connection);
+                    command.Parameters.AddWithValue("@TeamId", teamNr);
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                    if (rowsAffected > 0)
+                        return team;
                 }
                 catch (SqlException sqlExp)
                 {
@@ -115,7 +131,8 @@ namespace GadevangTennisklub2025.Services
                     Console.WriteLine("General error: " + ex.Message);
                 }
             }
-            return null; // Return false if the Delete fails
+
+            return null;
         }
 
         public async Task<List<Team>> GetAllAttendedTeamsAsync(int memberId)
@@ -223,61 +240,42 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        public async Task<Team> GetTeamFromIdAsync(int searchID)
+        public async Task<Team> GetTeamFromIdAsync(int teamId)
         {
-            Team result_team = new Team();
-            List<Team> teams = new List<Team>();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                string query = "SELECT * FROM Team WHERE Team_Id = @TeamId";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@TeamId", teamId);
+
+                await connection.OpenAsync();
+
+                using (var reader = await command.ExecuteReaderAsync())
                 {
-                    try
+                    if (await reader.ReadAsync())
                     {
-                        SqlCommand command = new SqlCommand(queryString, connection);
-                        await command.Connection.OpenAsync();
-                        SqlDataReader reader = await command.ExecuteReaderAsync();
-                       
-                        while (await reader.ReadAsync())
+                        return new Team
                         {
-                            int teamID = reader.GetInt32("Team_Id");
-                            if (searchID == teamID)
-                            {
-                            
-                            
-                            string teamNavn = reader.GetString("Name");
-                            int dayOfWeek = reader.GetInt32("DayOfWeek");
-                            string startTime = reader.GetString("TimeOfDay"); //ex. 14:30
-                            double length = double.Parse(reader.GetString("Length"), CultureInfo.InvariantCulture);
-                            int[] attendeeRange = { reader.GetInt32("MinMembers"), reader.GetInt32("MaxMembers") };
-                            
-                            string description = reader.GetString("Description");
-                            string membershipType = reader.GetString("MemberType");
-                                Coach trainer = await coachService.GetCoachByTeamIdAsync(teamID);
-
-                                List<Member> Attendees = await GetAttendeesAsync(teamID);
-                                result_team = new Team(teamID, teamNavn, membershipType, trainer, dayOfWeek, TimeOnly.Parse(startTime), length, attendeeRange, Attendees, description);
-                                reader.Close();
-                            }
-                            
-
-                        }
-                        reader.Close();
-                    }
-                    catch (SqlException sqlExp)
-                    {
-                        Console.WriteLine("Database error" + sqlExp.Message);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Generel fejl: " + ex.Message);
-                    }
-                    finally
-                    {
-
+                            Id = reader.GetInt32(reader.GetOrdinal("Team_Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            MembershipType = reader.GetString(reader.GetOrdinal("MemberType")),
+                            Length = double.Parse(reader["Length"].ToString(), CultureInfo.InvariantCulture),
+                            TimeOfDay = TimeOnly.Parse(reader["TimeOfDay"].ToString()),
+                            DayOfWeek = reader.GetInt32(reader.GetOrdinal("DayOfWeek")),
+                            AttendeeRange = new int[] {
+                        Convert.ToInt32(reader["MinMembers"]),
+                        Convert.ToInt32(reader["MaxMembers"])
+                    },
+                            Description = reader["Description"].ToString()
+                            // Set Trainer if needed
+                        };
                     }
                 }
-                return result_team;
             }
+
+            return null;
         }
+
 
         public async Task<List<Team>> GetTeamByNameAsync(string name)
         {
@@ -519,14 +517,14 @@ SELECT
     m.ProfileImagePath
 FROM RelMemberTeam r
 INNER JOIN Members m ON r.Member_Id = m.Member_Id
-WHERE r.Team_Id = @TeamId";
+WHERE r.Team_Id = @Team_Id";
 
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@TeamId", teamId);
+                    command.Parameters.AddWithValue("@Team_Id", teamId);
                     await connection.OpenAsync();
 
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
