@@ -8,11 +8,11 @@ namespace GadevangTennisklub2025.Models
     {
         public int Id { get; set; }
         
-        [Display(Name = "BlogTitel")]
+        [Display(Name = "Blog Titel")]
         [Required(ErrorMessage = "Du skal angive navnet på dit indslag")]
-        [RegularExpression(@"^[a-zA-ZæøåÆØÅ\s]{3,}$", ErrorMessage = "Navnet på dit indslag må kun indeholde bogstaver og skal være på mindst 3 tegn.")]
+        [RegularExpression(@"^[a-zA-ZæøåÆØÅ\s\!]{3,}$", ErrorMessage = "Navnet på dit indslag må kun indeholde bogstaver og skal være på mindst 3 tegn.")]
         public string Title { get; set; }
-        [Display(Name = "indslag indhold")]
+        [Display(Name = "Indslag indhold")]
         [Required(ErrorMessage = "Du skal angive inhold til dit indslag")]
         public string Content { get; set; }
         public int MemberId { get; set; }
