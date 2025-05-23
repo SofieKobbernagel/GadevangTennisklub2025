@@ -83,6 +83,7 @@ namespace GadevangTennisklub2025.Pages.Member
                 // Preserve existing image
                 MemberObject.ProfileImagePath = existingMember.ProfileImagePath;
             }
+            MemberObject.IsAdmin = existingMember.IsAdmin;
 
             await _memberService.UpdateMemberAsync(MemberObject, MemberObject.Member_Id);
             TempData["SuccessMessage"] = "Brugeroplysninger er opdateret.";
