@@ -24,10 +24,8 @@ namespace UnitTestGadevangTennisklub
         [TestMethod]
         public async Task CreateTeamAsync_ShouldReturnTrue_WhenTeamIsCreated()
         {
-            // Arrange
             var team = new Team
             {
-                Id = 999,
                 Name = "Testhold",
                 Description = "Test beskrivelse",
                 MembershipType = "Seniorer",
@@ -35,86 +33,106 @@ namespace UnitTestGadevangTennisklub
                 TimeOfDay = new TimeOnly(17, 30),
                 Length = 1.0,
                 AttendeeRange = new[] { 2, 12 },
-                Trainer = new Coach { Coach_Id = 3 }  // Use existing coach ID from your DB
+                Trainer = new Coach { Coach_Id = 3 }
             };
 
-            // Act
-            bool result = await _service.CreateTeamAsync(team);
+            bool result = false;
+            Team created = null;
 
-            // Assert
-            Assert.IsTrue(result, "Expected CreateTeamAsync to return true when team is created successfully.");
+            try
+            {
+                result = await _service.CreateTeamAsync(team);
+                Assert.IsTrue(result, "Expected CreateTeamAsync to return true when team is created successfully.");
+
+                created = (await _service.GetAllTeamsAsync()).LastOrDefault(t => t.Name == "Testhold");
+                Assert.IsNotNull(created, "Created team was not found.");
+            }
+            finally
+            {
+                if (created != null)
+                    await _service.DeleteTeamAsync(created.Id);
+            }
         }
-
-
 
         [TestMethod]
         public async Task DeleteTeamAsync_ShouldRemoveTeam()
         {
-            // Arrange
-            TeamService teamService = new TeamService();
-
             var team = new Team
             {
-                Id = 9999, // Unique temporary ID
                 Name = "Temp Deletion Team",
                 MembershipType = "Seniorer",
                 Length = 1,
                 TimeOfDay = new TimeOnly(10, 0),
-                DayOfWeek = 1, // Tuesday if your system uses 0 = Monday
+                DayOfWeek = 1,
                 AttendeeRange = new int[] { 5, 15 },
                 Description = "Test team for deletion",
-                Trainer = new Coach { Coach_Id = 3 } // Ensure this coach exists
+                Trainer = new Coach { Coach_Id = 3 }
             };
 
-            // Act
-            bool created = await teamService.CreateTeamAsync(team);
-            Assert.IsTrue(created, "Team creation failed during setup for deletion test.");
+            Team createdTeam = null;
 
-            Team deletedTeam = await teamService.DeleteTeamAsync(team.Id);
-            Assert.IsNotNull(deletedTeam, "DeleteTeamAsync should return the deleted team.");
+            try
+            {
+                bool created = await _service.CreateTeamAsync(team);
+                Assert.IsTrue(created, "Team creation failed during setup for deletion test.");
 
-            Team checkTeam = await teamService.GetTeamFromIdAsync(team.Id);
+                createdTeam = (await _service.GetAllTeamsAsync()).LastOrDefault(t => t.Name == "Temp Deletion Team");
+                Assert.IsNotNull(createdTeam, "Failed to retrieve created team.");
 
-            // Assert
-            Assert.IsNull(checkTeam, "Team should no longer exist in the database after deletion.");
+                Team deletedTeam = await _service.DeleteTeamAsync(createdTeam.Id);
+                Assert.IsNotNull(deletedTeam, "DeleteTeamAsync should return the deleted team.");
+
+                Team checkTeam = await _service.GetTeamFromIdAsync(createdTeam.Id);
+                Assert.IsNull(checkTeam, "Team should no longer exist in the database after deletion.");
+            }
+            finally
+            {
+                if (createdTeam != null)
+                    await _service.DeleteTeamAsync(createdTeam.Id); // ensure cleanup if delete failed
+            }
         }
-
 
         [TestMethod]
         public async Task UpdateTeamAsync_ShouldModifyTeam()
         {
-            // Arrange
-            TeamService teamService = new TeamService();
-
             var team = new Team
             {
-                Id = 8888, // Unique test ID
                 Name = "Update Test Team",
                 MembershipType = "Seniorer",
                 Length = 1.0,
                 TimeOfDay = new TimeOnly(14, 0),
-                DayOfWeek = 2, // Wednesday
+                DayOfWeek = 2,
                 AttendeeRange = new int[] { 10, 20 },
                 Description = "Before update",
-                Trainer = new Coach { Coach_Id = 3 } // Must be a valid existing coach ID
+                Trainer = new Coach { Coach_Id = 3 }
             };
 
-            // Act: Create the team
-            bool created = await teamService.CreateTeamAsync(team);
-            Assert.IsTrue(created, "Team was not created successfully for update test.");
+            Team createdTeam = null;
 
-            // Update values
-            team.Description = "Updated description";
-            team.Length = 1.5;
+            try
+            {
+                bool created = await _service.CreateTeamAsync(team);
+                Assert.IsTrue(created, "Team was not created successfully for update test.");
 
-            bool updated = await teamService.UpdateTeamAsync(team);
-            Assert.IsTrue(updated, "Team was not updated successfully.");
+                createdTeam = (await _service.GetAllTeamsAsync()).LastOrDefault(t => t.Name == "Update Test Team");
+                Assert.IsNotNull(createdTeam, "Failed to retrieve created team.");
 
-            // Reload and Assert
-            Team updatedTeam = await teamService.GetTeamFromIdAsync(team.Id);
-            Assert.IsNotNull(updatedTeam, "Updated team could not be retrieved from DB.");
-            Assert.AreEqual("Updated description", updatedTeam.Description, "Description did not update as expected.");
-            Assert.AreEqual(1.5, updatedTeam.Length, "Length did not update correctly.");
+                createdTeam.Description = "Updated description";
+                createdTeam.Length = 1.5;
+
+                bool updated = await _service.UpdateTeamAsync(createdTeam);
+                Assert.IsTrue(updated, "Team was not updated successfully.");
+
+                Team updatedTeam = await _service.GetTeamFromIdAsync(createdTeam.Id);
+                Assert.IsNotNull(updatedTeam, "Updated team could not be retrieved.");
+                Assert.AreEqual("Updated description", updatedTeam.Description);
+                Assert.AreEqual(1.5, updatedTeam.Length);
+            }
+            finally
+            {
+                if (createdTeam != null)
+                    await _service.DeleteTeamAsync(createdTeam.Id);
+            }
         }
 
         [TestMethod]
@@ -126,19 +144,30 @@ namespace UnitTestGadevangTennisklub
                 Description = "Searchable",
                 MembershipType = "Seniorer",
                 DayOfWeek = 4,
-                TimeOfDay = new TimeOnly(10, 0, 0),
+                TimeOfDay = new TimeOnly(10, 0),
                 Length = 1.25,
-                AttendeeRange = new int[] { 1, 8 }
+                AttendeeRange = new int[] { 1, 8 },
+                Trainer = new Coach { Coach_Id = 3 }
             };
 
-            await _service.CreateTeamAsync(team);
-            var createdTeam = (await _service.GetAllTeamsAsync()).LastOrDefault(t => t.Name == "LookupTeam");
+            Team createdTeam = null;
 
-            var fetched = await _service.GetTeamFromIdAsync(createdTeam.Id);
-            Assert.IsNotNull(fetched);
-            Assert.AreEqual("LookupTeam", fetched.Name);
+            try
+            {
+                await _service.CreateTeamAsync(team);
+                createdTeam = (await _service.GetAllTeamsAsync()).LastOrDefault(t => t.Name == "LookupTeam");
 
-            await _service.DeleteTeamAsync(createdTeam.Id);
+                Assert.IsNotNull(createdTeam, "Failed to find created team.");
+
+                var fetched = await _service.GetTeamFromIdAsync(createdTeam.Id);
+                Assert.IsNotNull(fetched);
+                Assert.AreEqual("LookupTeam", fetched.Name);
+            }
+            finally
+            {
+                if (createdTeam != null)
+                    await _service.DeleteTeamAsync(createdTeam.Id);
+            }
         }
     }
 }
