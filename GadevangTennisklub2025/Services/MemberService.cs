@@ -11,7 +11,9 @@ using System.Reflection;
 namespace GadevangTennisklub2025.Services
 {
 
-
+    /// <summary>
+    /// Indeholder funktionerne for members.
+    /// </summary>
     public class MemberService : IMemberService
     {
         private string connectionString = Secret.ConnectionString;
@@ -26,7 +28,11 @@ namespace GadevangTennisklub2025.Services
 
 
       
-
+        /// <summary>
+        /// Laver en medlem
+        /// </summary>
+        /// <param name="member">Tager en medlem</param>
+        /// <returns>Returnerer en medlem til databasen</returns>
         public async Task<bool> CreateMemberAsync(Member member)
         {
             bool isCreated = false;
