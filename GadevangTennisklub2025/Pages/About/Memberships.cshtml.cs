@@ -17,6 +17,7 @@ namespace GadevangTennisklub2025.Pages.About
         }
         public async Task<IActionResult> OnGetAsync()
         {
+            //Henter alle medlemsskabstyper og tilhørende info fra databasen
             Memberships = await _membershipService.GetAllMembershipsAsync();
             return Page();
         }
