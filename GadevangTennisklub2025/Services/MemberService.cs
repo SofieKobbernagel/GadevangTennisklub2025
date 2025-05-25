@@ -66,16 +66,15 @@ namespace GadevangTennisklub2025.Services
                         isCreated = true;
                     }
                 }
-                catch (SqlException sqlExp)
+                catch (SqlException sqlEx)
                 {
-                    Console.WriteLine("Database error: " + sqlExp.Message);
-                    return false;
+                    throw new ApplicationException("Databasefejl opstod.", sqlEx);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("General error: " + ex.Message);
-                    return false;
+                    throw;
                 }
+
             }
             return isCreated;
         }
@@ -122,16 +121,15 @@ namespace GadevangTennisklub2025.Services
                     }
                     reader.Close();
                 }
-                catch (SqlException sqlExp)
+                catch (SqlException sqlEx)
                 {
-                    Console.WriteLine("SQL ERROR: " + sqlExp.Message);
-                    Console.WriteLine("Stack Trace: " + sqlExp.StackTrace);
+                    throw new ApplicationException("Databasefejl opstod.", sqlEx);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("GENERAL ERROR: " + ex.Message);
-                    Console.WriteLine("Stack Trace: " + ex.StackTrace);
+                    throw;
                 }
+
             }
             return members;
         }
@@ -171,16 +169,15 @@ namespace GadevangTennisklub2025.Services
                         isUpdated = true;
                     }
                 }
-                catch (SqlException sqlExp)
+                catch (SqlException sqlEx)
                 {
-                    Console.WriteLine("Database error: " + sqlExp.Message);
-                    return false;
+                    throw new ApplicationException("Databasefejl opstod.", sqlEx);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("General error: " + ex.Message);
-                    return false;
+                    throw;
                 }
+
             }
             return isUpdated;
         }
@@ -245,16 +242,15 @@ namespace GadevangTennisklub2025.Services
                     reader.Close();
 
                 }
-                catch (SqlException sqlExp)
+                catch (SqlException sqlEx)
                 {
-                    Console.WriteLine("Database error" + sqlExp.Message);
-                    return null;
+                    throw new ApplicationException("Databasefejl opstod.", sqlEx);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Generel fejl: " + ex.Message);
-                    return null;
+                    throw;
                 }
+
 
                 return foundMember;
             }
@@ -282,15 +278,13 @@ namespace GadevangTennisklub2025.Services
                         deletedMember = null;
                 }
 
-                catch (SqlException sqlExp)
+                catch (SqlException sqlEx)
                 {
-                    Console.WriteLine("Database error: " + sqlExp.Message);
-                    deletedMember = null;
+                    throw new ApplicationException("Databasefejl opstod.", sqlEx);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("General error: " + ex.Message);
-                    deletedMember = null;
+                    throw;
                 }
                 return deletedMember;
             }
@@ -304,8 +298,10 @@ namespace GadevangTennisklub2025.Services
             foreach (Member m in members)
             {
                 if (m.Username == username)
+                {
                     isuniqe = false;
-                break;
+                    break;
+                }       
             }
             return isuniqe;
         }

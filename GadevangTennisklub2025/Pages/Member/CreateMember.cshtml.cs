@@ -89,13 +89,13 @@ namespace GadevangTennisklub2025.Pages.Member
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Could not create the member. Please try again.");
+                    ModelState.AddModelError("", "Der skete en fejl. Prøv venligst igen.");
                     return Page();
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "An error occurred while creating the member: " + ex.Message);
+                ViewData["ErrorMessage"] = "Der opstod en fejl under oprettelse af medlem: " + ex.Message;
                 return Page();
             }
         }
