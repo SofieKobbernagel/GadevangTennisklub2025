@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GadevangTennisklub2025.Pages.About
 {
+    // PageModel til visning af alle trænere på en oversigtsside.
+    // Tjekker også, om brugeren er admin for at styre rettigheder.
     public class GetAllCoachesModel : PageModel
     {
         private ICoachService _coachService;
@@ -18,10 +20,11 @@ namespace GadevangTennisklub2025.Pages.About
         }
         public async Task<IActionResult> OnGetAsync()
         {
+            //Tjekker om bruger er admin
             var isAdmin = HttpContext.Session.GetString("IsAdmin");
 
-            IsAdmin = isAdmin == "true";
-
+            IsAdmin = isAdmin == "true"; // Bruges i visningen til at afgøre om admin-funktioner skal vises
+            //Henter alle trænere fra database via service
             try
             {
                 Coaches = await _coachService.GetAllCoachesAsync();

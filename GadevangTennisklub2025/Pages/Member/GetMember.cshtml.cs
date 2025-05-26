@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GadevangTennisklub2025.Pages.Member
 {
+    // PageModel til visning af et enkelt medlems detaljer for admins.
+    //Ikke adgang til redigering eller sletning
+    // Bruges til at vise alle medlemsoplysninger på en profilside.
     public class GetMemberModel : PageModel
     {
         private readonly IMemberService _memberService;

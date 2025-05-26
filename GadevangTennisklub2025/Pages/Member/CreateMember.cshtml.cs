@@ -6,26 +6,34 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GadevangTennisklub2025.Pages.Member
 {
+    // PageModel til oprettelse af et nyt medlem i systemet.
+    // Indehodler bl.a. upload af profilbillede og validering af unikt brugernavn.
     public class CreateMemberModel : PageModel
     {
+        // Service til håndtering af medlemmer (oprettelse, validering mv.)
         private IMemberService _memberService;
+        // Service til håndtering af medlemskaber
         private readonly IMembershipService _membershipService;
 
+        // Indeholder listen af mulige medlemskaber til dropdown i formularen
         [BindProperty]
         public List<Membership> Memberships { get; set; } = new();
+        // ViewModel som indeholder det nye medlem og sørger for at betingelser bliver accepteret
         [BindProperty]
         public RegisterMemberViewModel RegisterModel { get; set; }
 
+        // Uploadet profilbillede fra formularen
         [BindProperty]
         public IFormFile? ProfileImage { get; set; }
 
+        // Constructor med dependency injection af services
         public CreateMemberModel(IMemberService memberService, IMembershipService membershipService)
         {
             _memberService = memberService;
             _membershipService = membershipService;
         }
 
-
+        // Henter alle medlemskaber når siden indlæses, så de kan vises i formularen
         public async Task<IActionResult> OnGetAsync()
         {
             Memberships = await _membershipService.GetAllMembershipsAsync();
@@ -36,12 +44,14 @@ namespace GadevangTennisklub2025.Pages.Member
         {
             try
             {
+                // Tjek om modellen er gyldig (baseret på validation fra Member klassen i models folderen)
                 if (!ModelState.IsValid)
                 {
                     Memberships = await _membershipService.GetAllMembershipsAsync();
                     return Page();
                 }
 
+                // Tjek om brugernavnet er unikt
                 bool isUnique = await _memberService.IsUsernameUnique(RegisterModel.Member.Username);
                 if (!isUnique)
                 {
@@ -50,39 +60,42 @@ namespace GadevangTennisklub2025.Pages.Member
                     return Page();
                 }
 
+                // Hvis der er uploadet et profilbillede, gem det på serveren
                 if (ProfileImage != null && ProfileImage.Length > 0)
                 {
-                    // Generate a unique filename (so people don't overwrite each other’s pictures)
+                    // Generer unikt filnavn
                     var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfileImage.FileName);
 
-                    // Build the path to /images/ProfilePictures/
+                    // Bygger stien hvor billedet skal gemmes
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/ProfilePictures", fileName);
 
-                    // Save the file to the server
+                    // Gem filen 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await ProfileImage.CopyToAsync(stream);
                     }
 
-                    // Save the relative path to the database
+                    // Gem stien i databasen
                     RegisterModel.Member.ProfileImagePath = "/images/ProfilePictures/" + fileName;
                 }
 
+                // Forsøg at oprette medlemmet
                 bool success = await _memberService.CreateMemberAsync(RegisterModel.Member);
 
                 if (success)
                 {
+                    // Ved succes, redirect til forsiden
                     return RedirectToPage("/Index");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Could not create the member. Please try again.");
+                    ModelState.AddModelError("", "Der skete en fejl. Prøv venligst igen.");
                     return Page();
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "An error occurred while creating the member: " + ex.Message);
+                ViewData["ErrorMessage"] = "Der opstod en fejl under oprettelse af medlem: " + ex.Message;
                 return Page();
             }
         }
