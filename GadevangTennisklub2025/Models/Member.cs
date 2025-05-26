@@ -158,5 +158,10 @@ namespace GadevangTennisklub2025.Models
             PictureConsent = consent;
             BookingsLeft = 4;
         }
+
+        public Member(int id) 
+        {
+            Member_Id = id;
+        }
     }
 }
