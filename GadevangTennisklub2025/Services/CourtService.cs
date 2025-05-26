@@ -90,7 +90,10 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        
+        /// <summary>
+        /// Get all courts from database
+        /// </summary>
+        /// <returns>Returns all courts from the database</returns>
         public async Task<List<TennisField>> GetAllCourtsAsync()
         {
             List<TennisField> courts = new List<TennisField>();
