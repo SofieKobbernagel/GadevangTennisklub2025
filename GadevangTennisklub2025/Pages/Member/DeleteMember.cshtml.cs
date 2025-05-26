@@ -83,7 +83,7 @@ namespace GadevangTennisklub2025.Pages.Member
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Der skete en fejl da brugeren skulle slettes: " + ex.Message);
+                ViewData["ErrorMessage"] = "Der opstod en fejl under sletning af medlem: " + ex.Message;
                 return Page();
             }
         }
