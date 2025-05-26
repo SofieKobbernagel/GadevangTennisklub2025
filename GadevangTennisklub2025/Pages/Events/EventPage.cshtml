@@ -4,11 +4,11 @@
     ViewData["Title"] = "EventPage";
 }
 @section Scripts {
-    <script>
-        function confirmAction() {
-            return confirm("Vil du Fortsætte");
-        }
-    </script>
+<script>
+    function confirmAction() {
+    return confirm("Vil du Fortsætte");
+    }
+</script>
 }
 <form method="post" enctype="multipart/form-data" onsubmit="return confirmAction()";>
     <p style="color:red">@Model.Message</p>
@@ -56,8 +56,17 @@
     {
         if (Model.MemberCount < Model.e.Maximum && Model.e.Date>DateTime.Now)
         {
+
             <div class="formgroup">
-                <input type="submit" value="Tilmeld event" class="btn btn-primary" />
+                @if (!Model.Participating)
+                {
+                    <input type="submit" value="Tilmeld event" class="btn btn-primary" />
+                } 
+                else
+                {
+                    <p style="color:red">Du er allerede tilmeldt</p>
+                }
+
             </div>
         } else
         {

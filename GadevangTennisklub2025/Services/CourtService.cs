@@ -5,17 +5,24 @@ using System.Data;
 
 namespace GadevangTennisklub2025.Services
 {
+    /// <summary>
+    /// Indeholder funktioner omhandlende baner
+    /// </summary>
     public class CourtService : ICourtService
     {
         private string connectionString = Secret.ConnectionString;
 
         private string queryString = "SELECT Court_Id, Name, Type FROM Court";
         private string findCourtByIDSql = "select Court_Id, Name, Type FROM Court WHERE Court_Id = @ID";
-        //private string insertSql = "Insert INTO Court Values(@ID, @Name, @Type)"; This is a query string made before automatic ID selection.
         private string insertSql = "Insert INTO Court Values(@Name, @Type)";
         private string updateSql = "UPDATE Court SET Type = @Type, Name = @Name WHERE Court_Id = @ID";
         private string deleteSql = "DELETE FROM Court WHERE Court_Id = @ID";
 
+        /// <summary>
+        /// Create a court asynchronously
+        /// </summary>
+        /// <param name="tennisField">Takes a TennisField object</param>
+        /// <returns>Adds an entry in the court database</returns>
         public async Task<bool> CreateCourtAsync(TennisField tennisField)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -46,6 +53,11 @@ namespace GadevangTennisklub2025.Services
             return false;
         }
 
+        /// <summary>
+        /// Deletes a court asynchronously
+        /// </summary>
+        /// <param name="courtId">Takes the ID of a court</param>
+        /// <returns>Deletes an entry from the court database</returns>
         public async Task<TennisField> DeleteCourtAsync(int courtId)
         {
             TennisField? court = GetCourtFromIdAsync(courtId).Result;
@@ -78,6 +90,10 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
+        /// <summary>
+        /// Get all courts from database
+        /// </summary>
+        /// <returns>Returns all courts from the database</returns>
         public async Task<List<TennisField>> GetAllCourtsAsync()
         {
             List<TennisField> courts = new List<TennisField>();

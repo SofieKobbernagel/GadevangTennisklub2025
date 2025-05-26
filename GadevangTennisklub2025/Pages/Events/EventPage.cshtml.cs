@@ -2,6 +2,7 @@ using GadevangTennisklub2025.Interfaces;
 using GadevangTennisklub2025.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace GadevangTennisklub2025.Pages.Events
 {
@@ -9,18 +10,21 @@ namespace GadevangTennisklub2025.Pages.Events
     {
         IEventServiceAsync eventServicesAsync { get; set; }
         IRelationshipsServicesAsync relationshipsServicesAsync { get; set; }
+
+        IMemberService memberService { get; set; }  
         [BindProperty]
         public Event e { get; set; }
+        public bool Participating { get; set; }
 
         public string Message { get; set; }
         public int MemberCount { get { return relationshipsServicesAsync.GetEventParticipants(e.Id).Result.Count; } }
         
         public bool notadmin { get; set; }
-        public EventPageModel(IEventServiceAsync IESA, IRelationshipsServicesAsync IRSA)
+        public EventPageModel(IEventServiceAsync IESA, IRelationshipsServicesAsync IRSA, IMemberService IMS)
         {
             eventServicesAsync = IESA;
             relationshipsServicesAsync = IRSA;
-           
+            memberService=IMS;
         }
         public async Task OnGetAsync(int EventId)
         {
@@ -29,8 +33,15 @@ namespace GadevangTennisklub2025.Pages.Events
             {
                 notadmin = true;
             }
-            e =  eventServicesAsync.returnEventAsync(EventId).Result;
             
+            e =  eventServicesAsync.returnEventAsync(EventId).Result;
+            List<Models.Member> temp = await relationshipsServicesAsync.GetEventParticipants(e.Id);
+            foreach (Models.Member tempItem in temp) 
+            {
+                if (HttpContext.Session.GetString("Member_Id") == null) break;
+                if (tempItem.Member_Id == int.Parse(HttpContext.Session.GetString("Member_Id")))Participating = true;
+            }
+           
             
         }
 

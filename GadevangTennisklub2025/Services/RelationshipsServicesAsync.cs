@@ -439,7 +439,7 @@ namespace GadevangTennisklub2025.Services
                     while (await reader.ReadAsync())
                     {
                         int MemberId = reader.GetInt32("Member_Id");
-                        members.Add(new Member());
+                        members.Add(new Member(MemberId));
                     }
                     reader.Close();
                 }

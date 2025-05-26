@@ -18,7 +18,7 @@
 <h4>Kalender over events</h4>
 
 
-<h5>Der er ligenu: @Model.EventList.Count;</h5>
+<h5>Der er ligenu: @Model.EventList.Count</h5>
 @if (HttpContext.Session.GetString("IsAdmin") != null && bool.Parse(HttpContext.Session.GetString("IsAdmin")))
 {
     <a asp-page="CreateEvent">Opret et event</a>
