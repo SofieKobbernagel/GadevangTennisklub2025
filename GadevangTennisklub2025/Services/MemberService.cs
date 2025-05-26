@@ -16,7 +16,10 @@ namespace GadevangTennisklub2025.Services
     /// </summary>
     public class MemberService : IMemberService
     {
+        // Connection string til databasen
         private string connectionString = Secret.ConnectionString;
+
+        // SQL-kommandoer til forskellige operationer
         private string selectAllMembersSql = "select * From Members";
         private string insertSql = "Insert INTO Members (Name, Address, Gender, Email, PostalCode, TLF, City, " +
             "MembershipType, Birthday, OtherTLF, NewsSubscriber, Username, Password, IsAdmin, Municipality, PictureConsent, ProfileImagePath)" +
@@ -27,12 +30,6 @@ namespace GadevangTennisklub2025.Services
         private string updateSql = @"Update Members Set Name = @Name,Address = @Address, Gender = @Gender, Email = @Email, PostalCode = @Postalcode, TLF= @TLF, City = @City, MembershipType = @MembershipType, Birthday = @Birthday, OtherTLF = @OtherTLF, NewsSubscriber = @NewsSubscriber, Username = @Username,Password = @Password, IsAdmin = @IsAdmin,Municipality =  @Municipality, PictureConsent = @PictureConsent, ProfileImagePath = @ProfileImagePath WHERE Member_Id = @Member_Id";
 
 
-      
-        /// <summary>
-        /// Laver en medlem
-        /// </summary>
-        /// <param name="member">Tager en medlem</param>
-        /// <returns>Returnerer en medlem til databasen</returns>
         public async Task<bool> CreateMemberAsync(Member member)
         {
             bool isCreated = false;
@@ -63,21 +60,21 @@ namespace GadevangTennisklub2025.Services
 
                     await connection.OpenAsync();
                     int rowsAffected = await command.ExecuteNonQueryAsync();
+                    // Hvis mindst en række er påvirket, blev oprettelsen succesfuld
                     if (rowsAffected > 0)
                     {
                         isCreated = true;
                     }
                 }
-                catch (SqlException sqlExp)
+                catch (SqlException sqlEx)
                 {
-                    Console.WriteLine("Database error: " + sqlExp.Message);
-                    return false;
+                    throw new ApplicationException("Databasefejl opstod.", sqlEx);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("General error: " + ex.Message);
-                    return false;
+                    throw;
                 }
+
             }
             return isCreated;
         }
@@ -124,16 +121,15 @@ namespace GadevangTennisklub2025.Services
                     }
                     reader.Close();
                 }
-                catch (SqlException sqlExp)
+                catch (SqlException sqlEx)
                 {
-                    Console.WriteLine("SQL ERROR: " + sqlExp.Message);
-                    Console.WriteLine("Stack Trace: " + sqlExp.StackTrace);
+                    throw new ApplicationException("Databasefejl opstod.", sqlEx);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("GENERAL ERROR: " + ex.Message);
-                    Console.WriteLine("Stack Trace: " + ex.StackTrace);
+                    throw;
                 }
+
             }
             return members;
         }
@@ -173,22 +169,22 @@ namespace GadevangTennisklub2025.Services
                         isUpdated = true;
                     }
                 }
-                catch (SqlException sqlExp)
+                catch (SqlException sqlEx)
                 {
-                    Console.WriteLine("Database error: " + sqlExp.Message);
-                    return false;
+                    throw new ApplicationException("Databasefejl opstod.", sqlEx);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("General error: " + ex.Message);
-                    return false;
+                    throw;
                 }
+
             }
             return isUpdated;
         }
 
-        public Member VerifyMember(string username, string password)
+        public async Task<Member> VerifyMember(string username, string password)
         {
+            // Hent alle medlemmer og sammenlign brugernavn og kodeord
             foreach (var member in GetAllMembersAsync().Result)
             {
                 if (username.Equals(member.Username) && password.Equals(member.Password))
@@ -199,7 +195,7 @@ namespace GadevangTennisklub2025.Services
             return null;
         }
 
-        public async Task<Member> GetMemberById(int member_id)
+        public async Task<Member?> GetMemberById(int member_id)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -246,22 +242,21 @@ namespace GadevangTennisklub2025.Services
                     reader.Close();
 
                 }
-                catch (SqlException sqlExp)
+                catch (SqlException sqlEx)
                 {
-                    Console.WriteLine("Database error" + sqlExp.Message);
-                    return null;
+                    throw new ApplicationException("Databasefejl opstod.", sqlEx);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Generel fejl: " + ex.Message);
-                    return null;
+                    throw;
                 }
+
 
                 return foundMember;
             }
         }
 
-        public async Task<Member> DeleteMemberAsync(int member_Id)
+        public async Task<Member?> DeleteMemberAsync(int member_Id)
         {
             Member? deletedMember = await GetMemberById(member_Id);
             if (deletedMember == null)
@@ -283,15 +278,13 @@ namespace GadevangTennisklub2025.Services
                         deletedMember = null;
                 }
 
-                catch (SqlException sqlExp)
+                catch (SqlException sqlEx)
                 {
-                    Console.WriteLine("Database error: " + sqlExp.Message);
-                    deletedMember = null;
+                    throw new ApplicationException("Databasefejl opstod.", sqlEx);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("General error: " + ex.Message);
-                    deletedMember = null;
+                    throw;
                 }
                 return deletedMember;
             }
@@ -300,12 +293,15 @@ namespace GadevangTennisklub2025.Services
         public async Task<bool> IsUsernameUnique(string username)
         {
             bool isuniqe = true;
+         
             List<Member> members = await GetAllMembersAsync();
             foreach (Member m in members)
             {
                 if (m.Username == username)
+                {
                     isuniqe = false;
-                break;
+                    break;
+                }       
             }
             return isuniqe;
         }

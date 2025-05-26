@@ -5,6 +5,10 @@ using System.Net;
 
 namespace GadevangTennisklub2025.Models
 {
+    /// <summary>
+    /// Repræsenterer et medlem af Gadevang Tennisklub med oplysninger som navn, kontaktinfo og admin status.
+    /// Bruges til registrering, login og generel medlemsstyring.
+    /// </summary>
     public class Member
     {
        
@@ -13,6 +17,8 @@ namespace GadevangTennisklub2025.Models
         [ValidBirthday]
         public DateOnly Birthday { get; set; }
 
+        // Beregner medlemmets alder baseret på fødselsdato og dags dato.
+        // Trækker ét år fra, hvis fødselsdagen ikke er nået endnu i år.
         public int Age
         {
             get
@@ -28,6 +34,7 @@ namespace GadevangTennisklub2025.Models
             }
         }
 
+        //pris på medlemskab, er defineret i databasen og kan variere afhængigt af medlemstype.
         public double Price;
 
         [Display(Name = "Medlemstyper")]
@@ -83,6 +90,7 @@ namespace GadevangTennisklub2025.Models
         [RegularExpression(@".+@.+\.(com|dk)", ErrorMessage = "Email skal slutte på .com eller .dk.")]
         public string Email { get; set; }
 
+        // Antal tilbageværende bookinger medlemmet har. Starter typisk på 4 og nedjusteres ved brug.
         public int BookingsLeft { get; set; }
 
         [Display(Name = "brugernavn")]
@@ -102,9 +110,11 @@ namespace GadevangTennisklub2025.Models
 
 
         [Display(Name = "Er Admin")]
+        // Angiver om medlemmet har administrative rettigheder i systemet.
         public bool IsAdmin { get; set; }
 
         [Display(Name = "Tilmeldt nyhedsbrev")]
+        // Marker om medlemmet er tilmeldt nyhedsbrevet.
         public bool NewsSubscriber { get; set; } = false;
 
         [Display(Name = "Evt. Anden TLF (valgfri)")]
@@ -114,12 +124,14 @@ namespace GadevangTennisklub2025.Models
         [Display(Name = "Profilbillede")]
         public string? ProfileImagePath { get; set; }
 
-
+        // Tom konstruktør kræves til modellens brug i fx databinding og frameworks (f.eks. Entity Framework).
+        // Uden en parameterløs konstruktør kan fx Entity Framework og ASP.NET ikke fungere korrekt med vores modeller.
         public Member()
         {
 
         }
 
+        // Konstruktør til oprettelse af medlem, hvor ID kendes (fx ved indlæsning fra database).
         public Member(string username, string name, DateOnly birthday, string membertype, string city, string phone, string postalcode, string gender, string address, string email, string password, string municipality, string consent, int memberId)
         {
             IsAdmin = false;
@@ -140,6 +152,8 @@ namespace GadevangTennisklub2025.Models
             BookingsLeft = 4;
 
         }
+
+        // Konstruktør til oprettelse af nyt medlem (uden ID – fx ved brugeroprettelse).
         public Member(string username, string name, DateOnly birthday, string membertype, string city, string phone, string postalcode, string gender, string address, string email, string password, string municipality, string consent)
         {
             IsAdmin = false;
@@ -157,6 +171,11 @@ namespace GadevangTennisklub2025.Models
             Municipality = municipality;
             PictureConsent = consent;
             BookingsLeft = 4;
+        }
+
+        public Member(int id) 
+        {
+            Member_Id = id;
         }
     }
 }

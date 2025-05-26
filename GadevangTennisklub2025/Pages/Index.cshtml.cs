@@ -8,9 +8,11 @@ namespace GadevangTennisklub2025.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         public Calendar Calendar;
+
         public static int scuffedMonth;
         public static int scuffedYear;
         public static int scuffedWeek;
+        public static string PrevPage = "Index";
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
@@ -20,7 +22,7 @@ namespace GadevangTennisklub2025.Pages
         {
             scuffedMonth=DateTime.Now.Month;
             scuffedYear=DateTime.Now.Year;
-
+            PrevPage = "Index";
         }
 
         public void OnPostMod() { Console.WriteLine("joke"); }
