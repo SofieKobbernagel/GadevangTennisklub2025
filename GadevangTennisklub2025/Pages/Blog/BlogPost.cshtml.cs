@@ -12,6 +12,7 @@ namespace GadevangTennisklub2025.Pages.Blog
         IBlogPostServicesAsync blogPostServicesAsync;
         public IMemberService memberService;
         public ICommentServiceAsync commentService;
+        public static string stringtest { get; set; }
         [BindProperty]
         public BlogPost Post { get; set; }
         public string Member;
@@ -21,6 +22,8 @@ namespace GadevangTennisklub2025.Pages.Blog
         public List<Comment> PostComments { get; set; }
         [BindProperty]
         public string test { get; set; }
+        [BindProperty]
+        public Comment EditComment { get; set; }
         public BlogPostModel(IBlogPostServicesAsync IBPSA, IMemberService IMS, ICommentServiceAsync ICSA) 
         {
             blogPostServicesAsync = IBPSA;
@@ -68,8 +71,9 @@ namespace GadevangTennisklub2025.Pages.Blog
         }
         public async Task<IActionResult> OnpostUpdateComment(int id, string text)
         {
-           
-            await commentService.UpdateComment(PostComments.Find(i=> i.Id==id));
+            Comment comment = await commentService.GetComment(id);
+            comment.CommentContent = EditComment.CommentContent;
+            await commentService.UpdateComment(comment);
             return RedirectToPage("BlogSide");
         }
     }

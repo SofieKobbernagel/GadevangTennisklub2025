@@ -72,10 +72,10 @@ else
     <div class="white-box">
         <form method="post">
             <div class="form-group">
-                 @{
-                     Model.test = "virk for pokker";
+                @{
+                    Model.test = "virk for pokker";
                 }
-                 <label asp-for="@Model.test" class="control-label" hidden></label>
+                <label asp-for="@Model.test" class="control-label" hidden></label>
                 <input asp-for="@Model.test" class="form-control" hidden/>  
             </div>
 
@@ -118,18 +118,20 @@ else
 {
     if (HttpContext.Session.GetString("Member_Id") != null && (int.Parse(HttpContext.Session.GetString("Member_Id")) == comment.MemberId || bool.Parse(HttpContext.Session.GetString("IsAdmin"))))
     {
-        Model.test=comment.CommentContent;
+
+        Model.EditComment = comment;
+
+    ;
+
         <form method="post" asp-route-id="@comment.Id">
             <div class="white-box">
                 <div class="form-group">
                     <h2> Kommentar fra @Model.memberService.GetMemberById(comment.MemberId).Result.Name</h2>
                     <label asp-for="@comment.CommentContent" class="control-label" ></label>
-                    <input asp-for="@Model.test" class="form-control"  />
+                    <input asp-for="@Model.EditComment.CommentContent" class="form-control"  />
                     <span asp-validation-for="@comment.CommentContent" class="text-danger"></span> 
-                </div>
-                <div class="form-group">
                     <input type="submit" value="slet Kommentar" class="btn btn-primary" asp-page-handler="DeleteComment" asp-route-id="@comment.Id" />
-                    <input type="submit" value="opdater Kommentar" class="btn btn-primary" asp-page-handler="UpdateComment" asp-route-id="@comment.Id" asp-route-text="@Model.test"/>
+                    <input type="submit" value="opdater Kommentar" class="btn btn-primary" asp-page-handler="UpdateComment" asp-route-id="@comment.Id" asp-route-text="@Model.EditComment.CommentContent"/>
                 </div>
             </div>
         </form>

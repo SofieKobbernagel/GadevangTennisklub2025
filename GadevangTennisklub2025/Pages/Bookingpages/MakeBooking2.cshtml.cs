@@ -68,10 +68,8 @@ namespace GadevangTennisklub2025.Pages.Bookingpages
                 if(weekFromNow==0) bookingService.DeleteBooking(b);
                 temp.Remove(b);
             }
+            temp.RemoveAll(i=> ISOWeek.GetWeekOfYear(i.Start)!= ISOWeek.GetWeekOfYear(DateTime.Now.AddDays(weekFromNow*7)));
 
-
-            temp.RemoveAll(i => Math.Round((i.Start - DateTime.Now.AddDays(weekFromNow * 7)).TotalDays) >= (7 - ((int)DateTime.Now.DayOfWeek == 0 ? 7 : (int)DateTime.Now.DayOfWeek)));
-            temp.RemoveAll(i => Math.Round((i.Start - DateTime.Now.AddDays(weekFromNow * 7)).TotalDays) <= (-6 + ((int)DateTime.Now.DayOfWeek == 0 ? 7 : (int)DateTime.Now.DayOfWeek)));
             
             foreach (Booking booking in temp) 
             {
