@@ -68,11 +68,11 @@ namespace GadevangTennisklub2025.Services
                 }
                 catch (SqlException sqlEx)
                 {
-                    throw new ApplicationException("Databasefejl opstod.", sqlEx);
+                    throw sqlEx;
                 }
                 catch (Exception ex)
                 {
-                    throw;
+                    throw ex;
                 }
 
             }
