@@ -26,6 +26,7 @@ namespace GadevangTennisklub2025.Pages.Teams
         [BindProperty] public Coach? Coach { get; set; }
         public List<SelectListItem> TrainerOptions { get; set; }
         public List<SelectListItem> MembershipOptions { get; set; }
+        public List<SelectListItem> DayOptions { get; set; }
 
         public UpdateTeamModel(ITeamService teamService, ICoachService coachService, IMembershipService membershipService)
         {
@@ -33,8 +34,19 @@ namespace GadevangTennisklub2025.Pages.Teams
             _coachService = coachService;
             _membershipService = membershipService;
         }
+        public void PopulateDayOptions()
+        {
+            var week = new[] { "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag" };
+
+            DayOptions = Enumerable.Range(0, 7).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),    // Returns 0 for Monday, 1 for Tuesday, etc.
+                Text = week[i]           // Display name
+            }).ToList();
+        }
         public async Task<IActionResult> OnGet(int id)
         {
+            PopulateDayOptions();
             var team = await _teamService.GetTeamFromIdAsync(id);
             if (team == null) return NotFound();
 

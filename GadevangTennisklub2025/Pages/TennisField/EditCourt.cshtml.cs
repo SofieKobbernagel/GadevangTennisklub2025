@@ -2,6 +2,7 @@ using GadevangTennisklub2025.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 
 namespace GadevangTennisklub2025.Pages.TennisField
 {
@@ -28,12 +29,24 @@ namespace GadevangTennisklub2025.Pages.TennisField
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            await LoadList();
-            Court = await _courtService.GetCourtFromIdAsync(id);
-            var isAdmin = HttpContext.Session.GetString("IsAdmin");
-            if (isAdmin != "true")
+            try
             {
-                return RedirectToPage("/Index");
+                await LoadList();
+                Court = await _courtService.GetCourtFromIdAsync(id);
+                var isAdmin = HttpContext.Session.GetString("IsAdmin");
+                if (isAdmin != "true")
+                {
+                    return RedirectToPage("/Index");
+                }
+                return Page();
+            }
+            catch (SqlException sqlEx)
+            {
+                ViewData["ErrorMessage"] = sqlEx.Message;
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
             }
             return Page();
         }

@@ -31,7 +31,6 @@ namespace GadevangTennisklub2025.Services
 
                 try
                 {
-                    //command.Parameters.AddWithValue("@ID", tennisField.CourtId);
                     command.Parameters.AddWithValue("@Name", tennisField.Name);
                     command.Parameters.AddWithValue("@Type", tennisField.Type);
 
@@ -50,7 +49,6 @@ namespace GadevangTennisklub2025.Services
                     throw ex;
                 }
             }
-            return false;
         }
 
         /// <summary>
@@ -90,7 +88,10 @@ namespace GadevangTennisklub2025.Services
             }
         }
 
-        
+        /// <summary>
+        /// Get all courts from database
+        /// </summary>
+        /// <returns>Returns all courts from the database</returns>
         public async Task<List<TennisField>> GetAllCourtsAsync()
         {
             List<TennisField> courts = new List<TennisField>();
@@ -130,7 +131,11 @@ namespace GadevangTennisklub2025.Services
             }
             return courts;
         }
-
+        /// <summary>
+        /// Get a court from a CourtId
+        /// </summary>
+        /// <param name="courtId">The courtID</param>
+        /// <returns>Returns a TennisField</returns>
         public async Task<TennisField> GetCourtFromIdAsync(int courtId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -169,7 +174,11 @@ namespace GadevangTennisklub2025.Services
                 return court;
             }
         }
-
+        /// <summary>
+        /// Get a court from Type
+        /// </summary>
+        /// <param name="type">Court Type</param>
+        /// <returns>Returns a TennisField</returns>
         public async Task<List<TennisField>> GetCourtFromTypeAsync(string type)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -206,7 +215,11 @@ namespace GadevangTennisklub2025.Services
                 return courts;
             }
         }
-
+        /// <summary>
+        /// Get a court from Name
+        /// </summary>
+        /// <param name="name">Court Name</param>
+        /// <returns>Returns a TennisField</returns>
         public async Task<List<TennisField>> GetCourtFromNameAsync(string name)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -243,7 +256,11 @@ namespace GadevangTennisklub2025.Services
                 return courts;
             }
         }
-
+        /// <summary>
+        /// Update a court
+        /// </summary>
+        /// <param name="tennisField">TennisField class</param>
+        /// <returns>Updates a court entry in the database</returns>
         public async Task<bool> UpdateCourtAsync(TennisField tennisField)
         {
             bool temp = false;

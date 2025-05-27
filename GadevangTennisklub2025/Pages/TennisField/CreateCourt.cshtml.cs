@@ -2,6 +2,7 @@ using GadevangTennisklub2025.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 
 namespace GadevangTennisklub2025.Pages.TennisField
 {
@@ -48,11 +49,17 @@ namespace GadevangTennisklub2025.Pages.TennisField
                 await _courtService.CreateCourtAsync(Court);
                 return RedirectToPage("ShowCourts");
             }
+            catch (SqlException sqlEx)
+            {
+                ViewData["ErrorMessage"] = sqlEx.Message;
+                return Page();
+            }
             catch (Exception ex)
             {
                 ViewData["ErrorMessage"] = ex.Message;
+                return Page();
             }
-            return Page();
+            
         }
     }
 }
