@@ -29,11 +29,13 @@ namespace GadevangTennisklub2025.Pages.Blog
             blogPostServicesAsync = IBPSA;
             memberService = IMS;
             commentService = ICSA;
+            MakeComment=new Comment();
+            EditComment=new Comment();
            
         }
         public async Task OnGet(int BlogId)
         {
-           
+            
             Post =  blogPostServicesAsync.GetBlogPost(BlogId).Result;
             Models.Member t=  memberService.GetMemberById(Post.MemberId).Result;
             Member = t.Name;
@@ -54,7 +56,9 @@ namespace GadevangTennisklub2025.Pages.Blog
 
         public async Task<IActionResult> OnPostComment() 
         {
+            EditComment.CommentContent =MakeComment.CommentContent;
             test = "";
+            
             if (!ModelState.IsValid) 
             {
                 OnGet(Post.Id);
