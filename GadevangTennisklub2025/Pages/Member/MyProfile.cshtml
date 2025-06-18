@@ -94,7 +94,7 @@
                         </td>
                      
                         <td>
-                            <form method="post" asp-page-handler="RemoveFromEvent" asp-route-Event_ID="@eventVM.Id">
+                            <form method="post" asp-page-handler="RemoveFromEvent" asp-route-eventId="@eventVM.Id">
                                 <input type="hidden" name="Event_Id" value="@eventVM.Id" />
                                 <button type="submit" class="btn btn-danger btn-sm">Afmeld fra Event</button>
                             </form>

@@ -88,6 +88,7 @@ namespace GadevangTennisklub2025.Models
 
         [Display(Name = "Email")]
         [Required(ErrorMessage = "Der skal gives en email")]
+        //.+ er et eler flere vilkårlige tegn
         [RegularExpression(@".+@.+\.(com|dk)", ErrorMessage = "Email skal slutte på .com eller .dk.")]
         public string Email { get; set; }
 
