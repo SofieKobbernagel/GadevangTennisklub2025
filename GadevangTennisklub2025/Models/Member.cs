@@ -35,6 +35,7 @@ namespace GadevangTennisklub2025.Models
         }
 
         //pris på medlemskab, er defineret i databasen og kan variere afhængigt af medlemstype.
+        //ikke nødvendig da den ligger i Membership
         public double Price;
 
         [Display(Name = "Medlemstyper")]
